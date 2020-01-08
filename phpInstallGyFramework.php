@@ -3649,7 +3649,7 @@ $gy_config = array(
         \'db_type\' => \'mysql\',
         \'db_host\' => \'localhost\',
         \'db_user\' => \'root\', // заменить на настоящего пользователя // replace by true user 
-        \'db_pass\' => \'12345678\', // заменить на настоящий пароль // replace by true password
+        \'db_pass\' => \'********\', // заменить на настоящий пароль // replace by true password
         \'db_name\' => \'gy_db\',
     ),
     \'type_cache\' => \'cacheFiles\'

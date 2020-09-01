@@ -708,8 +708,14 @@ if(isset($data['step']) && in_array($data['step'], $steps)){
     // надо проверить всё ли пришло из настроек и установить эти настройки
     // + установить сам gy
     // если что то не то можно сделать флад $flag = false
-    if($thisStep == 2){ 
-        
+    if($thisStep == 2){ // !!! TODO
+        global $argv;
+        $argv = 1;
+        ob_start();
+        include 'phpInstallGyFramework.php';
+        $consoleLog = ob_get_contents();
+        ob_end_clean();
+        var_dump($consoleLog);
     }
     
     if(!empty($data['button-next']) && $flag){
@@ -954,7 +960,8 @@ function getHtmlPage($step){
                                 <?}?>
                             />
                         <?}else{?>
-                            <a class="button" href="/" >Перейти в Ваш проект с установленным gy и удалить скрипт установки</a>
+                            <a class="button" href="/" >Перейти в Ваш проект с установленным gy</a>
+                            <P>* Cкрипт установки, директории и файлы нужные для установки были удалены</p>
                         <?}?>
                     </div>
                 </form>

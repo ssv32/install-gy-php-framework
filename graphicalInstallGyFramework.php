@@ -700,6 +700,7 @@ print_r($data);
 echo "</pre>";
 
 $thisStep = 0;
+$errText = false;
 if(isset($data['step']) && in_array($data['step'], $steps)){
     $thisStep = $data['step'];
     
@@ -708,14 +709,83 @@ if(isset($data['step']) && in_array($data['step'], $steps)){
     // надо проверить всё ли пришло из настроек и установить эти настройки
     // + установить сам gy
     // если что то не то можно сделать флад $flag = false
-    if($thisStep == 2){ // !!! TODO
-        global $argv;
-        $argv = 1;
-        ob_start();
-        include 'phpInstallGyFramework.php';
-        $consoleLog = ob_get_contents();
-        ob_end_clean();
-        var_dump($consoleLog);
+    if($thisStep == 2){ 
+        
+        $setProperty = array();
+                
+        // проверить всё ли есть для БД
+        if(!empty($data['db_type'])){ 
+            $setProperty['db_config']['db_type'] = $data['db_type'];
+            if( in_array( $data['db_type'], array( 'mysql', 'pgsql' ) ) ){
+                foreach (array('db_host', 'db_user', 'db_pass', 'db_name') as $value) {
+                    if(empty($data[$value])){
+                        $flag = false;
+                        break;
+                    }else{
+                        $setProperty['db_config'][$value] = $data[$value];
+                    }
+                }
+                if (!empty($data['db_port'])){
+                    $setProperty['db_config']['db_port'] = $data['db_port'];
+                }
+            }elseif($data['db_type'] == 'PhpFileSqlClientForGy'){
+                foreach (array('db_url', 'db_user', 'db_pass', 'db_name') as $value) {
+                    if(empty($data[$value])){
+                        $flag = false;
+                        break;
+                    }else{
+                        $setProperty['db_config'][$value] = $data[$value];
+                    }
+                }
+            }else{
+                $flag = false;
+            }
+        }else{
+            $flag = false;
+        }
+
+        // если для БД всё есть то проверяем остальное
+        if($flag){
+            $configInfo = getCoreConfigInfo(); // все настройки ядра
+            // исключить то что мы уже проверили
+            $arConfigInfo = array();
+            foreach ($configInfo as $value) {
+                $arConfigInfo[] = $value['name'];
+            }
+            
+            $arTrue = array('db_type', 'db_url', 'db_host', 'db_user', 'db_pass', 'db_name', 'db_port');
+            $arConfigInfo = array_diff($arConfigInfo, $arTrue);
+            
+            foreach ($arConfigInfo as $val){
+                if(empty($data[$val])){
+                    $flag = false;
+                    break;
+                }else{
+                    $setProperty[$val] = $data[$val];
+                }
+            }
+        }
+            
+        if(!$flag){
+            $errText = '! Не все параметры указаны';
+        }else{
+            global $argv;
+            $argv = 1;
+            ob_start();
+            include 'phpInstallGyFramework.php';
+            $consoleLog = ob_get_contents();
+            ob_end_clean();
+            var_dump($consoleLog); // TODO тут ошибка
+            
+            // задать настройки сразу ядра
+            
+            // установить таблицы БД
+            
+            // удалить графический скрипт установки (это скрипт)
+            // unlink("./phpInstallGyFramework.php"); 
+        }
+        
+
     }
     
     if(!empty($data['button-next']) && $flag){
@@ -783,7 +853,7 @@ function getCoreConfigInfo(){
     );
 }
     
-function getHtmlPage($step){
+function getHtmlPage($step, $errText){
     ?>
     <html>
         <head>
@@ -869,6 +939,9 @@ function getHtmlPage($step){
                 .gy-config{
                     padding: 15px;
                 }
+                .err-text{
+                    color:red;
+                }
             </style>
         </head>
         <body>
@@ -915,9 +988,9 @@ function getHtmlPage($step){
                                                 <?}else{?>
                                                     <td><?=$value['name']?></td>
                                                     <td>
-                                                        <select>
+                                                        <select name="<?=$value['name']?>">
                                                             <? foreach ($value['value'] as $subValue) { ?>
-                                                                <option><?=$subValue?></option>                 
+                                                                <option value="<?=$subValue?>"><?=$subValue?></option>                 
                                                             <?}?>
                                                         </select>
                                                     </td>
@@ -959,6 +1032,13 @@ function getHtmlPage($step){
                                     value="Я согласен"
                                 <?}?>
                             />
+                            <br/>
+                            <br/>
+                            <?if($errText !== false){?>
+                                <span class="err-text"><?=$errText?></span>
+                            <?}?>
+                            <br/>
+                            <br/>
                         <?}else{?>
                             <a class="button" href="/" >Перейти в Ваш проект с установленным gy</a>
                             <P>* Cкрипт установки, директории и файлы нужные для установки были удалены</p>
@@ -977,6 +1057,6 @@ function getHtmlPage($step){
 
 echo 'thisStep ='.$thisStep;
 
-getHtmlPage($thisStep);
+getHtmlPage($thisStep, $errText);
 
 

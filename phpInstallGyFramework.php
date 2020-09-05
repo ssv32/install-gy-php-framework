@@ -6385,7 +6385,7 @@ $mess[\'rus\'] = array(
             foreach(scandir($path) as $p) {
                 if (($p!=".") && ($p!="..")){
                     rmRec($path.DIRECTORY_SEPARATOR.$p);
-                    if (is_dir($path)){
+                    if (file_exists($path)){
                         rmdir($path); 
                     }
                 }

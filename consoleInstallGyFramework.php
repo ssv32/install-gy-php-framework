@@ -6397,7 +6397,7 @@ $mess[\'rus\'] = array(
     // удалить директории и файлы ./install-file
     rmRec("./install-file");
 
-    unlink("./phpInstallGyFramework.php"); // удалить этот скрипт
+    unlink("./consoleInstallGyFramework.php"); // удалить этот скрипт
 
     echo "OK!";
     

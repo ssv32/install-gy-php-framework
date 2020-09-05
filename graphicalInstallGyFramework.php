@@ -777,7 +777,7 @@ if(isset($data['step']) && in_array($data['step'], $steps)){
             global $argv;
             $argv = 1;
             ob_start();
-            include 'phpInstallGyFramework.php';
+            include 'consoleInstallGyFramework.php';
             $consoleLog = ob_get_contents();
             ob_end_clean();
             
@@ -829,7 +829,7 @@ if(isset($data['step']) && in_array($data['step'], $steps)){
             }
 
             // удалить графический скрипт установки (это скрипт)
-            unlink("./phpInstallGyFramework.php"); 
+            unlink("./graphicalInstallGyFramework.php"); 
         }
         
 

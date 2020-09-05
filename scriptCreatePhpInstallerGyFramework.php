@@ -175,7 +175,7 @@ if($isRunConsole){ ';
     // удалить директории и файлы ./install-file
     rmRec("./install-file");
 
-    unlink("./phpInstallGyFramework.php"); // удалить этот скрипт
+    unlink("./consoleInstallGyFramework.php"); // удалить этот скрипт
 
     echo "OK!";
     
@@ -185,7 +185,7 @@ if($isRunConsole){ ';
     ';
     
     // сохраняем скрипт
-    file_put_contents('./phpInstallGyFramework.php', $codeScript);
+    file_put_contents('./consoleInstallGyFramework.php', $codeScript);
 
     // TODO можно удалить файлы gy и этот скрипт 
     //   удалить всё оставив только скрипт установки и раздел install-file

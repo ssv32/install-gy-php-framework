@@ -166,7 +166,7 @@ if($isRunConsole){ ';
             foreach(scandir($path) as $p) {
                 if (($p!=".") && ($p!="..")){
                     rmRec($path.DIRECTORY_SEPARATOR.$p);
-                    rmdir($path); 
+                    @rmdir($path); 
                 }
             }
         }

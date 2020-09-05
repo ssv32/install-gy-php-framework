@@ -695,12 +695,8 @@ $steps = array(
     3  // финал
 );
 
-echo "<pre>";
-print_r($data);
-echo "</pre>";
-
 $thisStep = 0;
-$errText = false;
+$err = false;
 if(isset($data['step']) && in_array($data['step'], $steps)){
     $thisStep = $data['step'];
     
@@ -715,18 +711,21 @@ if(isset($data['step']) && in_array($data['step'], $steps)){
                 
         // проверить всё ли есть для БД
         if(!empty($data['db_type'])){ 
-            $setProperty['db_config']['db_type'] = $data['db_type'];
+            $setProperty['db_type'] = $data['db_type'];
             if( in_array( $data['db_type'], array( 'mysql', 'pgsql' ) ) ){
                 foreach (array('db_host', 'db_user', 'db_pass', 'db_name') as $value) {
                     if(empty($data[$value])){
                         $flag = false;
                         break;
                     }else{
-                        $setProperty['db_config'][$value] = $data[$value];
+                        if( ($value == 'db_pass') && ($data[$value] == '***') ){
+                            $data[$value] = '';
+                        }
+                        $setProperty[$value] = $data[$value];
                     }
                 }
                 if (!empty($data['db_port'])){
-                    $setProperty['db_config']['db_port'] = $data['db_port'];
+                    $setProperty['db_port'] = $data['db_port'];
                 }
             }elseif($data['db_type'] == 'PhpFileSqlClientForGy'){
                 foreach (array('db_url', 'db_user', 'db_pass', 'db_name') as $value) {
@@ -734,7 +733,10 @@ if(isset($data['step']) && in_array($data['step'], $steps)){
                         $flag = false;
                         break;
                     }else{
-                        $setProperty['db_config'][$value] = $data[$value];
+                        if( ($value == 'db_pass') && ($data[$value] == '***') ){
+                            $data[$value] = '';
+                        }
+                        $setProperty[$value] = $data[$value];
                     }
                 }
             }else{
@@ -767,22 +769,67 @@ if(isset($data['step']) && in_array($data['step'], $steps)){
         }
             
         if(!$flag){
-            $errText = '! Не все параметры указаны';
+            $err['type'] = 0;
+            $err['text'] = '! Не все параметры указаны';
         }else{
+            
+            // установка файлов gy
             global $argv;
             $argv = 1;
             ob_start();
             include 'phpInstallGyFramework.php';
             $consoleLog = ob_get_contents();
             ob_end_clean();
-            var_dump($consoleLog); // TODO тут ошибка
             
-            // задать настройки сразу ядра
+            if($consoleLog != 'OK!'){
+                $err['type'] = 1;
+                $err['text'] = $consoleLog;
+                $flag = false;
+            }
+            
+            // установка параметров ядра gy
+            if($err == false){
+                // задать настройки сразу ядра
+                global $argv;
+                $argv = array();
+                $argv[] = 1;
+                $argv[] = 'set-all';
+                foreach ($setProperty as $key => $value) {
+                    $argv[] = $key;
+                    $argv[] = $value;
+                }
+
+                ob_start();
+                include './gy/install/consoleInstallOptions.php';
+                $consoleLog = ob_get_contents();
+                ob_end_clean();
+                
+                if($consoleLog != "run set-all\nfinish set-all\n"){
+                    $err['type'] = 1;
+                    $err['text'] = $consoleLog;
+                    $flag = false;
+                }
+                
+            }
             
             // установить таблицы БД
-            
+            if($err == false){
+                global $argv;
+                $argv = 1;
+                ob_start();
+                include 'gy/install/installMysqlTable.php'; // TODO для нового релиза будет другая
+                $consoleLog = ob_get_contents();
+                ob_end_clean();
+                
+                if( strpos( $consoleLog, '-----install gy core taldes db = OK!-----') === false ){ // TODO
+                    $err['type'] = 1;
+                    $err['text'] = $consoleLog;
+                    $flag = false;
+                }    
+            }
+
             // удалить графический скрипт установки (это скрипт)
-            // unlink("./phpInstallGyFramework.php"); 
+            unlink("./phpInstallGyFramework.php"); 
         }
         
 
@@ -792,8 +839,6 @@ if(isset($data['step']) && in_array($data['step'], $steps)){
         $thisStep++;
     }
 }
-
-echo 'thisStep ='.$thisStep;
 
 function getCoreConfigInfo(){
     
@@ -840,7 +885,7 @@ function getCoreConfigInfo(){
         ),
         array(
             'name' => 'db_pass',
-            'text' => 'Пароль БД',
+            'text' => 'Пароль БД (что бы задать пустой пароль укажите ***)',
         ),
         array(
             'name' => 'db_name',
@@ -942,6 +987,9 @@ function getHtmlPage($step, $errText){
                 .err-text{
                     color:red;
                 }
+                .text1{
+                    resize: none;
+                }
             </style>
         </head>
         <body>
@@ -976,6 +1024,7 @@ function getHtmlPage($step, $errText){
                                 <textarea disabled=disabled rows=15 cols=80 class="text-license"><?getTextGPL30()?></textarea>
                             <?}elseif($step == 2){?>
                                 <H4>Настройки ядра:</h4>
+                                <p>(значение *** можно задавать только для пароля БД)</p>
                                 <?$configInfo = getCoreConfigInfo();?>
                                 <?if(!empty($configInfo)){?>
                                     <table class="gy-config">
@@ -1035,7 +1084,17 @@ function getHtmlPage($step, $errText){
                             <br/>
                             <br/>
                             <?if($errText !== false){?>
-                                <span class="err-text"><?=$errText?></span>
+                                <span class="err-text">Произошла ошибка:</span>
+                                <br/>
+                                <textarea class="text1" disabled="disabled" cols="80" rows="3" ><?=$errText['text']?></textarea>
+                                <br/>
+                                <?if($errText['type'] != 0){?>
+                                    <p>
+                                        * Вы можете сообщить от ошибке <a href="https://github.com/ssv32/gy" target="_blank">https://github.com/ssv32/gy</a>
+                                    </p>
+                                <?}?>
+                                <br/>
+                                <br/>
                             <?}?>
                             <br/>
                             <br/>
@@ -1055,8 +1114,6 @@ function getHtmlPage($step, $errText){
     <?
 }
 
-echo 'thisStep ='.$thisStep;
-
-getHtmlPage($thisStep, $errText);
+getHtmlPage($thisStep, $err);
 
 

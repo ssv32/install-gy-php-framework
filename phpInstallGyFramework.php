@@ -3830,6 +3830,10 @@ function parseOprions($optionsFromConsole){ // TODO надо распознав�
             $optionsFromConsole[$i+1] = \'\';
         }          
         
+        if($optionsFromConsole[$i+1] == \'***\'){
+            $optionsFromConsole[$i+1] = \'\';
+        }
+
         if (strripos($optionsFromConsole[$i], \'db\') !== false){
             $arOptions[\'db_config\'][$optionsFromConsole[$i]] = $optionsFromConsole[$i+1];
         
@@ -3847,8 +3851,7 @@ function createTextForFileCofig($options){
     
     if (!empty($options)){
         
-        $fileText = \'
-<?\'.$br.\'
+        $fileText = \'<?\'.$br.\'
 if (!defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && GY_GLOBAL_FLAG_CORE_INCLUDE !== true ) die("err_core");\'.$br.\'
 
 $gy_config = array(\'.$br;
@@ -6385,9 +6388,7 @@ $mess[\'rus\'] = array(
             foreach(scandir($path) as $p) {
                 if (($p!=".") && ($p!="..")){
                     rmRec($path.DIRECTORY_SEPARATOR.$p);
-                    if (file_exists($path)){
-                        rmdir($path); 
-                    }
+                    @rmdir($path); 
                 }
             }
         }

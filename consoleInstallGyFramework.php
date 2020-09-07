@@ -8,50 +8,73 @@ if($isRunConsole){
     $arrayDirGy = array (
   './index.php' => 
   array (
-    'CODE' => '<? include "./gy/gy.php"; // подключить ядро // include core ?>
-	
-    <h1>Пример использования gy CMS/framework</h1>
+    'CODE' => '<? include $_SERVER["DOCUMENT_ROOT"]."/gy/gy.php"; // подключить ядро // include core 
 
-    <? // пример вызова одинаковых компонентов // example run two component ?>
-    <h4>Вызов компонента "form_auth_test" (1 раз)</h4>
-    <?
-    $app->component(
-		\'form_auth_test\',
-		\'0\',
-		array( 
-			\'test\' => \'asd\',
-			\'idComponent\' => 1,
-		)
-	);
-    ?>    
-    
-    <h4>Вызов компонента "form_auth_test" (2 раз)</h4>
-    <?
-	$app->component(
-		\'form_auth_test\',
-		\'0\',
-		array( 
-			\'test\' => \'asd2\',
-			\'idComponent\' => 2,
-		)
-	);
+$app->component(
+    \'admin-button-public-site\',
+    \'0\',
+    array()
+);
 
-    /**
-    пример вызова компонента с выводом контента,
-      + пример использования кастомного (пользовательского) шаблона компонента
-      (пользователя - разработчика использующего gy)
-    */
-    
-    $app->component(
-		\'containerdata_element_show\',
-		\'0\',
-		array( 
-			\'container-data-code\' => \'Content\',
-			\'element-code\' => \'html-index-page\',
-            \'cacheTime\' => 86400 // закешить на 24 ч.
-		)
-	);
-    
+$app->component(
+    \'includeHtml\',
+    \'0\',
+    array(
+        \'html\' => \'<h1>Пример использования gy CMS/framework</h1>\'
+    )
+);
+
+// пример вызова одинаковых компонентов // example run two component 
+$app->component(
+    \'includeHtml\',
+    \'0\',
+    array(
+        \'html\' => \'<h4>Вызов компонента "form_auth_test" (1 раз)</h4>\'
+    )
+);
+
+$app->component(
+    \'form_auth_test\',
+    \'0\',
+    array( 
+        \'test\' => \'asd\',
+        \'idComponent\' => 1,
+    )
+);
+
+ // пример вызова одинаковых компонентов // example run two component 
+$app->component(
+    \'includeHtml\',
+    \'0\',
+    array(
+        \'html\' => \'<h4>Вызов компонента "form_auth_test" (2 раз)</h4>\'
+    )
+);
+
+$app->component(
+    \'form_auth_test\',
+    \'0\',
+    array( 
+        \'test\' => \'asd2\',
+        \'idComponent\' => 2,
+    )
+);
+
+/**
+пример вызова компонента с выводом контента,
+  + пример использования кастомного (пользовательского) шаблона компонента
+  (пользователя - разработчика использующего gy)
+*/
+$app->component(
+    \'containerdata_element_show\',
+    \'0\',
+    array( 
+        \'container-data-code\' => \'Content\',
+        \'element-code\' => \'html-index-page\',
+        \'cacheTime\' => 86400 // закешить на 24 ч.
+    )
+);
+
     
     
     
@@ -70,7 +93,7 @@ global $user;
 // проверим разрешено ли показывать админ панель текущему пользователю
 if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
 	
-	include "../../gy/admin/header-admin.php";
+    include "../../gy/admin/header-admin.php";
 	
     // Проверим разрешено ли работать с пользователями текущему пользователю
     if (accessUserGroup::accessThisUserByAction( \'edit_users\')){
@@ -83,10 +106,10 @@ if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
         );
     }
     
-	include "../../gy/admin/footer-admin.php";
+    include "../../gy/admin/footer-admin.php";
 
 } else {
-	header( \'Location: /gy/admin/\' );
+    header( \'Location: /gy/admin/\' );
 }
 	
 ',
@@ -99,7 +122,7 @@ if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
 include "../../gy/gy.php"; // подключить ядро // include core
 
 $result = array(
-	\'stat\' => \'err\'
+    \'stat\' => \'err\'
 );
 
 $data = $_REQUEST;
@@ -107,17 +130,46 @@ $data = $_REQUEST;
 global $user;
 
 if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\') && !empty($data[\'action\'])){
-	// действие удалить пользователя
-	if (($data[\'action\'] == \'user-del\') && !empty($data[\'id-user\'])  ) {
-				
-		$res = $user->deleteUserById($data[\'id-user\']);
-		if ($res){
-			$result[\'stat\'] = \'ok\';
-		}
-	}
+    // действие удалить пользователя
+    if (($data[\'action\'] == \'user-del\') && !empty($data[\'id-user\'])  ) {
+
+        $res = $user->deleteUserById($data[\'id-user\']);
+        if ($res){
+            $result[\'stat\'] = \'ok\';
+        }
+    }
 }
 
 echo json_encode($result);
+
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/admin/',
+  ),
+  './gy/admin/edit-all-users-propertys.php' => 
+  array (
+    'CODE' => '<?
+include "../../gy/gy.php"; // подключить ядро // include core
+
+global $user;
+
+if ($user->isAdmin()){
+	
+    include "../../gy/admin/header-admin.php";
+
+    // редактирование общих свойств пользователей
+    $app->component(
+        \'edit-all-users-propertys\',
+        \'0\',
+        array()
+    );
+	
+    include "../../gy/admin/footer-admin.php";
+
+} else {
+    header( \'Location: /gy/admin/\' );
+}
+
 
 ',
     'TYPE' => 'php',
@@ -137,7 +189,7 @@ if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')
     && ($data[\'edit-id\'] != 1) 
 ){
 	
-	include "../../gy/admin/header-admin.php";
+    include "../../gy/admin/header-admin.php";
 	
     if (accessUserGroup::accessThisUserByAction( \'edit_users\')){
         $app->component(
@@ -150,7 +202,7 @@ if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')
         );
     }
         
-	include "../../gy/admin/footer-admin.php";
+    include "../../gy/admin/footer-admin.php";
 
 } else {
 	header( \'Location: /gy/admin/\' );
@@ -161,9 +213,47 @@ if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')
     'TYPE' => 'php',
     'DIR' => './gy/admin/',
   ),
+  './gy/admin/edit-users-propertys.php' => 
+  array (
+    'CODE' => '<?
+include "../../gy/gy.php"; // подключить ядро // include core
+
+global $user;
+$data = $_REQUEST;
+
+if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\') 
+    && !empty($data[\'edit-id\']) 
+    && is_numeric($data[\'edit-id\']) 
+    && ($data[\'edit-id\'] != 1) 
+){
+	
+    include "../../gy/admin/header-admin.php";
+	
+    if (accessUserGroup::accessThisUserByAction( \'edit_users\')){
+
+        // редактирование общих свойств пользователей
+        $app->component(
+            \'edit-users-propertys\',
+            \'0\',
+            array(
+                \'id-user\' => $data[\'edit-id\']
+            )
+        );
+    }
+    include "../../gy/admin/footer-admin.php";
+
+} else {
+    header( \'Location: /gy/admin/\' );
+}
+
+
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/admin/',
+  ),
   './gy/admin/footer-admin.php' => 
   array (
-    'CODE' => '<?if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );?>
+    'CODE' => '<?if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );?>
 
     </body>
 </html>	
@@ -193,7 +283,7 @@ if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\') && !empty($da
     }
     
 }else {
-	header( \'Location: /gy/admin/\' );
+    header( \'Location: /gy/admin/\' );
 }
 ',
     'TYPE' => 'php',
@@ -208,19 +298,19 @@ global $user;
 
 if ($user->isAdmin()){
 	
-	include "../../gy/admin/header-admin.php";
+    include "../../gy/admin/header-admin.php";
 
-	// таблица с пользователями
-	$app->component(
-		\'users_group_manager\',
-		\'0\',
-		array()
-	);
+    // таблица с пользователями
+    $app->component(
+        \'users_group_manager\',
+        \'0\',
+        array()
+    );
 	
-	include "../../gy/admin/footer-admin.php";
+    include "../../gy/admin/footer-admin.php";
 
 } else {
-	header( \'Location: /gy/admin/\' );
+    header( \'Location: /gy/admin/\' );
 }
 
 
@@ -231,29 +321,36 @@ if ($user->isAdmin()){
   ),
   './gy/admin/header-admin.php' => 
   array (
-    'CODE' => '<?if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );?>
+    'CODE' => '<?if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+global $app;
+global $user;
+?>
 
 <html>
-	<head>
-		<title>gy -admin</title>
-		<link href="../../gy/style/main.css" rel="stylesheet">
-		<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
-		<script src="../../gy/js/main.js"></script>
-	</head>	
-	<body class="gy-body-admin">
-		<h2 class="gy-admin-logo">Админка gy framework</h2>
+    <head>
+        <title>gy -admin</title>
+        <link href="../../gy/style/main.css" rel="stylesheet">
+        <script src="../../gy/js/main.js"></script>
+    </head>	
+    <body class="gy-body-admin">
+        <h2 class="gy-admin-logo">Админка gy framework</h2>
+        <?if(!empty($app->options[\'v-gy\'])){?>
+            <span class="version-gy-core">v <?=$app->options[\'v-gy\']?></span>
+            <br/>
+        <?}?>
+        <a href="/" class="gy-admin-button-min" >Перейти на сайт</a>
+        <br/>
+        <br/>
         <?
-        global $user;
-
         if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
-            
+
             // меню доступное для текущего пользователя
             $menu[\'Главная админки\'] = \'/gy/admin/index.php\';
-           
+
             if(accessUserGroup::accessThisUserByAction( \'edit_users\') || $user->isAdmin()){ 
                 $menu[\'Пользователи\'] = \'/gy/admin/users.php\';
             }
-            
+
             // надо добавить пункты меню заданные в подключенных модулях
             $module = module::getInstance();
             foreach ($module->getButtonsMenuAllModules() as $nameModule => $arButton) {
@@ -269,11 +366,13 @@ if ($user->isAdmin()){
                     }
                 }
             }
+
+            $menu[\'Модули\'] = \'/gy/admin/modules.php\';
             
             if($user->isAdmin()){
                 $menu[\'Настройки\'] = \'/gy/admin/options.php\';
             }
-            
+
             // menu
             $app->component(
                 \'menu\',
@@ -283,7 +382,7 @@ if ($user->isAdmin()){
                 )
             );
         }
-        ',
+',
     'TYPE' => 'php',
     'DIR' => './gy/admin/',
   ),
@@ -294,14 +393,44 @@ include "../../gy/gy.php"; // подключить ядро // include core
 
 include "../../gy/admin/header-admin.php";
 
-	// пример вызова компонента // example run component
-	$app->component(
-		\'admin\',
-		\'0\',
-		array()
-	);
+// пример вызова компонента // example run component
+$app->component(
+    \'admin\',
+    \'0\',
+    array()
+);
 	
 include "../../gy/admin/footer-admin.php";
+
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/admin/',
+  ),
+  './gy/admin/modules.php' => 
+  array (
+    'CODE' => '<?
+include "../../gy/gy.php"; // подключить ядро // include core
+
+global $user;
+
+if ($user->isAdmin()){
+	
+    include "../../gy/admin/header-admin.php";
+
+    // таблица с пользователями
+    $app->component(
+        \'show_include_modules\',
+        \'0\',
+        array()
+    );
+	
+    include "../../gy/admin/footer-admin.php";
+
+} else {
+    header( \'Location: /gy/admin/\' );
+}
+
+
 
 ',
     'TYPE' => 'php',
@@ -316,7 +445,7 @@ global $user;
 
 if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
 	
-	include "../../gy/admin/header-admin.php";
+    include "../../gy/admin/header-admin.php";
         
     if(accessUserGroup::accessThisUserByAction(\'action_all\')){
         $app->component(
@@ -329,7 +458,7 @@ if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
     include "../../gy/admin/footer-admin.php";
 
 } else {
-	header( \'Location: /gy/admin/\' );
+    header( \'Location: /gy/admin/\' );
 }',
     'TYPE' => 'php',
     'DIR' => './gy/admin/',
@@ -341,27 +470,38 @@ include "../../gy/gy.php"; // подключить ядро // include core
 
 global $user;
 
+$data = $_REQUEST;
+
 if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
 	
-	include "../../gy/admin/header-admin.php";
+    include "../../gy/admin/header-admin.php";
 
     if(accessUserGroup::accessThisUserByAction( \'edit_users\')){
-        // таблица с пользователями
-        $app->component(
-            \'users_all_tables\',
-            \'0\',
-            array()
-        );
-        ?>
-        <br>
-        <br>
-        <a href="group-user.php" class="gy-admin-button">Настройка групп прав доступа</a>
-        <?
+        
+        if(isset($data[\'show-id\']) && is_numeric($data[\'show-id\']) ){ 
+            // если есть параметр show-id то просто просмотреть все данные по конкретному пользователю  
+            $app->component(
+                \'show_user\',
+                \'0\',
+                array(
+                    \'id\' => $data[\'show-id\']
+                )
+            );
+            
+        }else{ // просмотр всех пользователей
+            // таблица с пользователями
+            $app->component(
+                \'users_all_tables\',
+                \'0\',
+                array()
+            );
+        }
+        
     }
-	include "../../gy/admin/footer-admin.php";
+    include "../../gy/admin/footer-admin.php";
 
 } else {
-	header( \'Location: /gy/admin/\' );
+    header( \'Location: /gy/admin/\' );
 }
 
 
@@ -370,22 +510,280 @@ if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
     'TYPE' => 'php',
     'DIR' => './gy/admin/',
   ),
-  './gy/cache/component_container_data_element_show.php' => 
+  './gy/classes/PhpFileSqlClientForGy.php' => 
   array (
-    'CODE' => '<? $cacheData = \'{"data":{"ITEMS":{"1":{"id":"1","id_container_data":"1","id_element_container_data":"1","id_property_container_data":"1","value":"\\u041f\\u0440\\u0438\\u0432\\u0435\\u0442 \\u043f\\u043e\\u043b\\u044c\\u0437\\u043e\\u0432\\u0430\\u0442\\u0435\\u043b\\u044c, \\u0442\\u0435\\u0431\\u044f \\u043f\\u0440\\u0438\\u0432\\u0435\\u0442\\u0441\\u0442\\u0432\\u0443\\u0435\\u0442 gy php framework\\r\\n \\u0438 \\u0442\\u0435\\u043a\\u0441\\u0442 \\u043f\\u043e\\u043a\\u0430\\u0437\\u0430\\u043d \\u0438\\u0437 \\u0435\\u0433\\u043e \\u043a\\u043e\\u043d\\u0442\\u0435\\u043d\\u0442\\u043d\\u043e\\u0439 \\u0447\\u0430\\u0441\\u0442\\u0438!!!!!"}}},"createTime":1578432482,"cacheTime":86400}\';',
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+/* PhpFileSqlClientForGy - класс для работы с базой данных PhpFileSql
+ *   https://github.com/ssv32/PhpFileSql
+ * class work PhpFileSql 
+ */
+
+class PhpFileSqlClientForGy extends db{
+    
+    public $test = \'PhpFileSqlClient ok\';
+    public $db; //TODO private
+    
+    // даныне после запроса селект для метода fetch() 
+    private $dataSelectForFetch = array();  
+    
+    /**
+     * clearResultMethodSelect()
+     *  - сбросит результаты запроса метода select
+     * 
+     * @return boolean
+     */
+    private function clearResultMethodSelect(){
+        $this->dataSelectForFetch = array();
+        return true;
+    }
+    
+    /* connect() - create connect in database
+    * @param $host
+    * @param $user
+    * @param $pass 
+    * @param $name_db
+    * @param $port - не используется
+    * @return resurs, false
+    */
+    public function connect($dir, $login, $pass, $name_db, $port = false){
+        $phpFileSql = new PhpFileSql($dir);
+        $phpFileSql->connect($login, $pass, $name_db);
+        
+        $this->db = $phpFileSql;
+        return $this;
+        
+    }
+    
+    /* query()  - out query in database //TODO
+     * @param $db - resurs (create self::connect()), $query - string query
+     * @return true - ok OR false - not ok
+     */
+    public function query($query){	
+        // 
+    }
+    
+    /*  close() - close connect database
+     * @param $db - resurs (create self::connect()) 
+     * @return true - ok OR false - not ok
+     */
+    public function close(){
+        if ( !empty($this->db)){
+            $phpFileSql = $this->db;
+            return $phpFileSql->close();
+        }else{
+            return false;
+        }
+    }
+	
+    /** 
+     * fetch - получить порцию (строку) данных, после выполнения запроса в БД
+     * @param $res - результат отработки запроса в БД
+     * @return array
+     */
+    public function fetch($res){
+        $res = $this->dataSelectForFetch;
+        
+        $result = false;
+        if(($res !== false) && is_array($res)) {
+                        
+            // беру первое значение из него
+            $result = array_shift($res);
+            
+            // записываем без первого значения
+            $this->dataSelectForFetch = $res;
+            
+        }
+        return $result;
+    }
+	
+    /**
+     * fetchAll - тоже что и fetch только в получит всё в виде массива (с ключём id элемента)
+     * @param $res - результат отработки запроса в БД
+     * @return array
+     */
+    public function fetchAll($res, $key = \'id\'){
+        $result = false;
+        
+        if(($res !== false) && is_array($res)) {
+            if($key !== false ){
+                foreach ($res as $value) {
+                    if(!empty($value[$key])){
+                        $result[$value[$key]] = $value;
+                    }
+                }
+            }else{
+                $result = $res;
+            }   
+        }
+        
+        return $result;
+    }
+    
+    public function __construct($db_config) {
+        if ( empty($this->db)){
+            if (!empty($db_config)){
+                $this->connect($db_config[\'db_url\'], $db_config[\'db_user\'], $db_config[\'db_pass\'], $db_config[\'db_name\']);
+            }
+        }
+    }
+    
+     /** //TODO
+     * selectDb - запрос типа select. на получение данных
+     * @param $db - расурс, коннект к базе данных
+     * @param string $tableName - имя таблицы 
+     * @param array $propertys - параметры (какие поля вернуть или * - все)
+     * @param array $where - условия запроса, массив специальной структуры в виде дерева (может не быть)
+     * @return - false or object result query
+     */
+    public function selectDb($tableName, $propertys = \'*\', $where = false){
+        
+        // чуть подправить для совместимости
+        if($propertys[0] == \'*\'){
+            $propertys = \'*\';
+        }
+                
+        // подготовить массив с условиями для класса PhpFileSql
+        $where = $this->createTrueArrayWhereFromPhpFileSql($where);
+        
+        $dataResult = $this->db->select($tableName, $propertys, $where);
+        
+        // записываю для метода fetch()
+        $this->dataSelectForFetch = $dataResult;
+
+        return $dataResult;
+    }
+    
+    /**
+     * insertDb - вставка, добавление новых строк в базу данных
+     * @param string $tableName - имя таблицы 
+     * @param array $propertys - параметры (поле = значение)
+     * @return - false or object result query
+     */
+    public function insertDb($tableName, $propertys){  
+        // сбросить данные предыдущего вызова метода select
+        $this->clearResultMethodSelect();
+        
+        global $crypto;
+        
+        // если встречается пароль то засолить и зашифровать его
+        if(!empty($propertys[\'pass\'])){
+            $propertys[\'pass\'] = md5($propertys[\'pass\'].$crypto->getSole());
+        }
+
+        return  $this->db->insertInto($tableName, $propertys);
+    }
+    
+    /** 
+     * updateDb - обновить поле таблицы
+     * @param string $tableName - имя таблицы
+     * @param array $propertys - параметры (поле = значение)
+     * @param array $where - условия запроса, массив специальной структуры в виде дерева (может не быть)
+     * @return - false or object result query
+     */
+    public function updateDb($tableName, $propertys, $where = array()){
+        // сбросить данные предыдущего вызова метода select
+        $this->clearResultMethodSelect();
+        
+        // подготовить массив с условиями для класса PhpFileSql
+        $where = $this->createTrueArrayWhereFromPhpFileSql($where);
+               
+        // если встречается пароль то засолить и зашифровать его
+        global $crypto;
+        if(!empty($propertys[\'pass\'])){
+            $propertys[\'pass\'] = md5($propertys[\'pass\'].$crypto->getSole());
+        }
+
+        return $this->db->update($tableName, $propertys, $where);
+    }
+    
+    /** // TODO сделать PRIMARY KEY AUTO_INCREMENT
+     * createTable - создать таблицу в базе данных
+     * @param string $tableName - имя таблицы
+     * @param array $propertys - параметры (приер  login varchar(50), name varchar(50) ...) 
+     * @return - false or object result query
+     */
+    public function createTable($tableName, $propertys){
+        // сбросить данные предыдущего вызова метода select
+        $this->clearResultMethodSelect();
+        
+        // массив мараметров подходящий для PhpFileSql метода createTable
+        $arrayColumns = array();
+        
+        // нужно подогнать свойства под метод класса PhpFileSql
+        foreach($propertys as $val){
+            $attr = explode(\' \', $val);
+            if( (count($attr)>2) 
+                && ($attr[1] == \'int\' )
+                && ($attr[2] == \'PRIMARY\')
+                && ($attr[3] == \'KEY\')
+                && ($attr[4] == \'AUTO_INCREMENT\')
+            ){ 
+                // PRIMARY KEY AUTO_INCREMENT
+                $arrayColumns[] = array($attr[0], \'PRIMARY_KEY_AUTO_INCREMENT\' );
+            }else{
+                $arrayColumns[] = $attr[0];
+            }
+        }      
+
+        return $this->db->createTable($tableName, $arrayColumns);
+    }
+    
+    /** //TODO из за условий может работать не на всём, желательно ещё потестировать
+     * deleteDb - удаление строк из таблицы
+     * @param string $tableName - имя таблицы
+     * @param array $where - условия запроса, что удалять
+     * @return boolean
+     */
+    public function deleteDb($tableName, $where){
+        // сбросить данные предыдущего вызова метода select
+        $this->clearResultMethodSelect();
+        
+        // подготовить массив с условиями для класса PhpFileSql
+        $where = $this->createTrueArrayWhereFromPhpFileSql($where);
+        
+        return $this->db->delete($tableName, $where);
+    }
+    
+    /**
+     * createTrueArrayWhereFromPhpFileSql 
+     *  - сделать массив where к виду подходящему для класса PhpFileSql
+     * 
+     * @param array $where
+     * @return array
+     */
+    public function createTrueArrayWhereFromPhpFileSql($where){
+        
+        if(is_array($where)){
+            foreach ($where as $key0 => $value0) {
+                if(in_array($key0, array(\'=\', \'!=\'))){
+                    $where[$key0][1] = str_replace("\'", \'\', $where[$key0][1]);
+                }elseif(in_array($key0, array(\'AND\', \'OR\'))){
+                    foreach ($value0 as $key1 => $value1) {
+                        foreach ($value1 as $key2 => $value2) {
+                            $where[$key0][$key1][$key2][1] = str_replace("\'", \'\', $where[$key0][$key1][$key2][1]);
+                        } 
+                    }
+                }
+            } 
+        }  
+
+        return $where;
+    }
+    
+    public function __destruct() {
+        $this->close();
+    }
+}
+',
     'TYPE' => 'php',
-    'DIR' => './gy/cache/',
-  ),
-  './gy/cache/getAccessGroup.php' => 
-  array (
-    'CODE' => '<? $cacheData = \'{"data":{"admins":{"code_action_user":{"action_all":"action_all","show_admin_panel":"show_admin_panel"},"name":"\\u0410\\u0434\\u043c\\u0438\\u043d\\u044b","code":"admins","text":"\\u0410\\u0434\\u043c\\u0438\\u043d\\u044b, \\u0435\\u0441\\u0442\\u044c \\u043f\\u0440\\u0430\\u0432\\u0430 \\u043d\\u0430 \\u0432\\u0441\\u0451"},"content":{"code_action_user":{"show_admin_panel":"show_admin_panel","edit_container_data":"edit_container_data"},"name":"\\u041a\\u043e\\u043d\\u0442\\u0435\\u043d\\u0442","code":"content","text":"\\u0422\\u0435 \\u043a\\u0442\\u043e \\u0438\\u0437\\u043c\\u0435\\u043d\\u044f\\u044e\\u0442 \\u043a\\u043e\\u043d\\u0442\\u0435\\u043d\\u0442 \\u0441\\u0430\\u0439\\u0442\\u0430"},"user_admin":{"code_action_user":{"edit_users":"edit_users","show_admin_panel":"show_admin_panel"},"name":"\\u0410\\u0434\\u043c\\u0438\\u043d\\u0438 \\u043f\\u043e \\u043f\\u043e\\u043b\\u044c\\u0437\\u043e\\u0432\\u0430\\u0442\\u0435\\u043b\\u044f\\u043c","code":"user_admin","text":"\\u041c\\u043e\\u0433\\u0443\\u0442 \\u0438\\u0437\\u043c\\u0435\\u043d\\u044f\\u0442\\u044c \\u0442\\u043e\\u043b\\u044c\\u043a\\u043e \\u043f\\u043e\\u043b\\u044c\\u0437\\u043e\\u0432\\u0430\\u0442\\u0435\\u043b\\u0435\\u0439"}},"createTime":1578479298,"cacheTime":604800}\';',
-    'TYPE' => 'php',
-    'DIR' => './gy/cache/',
+    'DIR' => './gy/classes/',
   ),
   './gy/classes/abstract/cache.php' => 
   array (
     'CODE' => '<? 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 /** 
  * abstract class cache - описывает класс работы с кешем
@@ -420,7 +818,7 @@ abstract class cache{
   './gy/classes/abstract/db.php' => 
   array (
     'CODE' => '<? 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 /** abstract class work database
  * 
@@ -432,9 +830,10 @@ abstract class db{
      * @param string $user - логин
      * @param string $pass - пароль
      * @param string $name_db - имя БД
+     * @param string $port - порт
      * @return resurs, false
      */
-    abstract public function connect($host, $user, $pass, $name_db); // подключение к db // connect database
+    abstract public function connect($host, $user, $pass, $name_db, $port); // подключение к db // connect database
     
     /** query()  - out query in database
      * @param $db - resurs (create self::connect()), $query - string query
@@ -450,21 +849,21 @@ abstract class db{
     
     //abstract public function select();
 	
-	/**
-	 * fetch - получить порцию (строку) данных, после выполнения запроса в БД
+    /**
+     * fetch - получить порцию (строку) данных, после выполнения запроса в БД
      * @param $res - результат отработки запроса в БД
      * @return array
-	 */
-	abstract public function fetch($res);
+    */
+    abstract public function fetch($res);
 	
-	/**
-	 * fetchAll - тоже что и fetch только в получит всё в виде массива 
+    /**
+     * fetchAll - тоже что и fetch только в получит всё в виде массива 
      *   что будет ключём можно указать, либо false тогда вернёт массив с ключами по порядку
      * @param $res - результат отработки запроса в БД
      * @param string $key - строка либо false, это что будет ключём в массиве (по умолчанию id записи)
      * @return array
-	 */
-	abstract public function fetchAll($res, $key = \'id\');
+    */
+    abstract public function fetchAll($res, $key = \'id\');
     
     
     // TODO в функции ниже добавить параметры сортировки 
@@ -519,7 +918,7 @@ abstract class db{
   './gy/classes/accessUserGroup.php' => 
   array (
     'CODE' => '<?php
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 /**
  * accessUserGroup - будет всё что связано с правами доступов пользователей 
@@ -685,17 +1084,17 @@ class accessUserGroup{
     /**
      * getListGroupsByUser() - получить список групп к каким относится пользователь
      * 
-     * @param int $idUsers - id пользователя
+     * @param int $id_users - id пользователя
      * @return array
      */
-    public static function getListGroupsByUser($idUsers){
+    public static function getListGroupsByUser($id_users){
         $arResult = array();
 
         // определить id групп к каким относится пользователь
         global $db;
-        $res = $db->selectDb(self::$tableNameUsersInGroupss, array(\'codeGroup\'), array(\'=\'=>array(\'idUser\', $idUsers )));
+        $res = $db->selectDb(self::$tableNameUsersInGroupss, array(\'code_group\'), array(\'=\'=>array(\'id_user\', $id_users )));
         while($arRes = $db->fetch($res)){
-            $arResult[$arRes[\'codeGroup\']] = $arRes[\'codeGroup\'];
+            $arResult[$arRes[\'code_group\']] = $arRes[\'code_group\'];
         }
         
         return $arResult;   
@@ -704,18 +1103,18 @@ class accessUserGroup{
     
     /**
      * addUserInGroup() - добавить пользователя в группуы
-     * @param int $idUsers - id пользователя
-     * @param string $codeGroup - код группы
+     * @param int $id_users - id пользователя
+     * @param string $code_group - код группы
      * @return boolean
      */
-    public static function addUserInGroup($idUser, $codeGroup){
+    public static function addUserInGroup($id_user, $code_group){
         $arResult = false;
         global $db;
         $res = $db->insertDb(
             self::$tableNameUsersInGroupss, 
             array(
-                \'codeGroup\' => $codeGroup, 
-                \'idUser\' => $idUser,
+                \'code_group\' => $code_group, 
+                \'id_user\' => $id_user,
             )
         );
         if($res){
@@ -727,13 +1126,13 @@ class accessUserGroup{
     /**
      * deleteUserInAllGroups - удалить пользователя из всех групп 
      *  (где он состоит)
-     * @param int $idUsers - id пользователя
+     * @param int $id_users - id пользователя
      * @return boolean
      */
-    public static function deleteUserInAllGroups($idUser){
+    public static function deleteUserInAllGroups($id_user){
         $arResult = false;
         global $db;
-        $res = $db->deleteDb(self::$tableNameUsersInGroupss, array(\'=\' => array(\'idUser\', $idUser)) );
+        $res = $db->deleteDb(self::$tableNameUsersInGroupss, array(\'=\' => array(\'id_user\', $id_user)) );
         if($res){
             $arResult = true;
         }
@@ -868,17 +1267,17 @@ class accessUserGroup{
      *  - удалить пользовательскую группу по коду группы
      * 
      * @global type $db
-     * @param string $codeGroup - код удаляемой группы
+     * @param string $code_group - код удаляемой группы
      * @return boolean
      */
-    public static function deleteUserGroupByCode($codeGroup){
+    public static function deleteUserGroupByCode($code_group){
         global $db;
         $arResult = false;
         // удалить все связи пользователей с этой группой
         
         $res = $db->deleteDb(
             self::$tableNameUsersInGroupss,
-            array(\'=\' => array(\'codeGroup\' , "\'".$codeGroup."\'" ) )
+            array(\'=\' => array(\'code_group\' , "\'".$code_group."\'" ) )
         );
         if($res){
             $arResult = true;
@@ -889,7 +1288,7 @@ class accessUserGroup{
             $arResult = false;
             $res = $db->deleteDb(
                 self::$tableNameAccessGroup,
-                array(\'=\' => array(\'code\' , "\'".$codeGroup."\'" ) )
+                array(\'=\' => array(\'code\' , "\'".$code_group."\'" ) )
             );
             if($res){
                 $arResult = true;
@@ -909,7 +1308,7 @@ class accessUserGroup{
   './gy/classes/app.php' => 
   array (
     'CODE' => '<?php 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 final class app{
 
@@ -924,11 +1323,12 @@ final class app{
     private function  __construct($url, $options){
         // подключить настройки
         $this->options = $options; 
-       
-        $this->url = $url;
         
-        // записать ещё путь до проекта без последней директории т.е. без /gy
-        $this->urlProject = substr($this->url, 0, (strlen($this->url) - 3) );
+        // записать ещё путь c /gy
+        $this->url = $url.\'/gy\';
+        
+        // путь до проекта
+        $this->urlProject = $url;
         
         // если есть языковой файл то надо подключить его
         $this->lang = new lang($url, \'app\', $this->options[\'lang\']);
@@ -959,10 +1359,36 @@ final class app{
      * 		maybe includ many model in component
      */
     public function component($name, $template, $arParam  ){
+        if($name != \'includeHtml\'){
+            // обезопасим входные параметры
+            $arParam = security::filterInputData($arParam);
+        }
+        
         $component = new component($name, $template, $arParam, $this->urlProject, $this->options[\'lang\']);
         return $component;
     }
 
+    /**
+     * getAllUrlTisPage()
+     *  - вернёт полный путь к текущей страницы (вместе с get параметрами)
+     * 
+     * @return string
+     */
+    public function getAllUrlTisPage(){
+        return $_SERVER[\'REQUEST_URI\'];
+    }
+    
+    /**
+     * getUrlTisPageNotGetProperty()
+     *  - вернёт полный путь к текущей страницы (без get параметров)
+     * 
+     * @return string
+     */
+    public function getUrlTisPageNotGetProperty(){
+        return $_SERVER[\'SCRIPT_NAME\'];
+    }
+    
+    
 }
 ',
     'TYPE' => 'php',
@@ -972,7 +1398,7 @@ final class app{
   array (
     'CODE' => '<?php
 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 /**
  * cache - класс для работы с кешем
@@ -1038,8 +1464,10 @@ class cacheFiles extends cache {
             \'data\' => $data,
             \'createTime\' => time(),
             \'cacheTime\' => $this->cacheTime
-        );       
-        file_put_contents($this->urlProject.$this->urlCache.$this->cacheName.$this->endUrl, \'<? $cacheData = \'."\'". json_encode($cacheData)."\';" );  
+        );  
+        if(file_exists($this->urlProject.$this->urlCache.$this->cacheName.$this->endUrl) ){
+            file_put_contents($this->urlProject.$this->urlCache.$this->cacheName.$this->endUrl, \'<? $cacheData = \'."\'". json_encode($cacheData)."\';" );  
+        }
         return true;
     }
     
@@ -1060,7 +1488,7 @@ class cacheFiles extends cache {
   './gy/classes/capcha.php' => 
   array (
     'CODE' => '<?php 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 /**
  * class capcha - для работы с капчей
@@ -1174,7 +1602,7 @@ class capcha{
             $b = rand(50, 230);
             $text_color = imagecolorallocate($img, $r, $g, $b);
             
-            $font = rand(3, 5); // размер шрифта
+            $font = rand(5, 7); // размер шрифта
             
             $j = rand(0,1);
             if($j == 0){
@@ -1232,25 +1660,25 @@ class capcha{
   './gy/classes/component.php' => 
   array (
     'CODE' => '<?php 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 class component{
 
-	public $template; // тут будут объект класса template
-	public $controller;
-	public $model;
-	public $url;
-	public $lang; 
+    public $template; // тут будут объект класса template
+    public $controller;
+    public $model;
+    public $url;
+    public $lang; 
 
-	public function __construct( $name, $template, $arParam, $url, $lang ){
-		$this->lang = new lang($url.\'/classes/\', \'component\', $lang);
+    public function __construct( $name, $template, $arParam, $url, $lang ){
+        $this->lang = new lang($url.\'/classes/\', \'component\', $lang);
 
-		// TODO $template - сюда можно и пустую строку записать
-		// могут быть разные шаблоны
+        // TODO $template - сюда можно и пустую строку записать
+        // могут быть разные шаблоны
 
-		$err = 0;
-		$errText = \'\';
-        
+        $err = 0;
+        $errText = \'\';
+
         // нужно попробовать найти подключаемый компонент среди подключённых модулей
         $module = module::getInstance();
         $urlComponentInModule = $module->getModulesComponent($name);
@@ -1263,64 +1691,64 @@ class component{
             $template = new template($urlComponentInModule.\'/teplates/\'.$template, $lang ); 
         }elseif(($err == 0) && file_exists($url.\'/gy/component/\'.$name.\'/teplates/\'.$template.\'/template.php\' ) ){ 
             // если нет то поискать шаблон в стандартной папке с компонентами
-			$template = new template($url.\'/gy/component/\'.$name.\'/teplates/\'.$template, $lang );
-		} else {
-			$err = 1;
-			$errText = $this->lang->GetMessage(\'err_not_controller\');
-		}
+            $template = new template($url.\'/gy/component/\'.$name.\'/teplates/\'.$template, $lang );
+        } else {
+            $err = 1;
+            $errText = $this->lang->GetMessage(\'err_not_controller\');
+        }
                 
         if (($err == 0) && file_exists($url.\'/customDir/component/\'.$name.\'/controller.php\' ) ){ 
             $this->controller = new controller($url.\'/customDir/component/\'.$name, $lang); // всегда один
         }elseif(($urlComponentInModule !== false) && file_exists($urlComponentInModule.\'/controller.php\' ) ){              
             $this->controller = new controller($urlComponentInModule, $lang);
         }elseif(($err == 0) && file_exists($url.\'/gy/component/\'.$name.\'/controller.php\' ) ){ 
-			$this->controller = new controller($url.\'/gy/component/\'.$name, $lang); // всегда один
-		} else {
-			$err = 2;
-			$errText = $this->lang->GetMessage(\'err_not_controller\') ;
-		}
+            $this->controller = new controller($url.\'/gy/component/\'.$name, $lang); // всегда один
+        } else {
+            $err = 2;
+            $errText = $this->lang->GetMessage(\'err_not_controller\') ;
+        }
                 
-		if ( ($err == 0) && file_exists($url.\'/customDir/component/\'.$name.\'/model.php\' ) ){ 
+        if ( ($err == 0) && file_exists($url.\'/customDir/component/\'.$name.\'/model.php\' ) ){ 
             $model = new model($url.\'/customDir/component/\'.$name.\'/model.php\'); // может и не быть
-			$this->controller->SetModel($model);
+            $this->controller->SetModel($model);
         }elseif(($urlComponentInModule !== false) && file_exists($urlComponentInModule.\'/model.php\' )){
             $model = new model($urlComponentInModule.\'/model.php\'); // может и не быть
-			$this->controller->SetModel($model);
+            $this->controller->SetModel($model);
         }elseif( ($err == 0) && file_exists($url.\'/gy/component/\'.$name.\'/model.php\' ) ){ 
-			$model = new model($url.\'/gy/component/\'.$name.\'/model.php\'); // может и не быть
-			$this->controller->SetModel($model);
-		} 
+            $model = new model($url.\'/gy/component/\'.$name.\'/model.php\'); // может и не быть
+            $this->controller->SetModel($model);
+        } 
 
-		// TODO вывести ошибку если что то не найдено // значит файлы не все есть
+        // TODO вывести ошибку если что то не найдено // значит файлы не все есть
 
-		if ($err != 0){ // если есть ошибки 
-			$this->ShowErr($errText);
-		} else { // иначе запускаем компонент
-			
-			$this->controller->SetTemplate($template); // задать шаблон	
-			$this->controller->SetArParam($arParam); // передать параметры компонента // set array property component 
-			
-			$this->run();
-		}
+        if ($err != 0){ // если есть ошибки 
+            $this->ShowErr($errText);
+        } else { // иначе запускаем компонент
 
-		$this->url = $url.\'/gy\';
-	}
+            $this->controller->SetTemplate($template); // задать шаблон	
+            $this->controller->SetArParam($arParam); // передать параметры компонента // set array property component 
+
+            $this->run();
+        }
+
+        $this->url = $url.\'/gy\';
+    }
 
     /**
      * run() 
      */
-	public function run(){
-		$this->controller->run();
-		//$this->template->show($arRes);
-	}
+    public function run(){
+        $this->controller->run();
+        //$this->template->show($arRes);
+    }
 
     /**
      * ShowErr 
      * @param type $err
      */
-	public function ShowErr($err){ // TODO вынести в отдельный класс про ошибки
-		echo \'<div class=gy_err>\'.$err.\'</div>\';
-	}
+    public function ShowErr($err){ // TODO вынести в отдельный класс про ошибки
+        echo \'<div class=gy_err>\'.$err.\'</div>\';
+    }
 
 }
 ',
@@ -1330,50 +1758,50 @@ class component{
   './gy/classes/controller.php' => 
   array (
     'CODE' => '<?php 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 class controller{
-	public $model;
-	public $controller; // ссылка для запуска выбранного контроллера компонента
-	public $lang;
-	public $template; // объект шаблона 
-	public $arParam;
+    public $model;
+    public $controller; // ссылка для запуска выбранного контроллера компонента
+    public $lang;
+    public $template; // объект шаблона 
+    public $arParam;
 
-	public function __construct($url, $lang){
-		$this->controller = $url.\'/controller.php\';
-		$this->lang = new lang($url, \'controller\', $lang);
-	}
+    public function __construct($url, $lang){
+        $this->controller = $url.\'/controller.php\';
+        $this->lang = new lang($url, \'controller\', $lang);
+    }
 	
     /**
      * SetModel
      * @param type $model
      */
-	public function SetModel($model){ // установить ссылку на модель если есть
-		$this->model = $model;
-	}
+    public function SetModel($model){ // установить ссылку на модель если есть
+        $this->model = $model;
+    }
 
     /**
      * SetTemplate - задать шаблон
      * @param object class template $template
      */
-	public function SetTemplate($template){  
-		$this->template = $template;	
-	}
+    public function SetTemplate($template){  
+        $this->template = $template;	
+    }
 
     /**
      * SetArParam - задать параметры компонента // set array property component
      * @param type $arParam
      */
-	public function SetArParam($arParam){ 
-		$this->arParam = $arParam;
-	}
+    public function SetArParam($arParam){ 
+        $this->arParam = $arParam;
+    }
 
     /**
      * run 
      */
-	public function run(){		
-		include $this->controller;
-	}
+    public function run(){		
+        include $this->controller;
+    }
 
 }
 ',
@@ -1383,37 +1811,37 @@ class controller{
   './gy/classes/crypto.php' => 
   array (
     'CODE' => '<?
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 class crypto{
 	
-	private $sole; 
+    private $sole; 
 	
     /**
      * setSole - установить соль (некая строка)
      * @param string $sole
      * @return boolean true
      */
-	public function setSole($sole){
-		$this->sole = $sole;
-		return true;
-	}
+    public function setSole($sole){
+        $this->sole = $sole;
+        return true;
+    }
 	
     /**
      * getSole - получить значение соли
      * @return string
      */
-	public function getSole(){
-		return $this->sole;
-	}
+    public function getSole(){
+        return $this->sole;
+    }
 	
     /**
      * getRandString - даст произвольную строку
      * @return string
      */
-	public function getRandString(){
-		return md5(microtime().$this->sole);
-	}
+    public function getRandString(){
+        return md5(microtime().$this->sole);
+    }
 	
     /**
      * getStringForUserCookie - даст строку для пользовательской куки
@@ -1423,9 +1851,9 @@ class crypto{
      * @param int $id
      * @return string (md5)
      */
-	public function getStringForUserCookie($login, $name, $id){
-		return md5(microtime().$login.$this->sole.$name.$id);
-	}
+    public function getStringForUserCookie($login, $name, $id){
+        return md5(microtime().$login.$this->sole.$name.$id);
+    }
 
 }
 
@@ -1434,10 +1862,283 @@ class crypto{
     'TYPE' => 'php',
     'DIR' => './gy/classes/',
   ),
+  './gy/classes/generalUsersPropertys.php' => 
+  array (
+    'CODE' => '<?php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+/**
+ * generalUsersPropertys - класс для работы с общими свойствами пользователей
+ */
+class generalUsersPropertys{
+    
+    private static $tableNameCreatePropertys = \'create_all_users_property\';
+    private static $tableNameTypePropertys = \'type_all_user_propertys\';
+    
+    private static $tableNameTypePropertysForCodeTypeProperty = array(
+        \'text\' => \'value_all_user_propertys_text\'
+    );
+    
+    /**
+     * getAllGeneralUsersPropertys
+     *  - получить все созданные пользовательские свойства
+     * 
+     * @global type $db
+     * @return array
+     */
+    public static function getAllGeneralUsersPropertys(){ 
+        global $db;		        
+        $res = $db->selectDb( 
+            self::$tableNameCreatePropertys, 
+            array(\'*\'),
+            array()
+        );
+        $result = $db->fetchAll($res, \'id\');
+        return $result;
+    }
+    
+    /**
+     * getAllTypeAllUsersPropertys 
+     *  - получить все возможные типы пользовательских свойств
+     * 
+     * @global type $db
+     * @return array
+     */
+    public static function getAllTypeAllUsersPropertys(){
+        global $db;		        
+        $res = $db->selectDb( 
+            self::$tableNameTypePropertys, 
+            array(\'*\'),
+            array(
+                
+            )
+        );
+        $result = $db->fetchAll($res, \'id\');
+        return $result;
+    }
+    
+    /**
+     * addUsersPropertys
+     *  - создать пользовательское свойство
+     * 
+     * @global type $db
+     * @param string $name - имя
+     * @param int $idType - тип
+     * @param string $code - код
+     * @return boolean
+     */
+    public static function addUsersPropertys($name, $idType, $code){
+        $result = false;
+
+        global $db;		
+        $res = $db->insertDb(
+            self::$tableNameCreatePropertys, 
+            array(
+                \'name_property\' => $name,
+                \'type_property\' => $idType,
+                \'code\' => $code
+            )
+        );
+                
+        if ($res){
+            $result = true;
+        }		
+        return $result;
+    }
+    
+    /**
+     * deleteUserProperty
+     *  - удалить общее пользовательское свойство
+     * 
+     * @global type $db
+     * @param int $id - id общего пользовательского свойства
+     * @return boolean
+     */
+    public static function deleteUserProperty($id){
+        $result = false;
+        global $db;
+
+        $res = $db->deleteDb(
+            self::$tableNameCreatePropertys, 
+            array(\'=\'=>array(\'id\', $id))
+        );
+
+        if ($res){
+            $result = true;		
+        }
+        
+        //удалить значения
+        self::deleteAllValuesAllUserBypropertyId($id, \'text\'); // text - т.к. пока других нет
+        
+        return $result;
+    }
+    
+    /**
+     * deleteAllValuesAllUserBypropertyId
+     *  - удалить все значения определённого свойства у всех пользователей
+     * 
+     * @global type $db
+     * @param int $idProperty - id свойства (общее свойство)
+     * @param string $typePropertyCode - пока у всех значение text
+     * @return boolean
+     */
+    public static function deleteAllValuesAllUserBypropertyId($idProperty, $typePropertyCode){
+        $result = false;
+        
+        if(!empty(self::$tableNameTypePropertysForCodeTypeProperty[$typePropertyCode])){
+            global $db;	
+            
+            $res = $db->deleteDb(
+                self::$tableNameTypePropertysForCodeTypeProperty[$typePropertyCode],
+                array( \'=\' => array(\'id_property\', $idProperty) )
+            );
+
+            if ($res){
+                $result = true;		
+            }
+        }
+        return $result;
+        
+    }
+    
+    /**
+     * getAllValueUserProperty
+     *  - взять все значения определённого типа свойства пользователя
+     * 
+     * @global type $db
+     * @param int $idUser - id пользователя
+     * @param string $typePropertyCode - пока у всех значение text
+     * @return boolean/array
+     */
+    public static function getAllValueUserProperty($idUser, $typePropertyCode){
+        $result = false;
+        
+        if(!empty(self::$tableNameTypePropertysForCodeTypeProperty[$typePropertyCode])){
+            global $db;		        
+            $res = $db->selectDb( 
+                self::$tableNameTypePropertysForCodeTypeProperty[$typePropertyCode], 
+                array(\'*\'),
+                array( \'=\' => array(\'id_users\', $idUser) )
+            );
+            $result = $db->fetchAll($res, \'id_property\');
+        } 
+        return $result;
+    }
+    
+    /**
+     * addValueProperty
+     *  - добавить значение свойства
+     * 
+     * @global type $db
+     * @param int $idUser - id пользователя
+     * @param string $typePropertyCode - пока у всех значение text
+     * @param int $idProperty - id пользовательского свойства
+     * @param string $value - пока тип text, тут только строка
+     * @return boolean
+     */
+    public static function addValueProperty($idUser, $typePropertyCode, $idProperty, $value){
+        $result = false;
+        
+        if(!empty(self::$tableNameTypePropertysForCodeTypeProperty[$typePropertyCode])){
+            global $db;
+            $res = $db->insertDb(
+                self::$tableNameTypePropertysForCodeTypeProperty[$typePropertyCode], 
+                array(
+                    \'value\' => $value,
+                    \'id_users\' => $idUser,
+                    \'id_property\' => $idProperty
+                )
+            );
+
+            if ($res){
+                $result = true;
+            }
+        }
+        return $result;
+    }
+    
+    /**
+     * deleteValueProperty 
+     *  - удалить значения конкретного свойства конкретного пользователя
+     * 
+     * @global type $db
+     * @param int $idUser - id пользователя
+     * @param string $typePropertyCode - пока у всех значение text
+     * @param int $idProperty - id пользовательского свойства
+     * @return boolean
+     */
+    public static function deleteValueProperty($idUser, $typePropertyCode, $idProperty){
+        $result = false;
+        
+        if(!empty(self::$tableNameTypePropertysForCodeTypeProperty[$typePropertyCode])){
+            global $db;	
+            
+            $res = $db->deleteDb(
+                self::$tableNameTypePropertysForCodeTypeProperty[$typePropertyCode],
+                array( 
+                    \'AND\' => array(
+                        array(\'=\' => array(\'id_users\', $idUser) ), 
+                        array(\'=\' => array(\'id_property\', $idProperty) ) 
+                    ),  
+                )
+            );
+
+            if ($res){
+                $result = true;		
+            }
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * updateValueProperty
+     *  - изменить значение конкретного свойства конкретного пользователя
+     * 
+     * @global type $db
+     * @param int $idUser - id пользователя
+     * @param string $typePropertyCode - пока у всех значение text
+     * @param int $idProperty - id пользовательского свойства
+     * @param string $value - пока тип text, тут только строка
+     * @return boolean
+     */
+    public static function updateValueProperty($idUser, $typePropertyCode, $idProperty, $value){
+        $result = false;
+        
+        if(!empty(self::$tableNameTypePropertysForCodeTypeProperty[$typePropertyCode])){
+            global $db;
+            $res = $db->updateDb(
+                self::$tableNameTypePropertysForCodeTypeProperty[$typePropertyCode],
+                array(
+                    \'id_users\' => $idUser,
+                    \'id_property\' => $idProperty,
+                    \'value\' => $value
+                ),
+                array( 
+                    \'AND\' => array(
+                        array(\'=\' => array(\'id_users\', $idUser) ), 
+                        array(\'=\' => array(\'id_property\', $idProperty) ) 
+                    ),  
+                )
+            );
+
+            if ($res){
+                $result = true;		
+            }
+        }
+        return $result;
+    }
+    
+    
+}
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/classes/',
+  ),
   './gy/classes/image.php' => 
   array (
     'CODE' => '<?
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 /* image class work with image // wrapper class php GD
  * image класс для работы с изображениями // обёртка класса php GD
@@ -1474,67 +2175,66 @@ class image{
   './gy/classes/lang.php' => 
   array (
     'CODE' => '<?php
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 class lang{
 	
-	public $textLang; // тексты определённого языка
+    public $textLang; // тексты определённого языка
 
-	function __construct($url, $fileName, $lang){
-		$result = false; 
-		        
-		if ( !empty($url) && !empty($fileName) && !empty($lang) ) {
-			//load array text language
-			$this->textLang = $this->GetArrLangFromFilre( $url.\'/lang_\'.$fileName.\'.php\', $lang );
-		}
+    function __construct($url, $fileName, $lang){
+        $result = false; 
 
-		return $result;
-	}
+        if ( !empty($url) && !empty($fileName) && !empty($lang) ) {
+            //load array text language
+            $this->textLang = $this->GetArrLangFromFilre( $url.\'/lang_\'.$fileName.\'.php\', $lang );
+        }
 
-	/** 
+        return $result;
+    }
+
+    /** 
      * autoLoadLang
      * авто загрузка языкового файла для файла где вызывается эта функция
-	 * 	нужно передать в какой файле вызывается (название компонента например, шаблона)
-	 * @param namePHPFile	- файл в котором будет вызываться данный класс // там где нужен языковой файл
+     * 	нужно передать в какой файле вызывается (название компонента например, шаблона)
+     * @param namePHPFile	- файл в котором будет вызываться данный класс // там где нужен языковой файл
      * @return
      */
 
-	function autoLoadLang($namePHPFile, $lang ){
+    function autoLoadLang($namePHPFile, $lang ){
 
-	}
+    }
 
-	/**
+    /**
      *  GetMessage вернуть текст для заданной переменной текущего языка
-	 * @param string $nameVar - передать переменную 
-	 * @return вернёт текст или false
-	 */
-	function GetMessage($nameVar ){
-		$result = false;
-		if ( !empty($this->textLang[$nameVar]) ){
-			$result = $this->textLang[$nameVar];
-		}
-		return $result;
-	}
+     * @param string $nameVar - передать переменную 
+     * @return вернёт текст или false
+     */
+    function GetMessage($nameVar ){
+        $result = false;
+        if ( !empty($this->textLang[$nameVar]) ){
+            $result = $this->textLang[$nameVar];
+        }
+        return $result;
+    }
 
-	
-	/**
-	 * GetArrLangFromFilre загрузить массив с текстом нужного языка // load array text language
-	 * @param $urlFile ссылка на загружаемый файл // url load file
-	 * @param $lang - нужный язык // language // rus, eng ...
-	 * 
-	 * @return массив с текстом на выбранном языке // language text array 
-	 */
-	function GetArrLangFromFilre( $urlFile, $lang ){
-		$mess = array();
-	       
-		// если есть файл с языковыми параметрами
-		if ( file_exists($urlFile) === true ){	
-			include $urlFile;
+    /**
+     * GetArrLangFromFilre загрузить массив с текстом нужного языка // load array text language
+     * @param $urlFile ссылка на загружаемый файл // url load file
+     * @param $lang - нужный язык // language // rus, eng ...
+     * 
+     * @return массив с текстом на выбранном языке // language text array 
+     */
+    function GetArrLangFromFilre( $urlFile, $lang ){
+        $mess = array();
+
+        // если есть файл с языковыми параметрами
+        if ( file_exists($urlFile) === true ){	
+            include $urlFile;
             $mess = $mess[$lang];
-		}
+        }
 
-		return $mess;
-	}
+        return $mess;
+    }
 	
 }
 ',
@@ -1544,12 +2244,12 @@ class lang{
   './gy/classes/lang_component.php' => 
   array (
     'CODE' => '<?php 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
-	\'err_not_template\' => \'!шаблон не найден\',
-	\'err_not_controller\' => \'!!! контроллер компонента не найден\',
-	// \'err_not_controller\' => \'\';
+    \'err_not_template\' => \'!шаблон не найден\',
+    \'err_not_controller\' => \'!!! контроллер компонента не найден\',
+    // \'err_not_controller\' => \'\';
 );
 ',
     'TYPE' => 'php',
@@ -1558,21 +2258,21 @@ $mess[\'rus\'] = array(
   './gy/classes/model.php' => 
   array (
     'CODE' => '<?
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 class model{
-	public $url; // ссылка на шаблон
+    public $url; // ссылка на шаблон
 
-	public function __construct($url){
-		$this->url = $url;
-	}
+    public function __construct($url){
+            $this->url = $url;
+    }
 
     /**
      * includeModel - подключить файл с моделью компонента
      */
-	public function includeModel(){		
-		require_once $this->url; // !!!
-	}
+    public function includeModel(){		
+        require_once $this->url; // !!!
+    }
 }
 
 ',
@@ -1582,7 +2282,7 @@ class model{
   './gy/classes/module.php' => 
   array (
     'CODE' => '<?php
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 /**
  * module - работа с модулями фреймворка
@@ -1591,6 +2291,9 @@ class module{
     
     // массив подключённых модулей
     public $arrayIncludeModules = array(); 
+    
+    // массив подключённых модулей и их версии
+    public $arrayIncludeModulesAndVersion = array(); 
     
     // соответствие компонентов подключенным модулям
     public $nameModuleByComponentName = array();
@@ -1615,6 +2318,7 @@ class module{
     
     private function  __construct(){
         // заполнить пустотой
+        $this->arrayIncludeModulesAndVersion = array();
         $this->arrayIncludeModules = array();
         $this->nameModuleByComponentName = array();
         $this->nameClassModuleByNameModule = array();
@@ -1673,6 +2377,12 @@ class module{
             if (!empty($nameThisModule)){
                 $this->arrayIncludeModules[$nameThisModule] = $urlModule;
                 //unset($nameThisModule);
+                
+                if(!empty($versionThisModule)){
+                    $this->arrayIncludeModulesAndVersion[$nameThisModule] = $versionThisModule;
+                    unset($versionThisModule);
+                }
+                
             }
             
             // тут список компонентов модуля
@@ -1713,9 +2423,7 @@ class module{
             if (!empty($isShowButtonsMenuAdminPanetThisModule)){
                 $this->isShowButtonsMenuAdminPanelModules[$nameThisModule] = $isShowButtonsMenuAdminPanetThisModule;
                 unset($isShowButtonsMenuAdminPanetThisModule);
-            }
-                
-            
+            } 
         }
         return $result;
     }
@@ -1796,8 +2504,8 @@ class module{
     public function installDbModuleByNameModule($nameModule){ // TODO пока только установка для mysql
         $result = false;
         
-        if(file_exists($this->urlGyCore.\'/modules/\'.$nameModule.\'/install/installMysqlTable.php\' )){
-            include_once( $this->urlGyCore.\'/modules/\'.$nameModule.\'/install/installMysqlTable.php\' );
+        if(file_exists($this->urlGyCore.\'/modules/\'.$nameModule.\'/install/installDataBaseTable.php\' )){
+            include_once( $this->urlGyCore.\'/modules/\'.$nameModule.\'/install/installDataBaseTable.php\' );
             $result = true;
         }
         
@@ -1853,6 +2561,10 @@ class module{
         return $this->isShowButtonsMenuAdminPanelModules[$nameModule];
     }
     
+    public function getInfoAllIncludeModules(){
+        return $this->arrayIncludeModulesAndVersion;
+    }
+    
 }',
     'TYPE' => 'php',
     'DIR' => './gy/classes/',
@@ -1860,7 +2572,7 @@ class module{
   './gy/classes/mysql.php' => 
   array (
     'CODE' => '<?
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 /* mysql - класс для работы с базой данных mysql
  * class work mysql 
@@ -1876,10 +2588,11 @@ class mysql extends db{
     * @param $user
     * @param $pass 
     * @param $name_db
+    * @param $port
     * @return resurs, false
     */
-    public function connect($host, $user, $pass, $name_db){
-        $this->db = mysqli_connect($host, $user, $pass, $name_db);
+    public function connect($host, $user, $pass, $name_db, $port){
+        $this->db = mysqli_connect($host, $user, $pass, $name_db, $port);
         return $this->db;
     }
     
@@ -1887,7 +2600,7 @@ class mysql extends db{
      * @param $db - resurs (create self::connect()), $query - string query
      * @return true - ok OR false - not ok
      */
-    public function query($query){	// TODO брать прямо из класса $db
+    public function query($query){
         return mysqli_query($this->db, $query);
     }
     
@@ -1904,20 +2617,20 @@ class mysql extends db{
      * @param $res - результат отработки запроса в БД
      * @return array
      */
-	public function fetch($res){
-        $result = array();
-        if ($res !== false){
-            $result = mysqli_fetch_assoc($res);
-        }
-		return $result;
-	}
+    public function fetch($res){
+    $result = array();
+    if ($res !== false){
+        $result = mysqli_fetch_assoc($res);
+    }
+        return $result;
+    }
 	
     /**
-	 * fetchAll - тоже что и fetch только в получит всё в виде массива (с ключём id элемента)
+     * fetchAll - тоже что и fetch только в получит всё в виде массива (с ключём id элемента)
      * @param $res - результат отработки запроса в БД
      * @return array
-	 */
-	public function fetchAll($res, $key = \'id\'){
+     */
+    public function fetchAll($res, $key = \'id\'){
         $result = array();
         while ($arRes = self::fetch($res)){
             if($key !== false){
@@ -1925,42 +2638,186 @@ class mysql extends db{
             }else{
                 $result[] = $arRes;
             }
-		}
+        }
         return $result;
     }
     
-	public function __construct($db_config) {
-		if ( empty($this->db)){
-			if (!empty($db_config)){
-				$this->connect($db_config[\'db_host\'], $db_config[\'db_user\'], $db_config[\'db_pass\'], $db_config[\'db_name\']);
-			}
-		}
-	}
+    public function __construct($db_config) {
+        if ( empty($this->db)){
+            if (!empty($db_config)){
+                if( empty($db_config[\'db_port\']) ){
+                    $db_config[\'db_port\'] = ini_get("mysqli.default_port");
+                }
+                $this->connect(
+                    $db_config[\'db_host\'], 
+                    $db_config[\'db_user\'], 
+                    $db_config[\'db_pass\'], 
+                    $db_config[\'db_name\'], 
+                    $db_config[\'db_port\']
+                );
+            }
+        }
+    }
+        
+    /**
+     * isOneVersionWhere 
+     *  (ru) - проверит соответствует ли условие, условию как ниже (первый вариант)
+     *         (пока поддерживается только сравнение и не рано \'=\', \'!=\' )
+     *  
+     *  (en) - will check whether it matches the condition, the condition as below (first option)
+     *         (so far only comparison is supported and not early \'=\', \'! =\')
+     * 
+     *  $where = array(
+     *    \'=\' => array(
+     *       \'login\',
+     *       \'asd2\'
+     *    )
+     *  ) 
+     * 
+     * @param array $where - 
+     *        (ru) - условие (пример выше, что то типа дерева)
+     *        (en) - condition (example above, something like a tree)
+     * @return boolean
+     */        
+    private function isOneVersionWhere($where){
+        $result = false;
+        if (count($where) == 1){
+            foreach ($where as $key => $value) {
+                if( in_array($key, array(\'=\', \'!=\' )) && (count($value) == 2) ){
+                    $result = true;
+                }
+            }
+            $value = array_shift($where);
+            
+        }
+        return $result;
+    }
+    
+    /**
+     * isTwoVersionWhere 
+     *  (ru) - проверит соответствует ли условие, условию как ниже (второй вариант)
+     *         (пока поддерживается только сравнение и не рано \'=\', \'!=\' и связки \'AND\', \'OR\' )
+     *  
+     *  (ru) - will check whether the condition matches the condition as below (second option)
+     *         (so far only comparison is supported and not early \'=\', \'! =\' and the \'AND\', \'OR\' connectives)
+     * 
+     *  $where = array(
+     *      \'OR\' => array(
+     *          array(
+     *              \'=\' => array(
+     *                  \'login\',
+     *                  \'asd2\'
+     *              ),
+     *          ),
+     *          array(
+     *              \'!=\' => array(
+     *                  \'login\',
+     *                  \'asd\'
+     *              ),
+     *          ),
+     *          array(
+     *              \'!=\' => array(
+     *                  \'login\',
+     *                  \'asd\'
+     *              ),
+     *          ),
+     *      )    
+     *  ) 
+     * 
+     * @param array $where - 
+     *        (ru) - условие (пример выше, что то типа дерева)
+     *        (en) - condition (example above, something like a tree)
+     * @return boolean
+     */ 
+    private function isTwoVersionWhere($where){
+        $result = true;
+        foreach ($where as $key => $value) {
+            if(in_array($key, array(\'OR\', \'AND\'))){
+                foreach ($value as $value2) {
+                    if(!$this->isOneVersionWhere($value2)){
+                        $result = false;
+                    }
+                }
+            }else{
+                $result = false;
+            }
+        }
+        return $result;
+    }
+        
+    /**
+     * getStrOneTypeWhere
+     *  (ru) - соберёт строчку с условием определённого вида,
+     *         для условий из массива $where (метода например select) 1 варианта
+     * 
+     *  (en) - will collect a line with a condition of a certain kind,
+     *         for conditions from the array $where (for example, select parameters) 1 option
+     * 
+     * @param array $where
+     * @return string
+     */
+    private function getStrOneTypeWhere($where){
+        $result = false;
+        if(!empty($where[\'=\'])){
+            $result = $where[\'=\'][0]." = ".$where[\'=\'][1];
+        }elseif( !empty($where[\'!=\']) ){
+            $result = $where[\'!=\'][0]." != ".$where[\'!=\'][1];
+        }
+        return $result;
+    }
+    
+    /**
+     * getStrOneTypeWhere
+     *  (ru) - соберёт строчку с условием определённого вида,
+     *         для условий из массива $where (метода например select) 2 варианта
+     * 
+     *  (en) - will collect a line with a condition of a certain kind,
+     *         for conditions from the array $where (for example, select parameters) 2 option
+     * 
+     * @param array $where
+     * @return string
+     */
+    private function getStrTwoTypeWhere($where){
+        $result = \'\';
+        if( !empty($where[\'AND\']) ){
+            foreach($where[\'AND\'] as $val){
+                $result .= ((!empty($result))? \' AND \': \'\').$this->getStrOneTypeWhere( $val );
+            }
+        }elseif( !empty($where[\'OR\'])){
+            foreach($where[\'OR\'] as $val){
+                $result .= ((!empty($result))? \' OR \': \'\').$this->getStrOneTypeWhere($val);
+            }
+        }
+        return $result;
+    }
     
     /**
      * parseWhereForQuery - парсинг параметров where запроса
-     *   массив будет в виде дерева, т.е. конечные массивы должны состоять из 2х элементов // TODO добавить примеры в wiki
+     *   массив будет в виде дерева, т.е. конечные массивы должны состоять из 2х элементов 
      * @param type $where
      * @param type $i
      * @param type $key2
      * @return type
      */    
-    private function parseWhereForQuery($where, $i, $key2){ // TODO рефакторинг
-        $str = \'\';
-        $str2 = \'\';
-        if (is_array($where)){
-            $i++;
-            foreach($where as $key => $val){
-                $str = \'\';
-                $str = $this->parseWhereForQuery($val, $i, $key);
-                $str2 .=  ((!empty($str2))? \' \'.$key2.\' \' : \'\').$str;
-            }
-        }else{
-            $str2 = $where;
-        }   
-        return $str2;
+    private function parseWhereForQuery($where){ 
+        
+        $strWhere = \'\';
+        if($this->isOneVersionWhere($where) ){
+            // (ru) - если условия 1 варианта
+            // (en) - if conditions 1 options
+            $strWhere = $this->getStrOneTypeWhere($where);
+
+        }elseif($this->isTwoVersionWhere($where) ){
+            // (ru) - если условие 2 варианта
+            // (en) - if condition 2 options
+            $strWhere = $this->getStrTwoTypeWhere($where);
+        } 
+        // (ru) - остальное пока не поддерживается
+        // (en) - the rest is not yet supported
+        
+        return $strWhere;
     }
-    
+        
      /**
      * selectDb - запрос типа select. на получение данных
      * @param $db - расурс, коннект к базе данных
@@ -1974,13 +2831,13 @@ class mysql extends db{
         $strPropertys = implode(",", $propertys);
 
         if(!empty($where)){            
-            $where = \' WHERE \'.$this->parseWhereForQuery($where, 0, \'\');
+            $where = \' WHERE \'.$this->parseWhereForQuery($where);
         }else{
             $where = \'\';
         }
-                
+              
         $query .= $strPropertys.\' FROM \'.$tableName.$where.\';\';
-                 
+           
         return  $this->query($query);
     }
     
@@ -1996,20 +2853,20 @@ class mysql extends db{
         // разбить параметры на два списка через запятую // TODO вынести куда то
         global $crypto;
         $nameProperty = \'\';
-		$valueProperty = \'\';
-		foreach ($propertys as $key=> $val){
-			$nameProperty .= (($nameProperty != \'\')? \', \': \'\').$key;
-			
-			if ($key == \'pass\'){
-				$val = md5($val.$crypto->getSole());
-			}
-			
-			if (!is_numeric($val)){
-				$val = "\'".$val."\'";
-			}
-			
-			$valueProperty .= (($valueProperty != \'\')? \', \': \'\').$val;
-		}
+        $valueProperty = \'\';
+        foreach ($propertys as $key=> $val){
+            $nameProperty .= (($nameProperty != \'\')? \', \': \'\').$key;
+
+            if ($key == \'pass\'){
+                $val = md5($val.$crypto->getSole());
+            }
+
+            if (!is_numeric($val)){
+                $val = "\'".$val."\'";
+            }
+
+            $valueProperty .= (($valueProperty != \'\')? \', \': \'\').$val;
+        }
         ////
 
         $query = "INSERT INTO ".$tableName." (".$nameProperty." ) VALUES(".$valueProperty.")";
@@ -2024,24 +2881,24 @@ class mysql extends db{
      * @param array $where - условия запроса, массив специальной структуры в виде дерева (может не быть)
      * @return - false or object result query
      */
-    public function updateDb($tableName, $propertys, $where = array()){//TODO
+    public function updateDb($tableName, $propertys, $where = array()){
         $query = \'UPDATE \';
         $textPropertys = \'\';
         global $crypto;
         foreach ($propertys as $key => $val){
             
             if ($key == \'pass\'){
-				$val = md5($val.$crypto->getSole());
-			}
+                $val = md5($val.$crypto->getSole());
+            }
             
             if (!is_numeric($val)){
-				$val = "\'".$val."\'";
-			}
+                $val = "\'".$val."\'";
+            }
             $textPropertys .= ((!empty($textPropertys))? \',\': \'\').\' \'.$key.\'=\'.$val;
         }
 
         if(!empty($where)){            
-            $where = \' WHERE \'.$this->parseWhereForQuery($where, 0, \'\');
+            $where = \' WHERE \'.$this->parseWhereForQuery($where); 
         }else{
             $where = \'\';
         }
@@ -2078,7 +2935,7 @@ class mysql extends db{
     public function deleteDb($tableName, $where){
         $query = \'\';
         if(!empty($where)){            
-            $where = \' WHERE \'.$this->parseWhereForQuery($where, 0, \'\');
+            $where = \' WHERE \'.$this->parseWhereForQuery($where);
         }else{
             $where = \'\';
         }
@@ -2088,12 +2945,472 @@ class mysql extends db{
         return  $this->query($query);
     }
     
-	public function __destruct() {
-		if ( !empty($this->db)){
-			$this->close($this->db);
-		}
-	}
+    public function __destruct() {
+        if ( !empty($this->db)){
+            $this->close($this->db);
+        }
+    }
 }
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/classes/',
+  ),
+  './gy/classes/pgsql.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+/** 
+ * pgsql - класс для работы с базой данных PostgreSQL
+ * class work PostgreSQL 
+ */
+
+class pgsql extends db{
+    
+    public $test = \'pgsql ok\';
+    public $defaultPort = \'5432\';
+    public $db;
+    
+    /* connect() - create connect in database
+    * @param $host
+    * @param $user
+    * @param $pass 
+    * @param $name_db
+    * @param $port
+    * @return resurs, false
+    */
+    public function connect($host, $user, $pass, $name_db, $port){        
+        $this->db = pg_connect("host=".$host." port=".$port." dbname=".$name_db." user=".$user." password=".$pass);
+        return $this->db;
+    }
+    
+    /* query()  - out query in database
+     * @param $db - resurs (create self::connect()), $query - string query
+     * @return true - ok OR false - not ok
+     */
+    public function query($query){
+        return pg_query($this->db, $query);
+    }
+    
+    /*  close() - close connect database
+     * @param $db - resurs (create self::connect()) 
+     * @return true - ok OR false - not ok
+     */
+    public function close(){
+        return pg_close($this->db);
+    }
+	
+    /**
+     * fetch - получить порцию (строку) данных, после выполнения запроса в БД
+     * @param $res - результат отработки запроса в БД
+     * @return array
+     */
+    public function fetch($res){
+    $result = array();
+    if ($res !== false){
+        $result = pg_fetch_assoc($res);
+    }
+        return $result;
+    }
+	
+    /**
+     * fetchAll - тоже что и fetch только в получит всё в виде массива (с ключём id элемента)
+     * @param $res - результат отработки запроса в БД
+     * @return array
+     */
+    public function fetchAll($res, $key = \'id\'){
+        $result = array();
+        while ($arRes = self::fetch($res)){
+            if($key !== false){
+                $result[$arRes[$key]] = $arRes;
+            }else{
+                $result[] = $arRes;
+            }
+        }
+        return $result;
+    }
+    
+    public function __construct($db_config) {
+        if ( empty($this->db)){
+            if (!empty($db_config)){
+                if( empty($db_config[\'db_port\']) ){
+                    $db_config[\'db_port\'] = $this->defaultPort;
+                }
+                $this->connect(
+                    $db_config[\'db_host\'], 
+                    $db_config[\'db_user\'], 
+                    $db_config[\'db_pass\'], 
+                    $db_config[\'db_name\'], 
+                    $db_config[\'db_port\']
+                );
+            }
+        }
+    }
+        
+    /**
+     * isOneVersionWhere 
+     *  (ru) - проверит соответствует ли условие, условию как ниже (первый вариант)
+     *         (пока поддерживается только сравнение и не рано \'=\', \'!=\' )
+     *  
+     *  (en) - will check whether it matches the condition, the condition as below (first option)
+     *         (so far only comparison is supported and not early \'=\', \'! =\')
+     * 
+     *  $where = array(
+     *    \'=\' => array(
+     *       \'login\',
+     *       \'asd2\'
+     *    )
+     *  ) 
+     * 
+     * @param array $where - 
+     *        (ru) - условие (пример выше, что то типа дерева)
+     *        (en) - condition (example above, something like a tree)
+     * @return boolean
+     */        
+    private function isOneVersionWhere($where){
+        $result = false;
+        if (count($where) == 1){
+            foreach ($where as $key => $value) {
+                if( in_array($key, array(\'=\', \'!=\' )) && (count($value) == 2) ){
+                    $result = true;
+                }
+            }
+            $value = array_shift($where);
+            
+        }
+        return $result;
+    }
+    
+    /**
+     * isTwoVersionWhere 
+     *  (ru) - проверит соответствует ли условие, условию как ниже (второй вариант)
+     *         (пока поддерживается только сравнение и не рано \'=\', \'!=\' и связки \'AND\', \'OR\' )
+     *  
+     *  (ru) - will check whether the condition matches the condition as below (second option)
+     *         (so far only comparison is supported and not early \'=\', \'! =\' and the \'AND\', \'OR\' connectives)
+     * 
+     *  $where = array(
+     *      \'OR\' => array(
+     *          array(
+     *              \'=\' => array(
+     *                  \'login\',
+     *                  \'asd2\'
+     *              ),
+     *          ),
+     *          array(
+     *              \'!=\' => array(
+     *                  \'login\',
+     *                  \'asd\'
+     *              ),
+     *          ),
+     *          array(
+     *              \'!=\' => array(
+     *                  \'login\',
+     *                  \'asd\'
+     *              ),
+     *          ),
+     *      )    
+     *  ) 
+     * 
+     * @param array $where - 
+     *        (ru) - условие (пример выше, что то типа дерева)
+     *        (en) - condition (example above, something like a tree)
+     * @return boolean
+     */ 
+    private function isTwoVersionWhere($where){
+        $result = true;
+        foreach ($where as $key => $value) {
+            if(in_array($key, array(\'OR\', \'AND\'))){
+                foreach ($value as $value2) {
+                    if(!$this->isOneVersionWhere($value2)){
+                        $result = false;
+                    }
+                }
+            }else{
+                $result = false;
+            }
+        }
+        return $result;
+    }
+        
+    /**
+     * getStrOneTypeWhere
+     *  (ru) - соберёт строчку с условием определённого вида,
+     *         для условий из массива $where (метода например select) 1 варианта
+     * 
+     *  (en) - will collect a line with a condition of a certain kind,
+     *         for conditions from the array $where (for example, select parameters) 1 option
+     * 
+     * @param array $where
+     * @return string
+     */
+    private function getStrOneTypeWhere($where){
+        $result = false;
+        if(!empty($where[\'=\'])){
+            $where[\'=\'][0] = $where[\'=\'][0];
+            $result = $where[\'=\'][0]." = ".$where[\'=\'][1];
+        }elseif( !empty($where[\'!=\']) ){
+            $where[\'!=\'][0] = $where[\'=\'][0];
+            $result = $where[\'!=\'][0]." != ".$where[\'!=\'][1];
+        }
+        return $result;
+    }
+    
+    /**
+     * getStrOneTypeWhere
+     *  (ru) - соберёт строчку с условием определённого вида,
+     *         для условий из массива $where (метода например select) 2 варианта
+     * 
+     *  (en) - will collect a line with a condition of a certain kind,
+     *         for conditions from the array $where (for example, select parameters) 2 option
+     * 
+     * @param array $where
+     * @return string
+     */
+    private function getStrTwoTypeWhere($where){
+        $result = \'\';
+        if( !empty($where[\'AND\']) ){
+            foreach($where[\'AND\'] as $val){
+                $result .= ((!empty($result))? \' AND \': \'\').$this->getStrOneTypeWhere( $val );
+            }
+        }elseif( !empty($where[\'OR\'])){
+            foreach($where[\'OR\'] as $val){
+                $result .= ((!empty($result))? \' OR \': \'\').$this->getStrOneTypeWhere($val);
+            }
+        }
+        return $result;
+    }
+    
+    /**
+     * parseWhereForQuery - парсинг параметров where запроса
+     *   массив будет в виде дерева, т.е. конечные массивы должны состоять из 2х элементов 
+     * @param type $where
+     * @param type $i
+     * @param type $key2
+     * @return type
+     */    
+    private function parseWhereForQuery($where){ 
+        
+        $strWhere = \'\';
+        if($this->isOneVersionWhere($where) ){
+            // (ru) - если условия 1 варианта
+            // (en) - if conditions 1 options
+            $strWhere = $this->getStrOneTypeWhere($where);
+
+        }elseif($this->isTwoVersionWhere($where) ){
+            // (ru) - если условие 2 варианта
+            // (en) - if condition 2 options
+            $strWhere = $this->getStrTwoTypeWhere($where);
+        } 
+        // (ru) - остальное пока не поддерживается
+        // (en) - the rest is not yet supported
+        
+        return $strWhere;
+    }
+        
+     /**
+     * selectDb - запрос типа select. на получение данных
+     * @param $db - расурс, коннект к базе данных
+     * @param string $tableName - имя таблицы 
+     * @param array $propertys - параметры (какие поля вернуть или * - все)
+     * @param array $where - условия запроса, массив специальной структуры в виде дерева (может не быть)
+     * @return - false or object result query
+     */
+    public function selectDb($tableName, $propertys, $where = array()){
+        $query = \'SELECT \';
+        
+        //$propertys = $this->allValueArrayInMbStrtolower($propertys);
+        
+        $strPropertys = implode(",", $propertys);
+       
+        if(!empty($where)){            
+            $where = \' WHERE \'.$this->parseWhereForQuery($where);
+        }else{
+            $where = \'\';
+        }
+   
+        $query .= $strPropertys.\' FROM \'.$tableName.$where.\';\';
+           
+        return  $this->query($query);
+    }
+    
+    private static function allValueArrayInMbStrtolower($array){
+        
+        foreach ($array as $key => $value) {
+            $where[$key] = mb_strtolower($value);
+        }
+        return $where;
+    }
+    
+    /**
+     * insertDb - вставка, добавление новых строк в базу данных
+     * @param string $tableName - имя таблицы 
+     * @param array $propertys - параметры (поле = значение)
+     * @return - false or object result query
+     */
+    public function insertDb($tableName, $propertys){
+        $query = \'\';
+        
+        // разбить параметры на два списка через запятую // TODO вынести куда то
+        global $crypto;
+        $nameProperty = \'\';
+        $valueProperty = \'\';
+        foreach ($propertys as $key=> $val){
+            $nameProperty .= (($nameProperty != \'\')? \', \': \'\').$key;
+
+            if ($key == \'pass\'){
+                $val = md5($val.$crypto->getSole());
+            }
+
+            if (!is_numeric($val)){
+                $val = "\'".$val."\'";
+            }
+
+            $valueProperty .= (($valueProperty != \'\')? \', \': \'\').$val;
+        }
+        ////
+
+        $query = "INSERT INTO ".$tableName." (".$nameProperty." ) VALUES(".$valueProperty.")";
+               
+        return  $this->query($query);
+    }
+    
+    /**
+     * updateDb - обновить поле таблицы
+     * @param string $tableName - имя таблицы
+     * @param array $propertys - параметры (поле = значение)
+     * @param array $where - условия запроса, массив специальной структуры в виде дерева (может не быть)
+     * @return - false or object result query
+     */
+    public function updateDb($tableName, $propertys, $where = array()){
+        $query = \'UPDATE \';
+        $textPropertys = \'\';
+        global $crypto;
+        foreach ($propertys as $key => $val){
+            
+            if ($key == \'pass\'){
+                $val = md5($val.$crypto->getSole());
+            }
+            
+            if (!is_numeric($val)){
+                $val = "\'".$val."\'";
+            }
+            $textPropertys .= ((!empty($textPropertys))? \',\': \'\').\' \'.$key.\'=\'.$val;
+        }
+
+        if(!empty($where)){            
+            $where = \' WHERE \'.$this->parseWhereForQuery($where); 
+        }else{
+            $where = \'\';
+        }
+                
+        $query .= $tableName.\' SET \'.$textPropertys.$where.\';\';
+                    
+        return  $this->query($query);
+    }
+    
+    /**
+     * createTable - создать таблицу в базе данных
+     * @param string $tableName - имя таблицы
+     * @param array $propertys - параметры (приер  login varchar(50), name varchar(50) ...) 
+     * @return - false or object result query
+     */
+    public function createTable($tableName, $propertys){
+        $query = \'\';
+        $textPropertys = \'\';
+        
+        foreach($propertys as $val){
+            $strPos = strpos($val, \'int PRIMARY KEY AUTO_INCREMENT\');
+            if($strPos !== false ){
+                $val = str_replace(\'int PRIMARY KEY AUTO_INCREMENT\', \'SERIAL PRIMARY KEY\', $val);
+            }
+            $textPropertys .= ((!empty($textPropertys))? \',\': \'\').\' \'.$val;
+        }       
+        $query = \'CREATE TABLE IF NOT EXISTS \'.$tableName.\' (\'.$textPropertys.\');\';
+
+        return  $this->query($query);
+    }
+    
+    /**
+     * deleteDb - удаление строк из таблицы
+     * @param string $tableName - имя таблицы
+     * @param array $where - условия запроса, что удалять
+     * @return boolean
+     */
+    public function deleteDb($tableName, $where){
+        $query = \'\';
+        if(!empty($where)){            
+            $where = \' WHERE \'.$this->parseWhereForQuery($where);
+        }else{
+            $where = \'\';
+        }
+        
+        $query = \'DELETE FROM \'.$tableName.$where;
+                    
+        return  $this->query($query);
+    }
+    
+    public function __destruct() {
+        if ( !empty($this->db)){
+            $this->close($this->db);
+        }
+    }
+}
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/classes/',
+  ),
+  './gy/classes/security.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+/** 
+ * security - класс с методами для обеспечения безопасности gy framework
+ * class work security 
+ */
+
+class security{
+    
+    /**
+     * filterInputData 
+     *  - фильтр входных данных, в присланных данных уберёт лишнее
+     * 
+     * @param array/string $data - потенциально с вредоносом
+     * @return array/string - с большей частью вырезанным вредоносом
+     */
+    public static function filterInputData($data){
+        if(is_array($data)){
+            foreach ($data as $key => $value) {
+                $data[$key] = self::filterInputData($value);
+            }
+        }else{
+            return self::clearValue($data);
+        }
+        return $data;
+    }
+    
+    
+    /**
+     * clearValue 
+     *  - обработать одно значение, что бы лишнее не прошло
+     *  (если передадут случайно массив то тоже отработает)
+     * 
+     * @param string $value
+     * @return string
+     */
+    private static function clearValue($value){
+        $value = trim($value);
+        $value = stripslashes($value);
+        $value = strip_tags($value);
+        $value = htmlspecialchars($value);   
+        return $value;
+    }
+
+    
+}
+    
+
 ',
     'TYPE' => 'php',
     'DIR' => './gy/classes/',
@@ -2101,47 +3418,47 @@ class mysql extends db{
   './gy/classes/template.php' => 
   array (
     'CODE' => '<?php
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 class template{
-	public $templateUrl; // ссылка на шаблон
-	// public $name; // имя шаблона
-	public $lang;
+    public $templateUrl; // ссылка на шаблон
+    // public $name; // имя шаблона
+    public $lang;
     private $urlFileStyle; // url на файл со стилями, для этого шаблона
     private $urlFileJs; // url для файла с js, для этого шаблона
     
-	public function __construct($url, $lang){
-		$this->templateUrl = $url.\'/template.php\';
-        
+    public function __construct($url, $lang){
+        $this->templateUrl = $url.\'/template.php\';
+
         // проверить существует ли файл стилей для компонента
         if(file_exists($url.\'/style.css\')){
             $this->urlFileStyle = $url.\'/style.css\';
         }
-        
+
         // если есть файл js 
         if(file_exists($url.\'/script.js\')){
             $this->urlFileJs = $url.\'/script.js\';
         }
-        
-		$this->lang = new lang($url, \'template\', $lang);
-	}
 
-	/* show - нарисовать/показать шаблон 
-	*	arr - массив с данными для шаблона
-	*/
-	/*public function show($arr){
-		$arRes = $arr;
-		include $this->template_url;
-		// TODO как то по красивее сделать
-	}*/
+        $this->lang = new lang($url, \'template\', $lang);
+    }
 
-	/** 
-	 * show - нарисовать/показать шаблон 
-	 * @param $arRes - массив с данными для шаблона // array for template
-	 * 
-	 * @return void - ничего не вернёт, подключится файл шаблона // include template
-	 */
-	public function show($arRes, $arParam){
+    /* show - нарисовать/показать шаблон 
+    *	arr - массив с данными для шаблона
+    */
+    /*public function show($arr){
+        $arRes = $arr;
+        include $this->template_url;
+        // TODO как то по красивее сделать
+    }*/
+
+    /** 
+     * show - нарисовать/показать шаблон 
+     * @param $arRes - массив с данными для шаблона // array for template
+     * 
+     * @return void - ничего не вернёт, подключится файл шаблона // include template
+     */
+    public function show($arRes, $arParam){
         
         // если есть стили то добавить стили
         if(!empty($this->urlFileStyle)){
@@ -2151,7 +3468,7 @@ class template{
         }
         
         // файл шаблона
-		include $this->templateUrl;
+        include $this->templateUrl;
         
         // если есть js то добавить его
         if(!empty($this->urlFileJs)){
@@ -2159,7 +3476,7 @@ class template{
             include $this->urlFileJs;
             echo \'</script>\';
         }
-	}
+    }
 }
 
 ',
@@ -2169,15 +3486,15 @@ class template{
   './gy/classes/user.php' => 
   array (
     'CODE' => '<?
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 class user{ 
 	
-	protected $authorized = false;
-	protected $dataUser;
-	protected $nameCookie = \'gy_user_auth\';
-	protected $admin = false; 
-	public $tableName = \'users\';
+    protected $authorized = false;
+    protected $dataUser;
+    protected $nameCookie = \'gy_user_auth\';
+    protected $admin = false; 
+    public $tableName = \'users\';
 
     public function __construct() {
         $this->checkUserCookie();
@@ -2199,45 +3516,45 @@ class user{
      * getDataThisUser - получить данные по текущему, авторизованному пользователю
      * @return array
      */
-	public function getDataThisUser(){
-		return $this->dataUser;
-	}
+    public function getDataThisUser(){
+        return $this->dataUser;
+    }
 	
     /**
      * isAdmin - проверить является ли текущий, авторизованный пользователем администратором
      * @return booleand
      */
-	public function isAdmin(){
-		return $this->admin;
-	}
+    public function isAdmin(){
+        return $this->admin;
+    }
 	
-	/**
-	 * getAuthorized - узнать авторизован ли пользователь
-	 * @return booleand
-	 */
-	public function getAuthorized(){
-		return $this->authorized;
-	}
-	
-	/**
-	 * getId - получить id текущего пользователя
-	 * @return int
-	 */
-	public function getId(){
-		return $this->dataUser[\'id\'];
-	}
+    /**
+     * getAuthorized - узнать авторизован ли пользователь
+     * @return booleand
+     */
+    public function getAuthorized(){
+        return $this->authorized;
+    }
 
-	/**
+    /**
+     * getId - получить id текущего пользователя
+     * @return int
+     */
+    public function getId(){
+        return $this->dataUser[\'id\'];
+    }
+
+    /**
      * authorized - авторизовать пользователя
      * @param type $log - логин
      * @param type $pass - пароль
      * @return booleand 
      */
-	public function authorized($log, $pass ){
-		$result = $this->chackUser($log, $pass);
-		$this->authorized = $result;
-		return $result;
-	}
+    public function authorized($log, $pass ){
+        $result = $this->chackUser($log, $pass);
+        $this->authorized = $result;
+        return $result;
+    }
 	
     /**
      * chackUser - проверить существует ли пользователь
@@ -2247,33 +3564,33 @@ class user{
      * @param type $pass - пароль
      * @return booleand
      */
-	protected function chackUser($log, $pass) { 
-		$result = false;
-		
-		global $db;
-		global $crypto;		
+    protected function chackUser($log, $pass) { 
+        $result = false;
+
+        global $db;
+        global $crypto;		
 			
         $res = $db->selectDb(
             $this->tableName, 
             array(\'*\'), 
             array(
                 \'AND\' => array( 
-                    \'=\' => array(\'login\', "\'".$log."\'" ),
-                    \'AND\' => array( \'=\' => array(\'pass\',"\'".md5($pass.$crypto->getSole())."\'") )
+                    array(\'=\' => array(\'login\', "\'".$log."\'" ) ),
+                    array( \'=\' => array(\'pass\',"\'".md5($pass.$crypto->getSole())."\'") )
                 ),   
             )    
         );
         
-		if ($arRes = $db->fetch($res)){				
-			
-			//$this->setUserCookie($arRes[\'id\'] , $crypto->getRandString());
-			$this->setUserCookie($arRes[\'id\'] , $crypto->getStringForUserCookie($arRes[\'login\'], $arRes[\'name\'], $arRes[\'id\']));
-			$result = true;		
-		}
+        if ($arRes = $db->fetch($res)){				
+
+            //$this->setUserCookie($arRes[\'id\'] , $crypto->getRandString());
+            $this->setUserCookie($arRes[\'id\'] , $crypto->getStringForUserCookie($arRes[\'login\'], $arRes[\'name\'], $arRes[\'id\']));
+            $result = true;		
+        }
+
+        return $result;
 		
-		return $result;
-		
-	}
+    }
 	
     /**
      * setUserCookie - установить пользовательскую куку
@@ -2282,9 +3599,9 @@ class user{
      * @param string $StringCookie - строка, значение куки
      * @return boolean
      */
-	protected function setUserCookie($userId, $StringCookie){
-		setcookie($this->nameCookie, $StringCookie, 0, \'/\');
-		global $db;
+    protected function setUserCookie($userId, $StringCookie){
+        setcookie($this->nameCookie, $StringCookie, 0, \'/\');
+        global $db;
         
         $res = $db->updateDb(
             $this->tableName, 
@@ -2292,8 +3609,8 @@ class user{
             array( \'=\' => array(\'id\' , $userId ) )    
         );
         
-		return true;
-	}
+        return true;
+    }
 	
     /**
      * deleteUserCookie - удалить пользовательскую куку
@@ -2302,10 +3619,10 @@ class user{
      * @param int $userId - id пользователя
      * @return boolean
      */
-	protected function deleteUserCookie($userId){
-		global $_COOKIE;
-		unset($_COOKIE[$this->nameCookie]);
-		global $db;
+    protected function deleteUserCookie($userId){
+        global $_COOKIE;
+        unset($_COOKIE[$this->nameCookie]);
+        global $db;
         
         $res = $db->updateDb(
             $this->tableName, 
@@ -2313,38 +3630,38 @@ class user{
             array( \'=\' => array(\'id\' , $userId ) )    
         );
         
-		return true;
-	}
+        return true;
+    }
 	
     /**
      * checkUserCookie - проверить пользовательскую куку
      * @global type $_COOKIE
      * @return boolean
      */
-	public function checkUserCookie(){
-		$result = false;
-		
-		global $_COOKIE;
-		
-		if(!empty($_COOKIE[$this->nameCookie]) ){
-						
-			$dataUser = $this->findUserByCookie($_COOKIE[$this->nameCookie]);
-						
-			if ($dataUser !== false){
-				$this->dataUser = $dataUser;
-                
+    public function checkUserCookie(){
+        $result = false;
+
+        global $_COOKIE;
+
+        if(!empty($_COOKIE[$this->nameCookie]) ){
+
+            $dataUser = $this->findUserByCookie($_COOKIE[$this->nameCookie]);
+
+            if ($dataUser !== false){
+                $this->dataUser = $dataUser;
+
                 // получить группы к каким относится пользователь
                 $this->dataUser[\'groups\'] = accessUserGroup::getListGroupsByUser($dataUser[\'id\']);
-                
-				$this->authorized = true;
-				if ( !empty($this->dataUser[\'groups\'][\'admins\']) ){
-					$this->admin = true;
-				}
-				$result = true;
-			}
-		}
-		return $result;
-	}
+
+                $this->authorized = true;
+                if ( !empty($this->dataUser[\'groups\'][\'admins\']) ){
+                    $this->admin = true;
+                }
+                $result = true;
+            }
+        }
+        return $result;
+    }
 	
     /**
      * findUserByCookie - найти пользователя по значению куки
@@ -2352,42 +3669,41 @@ class user{
      * @param string $cookie
      * @return array - данные пользователя
      */
-	protected function findUserByCookie($cookie){
-		$result = false;
-		
-		global $db;
-		
-		//$res = $db->query($db->db, \'select * from users where hash_auth="\'.$cookie.\'";\');
-			
+    protected function findUserByCookie($cookie){
+        $result = false;
+
+        global $db;
+
         $res = $db->selectDb(
             $this->tableName, 
             array(\'*\'), 
             array( \'=\' => array(\'hash_auth\', "\'".$cookie."\'") ) 
         );
-        
-		if ($arRes = $db->fetch($res)){
-			$result = $arRes;		
-		}
-				
-		return $result;
-	}
+
+        if ($arRes = $db->fetch($res)){
+            $result = $arRes;		
+        }
+
+        return $result;
+    }
 	
     /**
      * userExit - сделать выход для пользователя 
      * @return boolean
      */
-	public function userExit(){
-		return $this->deleteUserCookie($this->dataUser[\'id\']);
-	}
+    public function userExit(){
+        return $this->deleteUserCookie($this->dataUser[\'id\']);
+    }
 	
     /**
      * getAllDataUsers - получить данные по пользователю 
      * @global type $db
      * @return array
      */
-	public function getAllDataUsers(){
-		$result = array();
-		global $db;		        
+    public function getAllDataUsers(){
+        $result = array();
+        
+        global $db;		        
         $res = $db->selectDb( 
             $this->tableName, 
             array(\'*\')
@@ -2399,8 +3715,8 @@ class user{
             $result[$key][\'groups\'] = accessUserGroup::getListGroupsByUser($value[\'id\']);
         }
         
-		return $result;
-	}
+        return $result;
+    }
 	
     /**
      * getUserById - получить данные по пользователю по id
@@ -2409,8 +3725,8 @@ class user{
      * @return array
      */
     public function getUserById($id){
-		$result = array();
-		global $db;		        
+        $result = array();
+        global $db;		        
         $res = $db->selectDb( 
             $this->tableName, 
             array(\'*\'),
@@ -2420,11 +3736,13 @@ class user{
         );
         $result = $db->fetch($res, false);
         
-        // получить группы текущего пользователя
-        $result[\'groups\'] = accessUserGroup::getListGroupsByUser($id);
+        if(!empty($result)){
+            // получить группы текущего пользователя
+            $result[\'groups\'] = accessUserGroup::getListGroupsByUser($id);
+        }
         
-		return $result;
-	}
+        return $result;
+    }
     
     /**
      * addUsers - добавить пользователя
@@ -2433,19 +3751,19 @@ class user{
      * @param type $data
      * @return boolean
      */
-	public function addUsers($data){
-		$result = false;
+    public function addUsers($data){
+        $result = false;
 
-		// id, login, name, pass, groups
-		global $db;		
+        // id, login, name, pass, groups
+        global $db;		
         $res = $db->insertDb($this->tableName, $data);
                 
         if ($res){
-			$result = true;
-		}
+            $result = true;
+        }
 			
-		return $result;
-	}
+        return $result;
+    }
 	
     /**
      * updateUserById - обновление данных пользователя
@@ -2459,68 +3777,91 @@ class user{
 
         unset($arParams[\'id\']);
         
-		global $db;		
+        global $db;		
         $res = $db->updateDb($this->tableName, $arParams, array(\'=\' => array(\'id\', $userId)));
         
         if ($res){
-			$result = true;
-		}
+            $result = true;
+        }
 			
-		return $result; 
+        return $result; 
     }
     
     /**
      * deleteUserById - удалить пользователя
      * @global type $db
-     * @param int $idUser - id пользователя
+     * @param int $id_user - id пользователя
      * @return string
      */
-	public function deleteUserById($idUser){
-		$result = false;
-		
-		if (is_numeric($idUser) && ($idUser != 1)){
-			global $db;
-			
-			$res = $db->query(\'DELETE FROM \'.$this->tableName.\' WHERE id = \'.$idUser.\';\');
+    public function deleteUserById($id_user){
+        $result = false;
 
-			if ($res){
-				$result = true;		
-			}
-		}		
-		return $result;
-	}
+        if (is_numeric($id_user) && ($id_user != 1)){
+            global $db;
+
+            $res = $db->deleteDb($this->tableName, array(\'=\'=>array(\'id\', $id_user)));
+
+            if ($res){
+                $result = true;		
+            }
+        }		
+        return $result;
+    }
 	
 }
 ',
     'TYPE' => 'php',
     'DIR' => './gy/classes/',
   ),
+  './gy/component/add_user/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/component/add_user/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'add_user\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+    \'all-property\' => array(
+        \'back-url\',
+    ),
+    \'all-property-text\' => array(
+        \'back-url\' => $langComponentInfo->GetMessage(\'property-back-url\'),
+    )
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/add_user/',
+  ),
   './gy/component/add_user/controller.php' => 
   array (
     'CODE' => '<?php 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $data  = $_REQUEST;
 
 $arRes[\'user_property\'] = array(
-	\'login\', 
-	\'name\', 
-	\'pass\', 
-	\'groups\'
+    \'login\', 
+    \'name\', 
+    \'pass\', 
+    \'groups\'
 );
 
-$redirectUrl = str_replace(\'index.php\', \'\', $_SERVER[\'DOCUMENT_URI\']);
+$redirectUrl = str_replace(\'index.php\', \'\', $_SERVER[\'SCRIPT_NAME\']);
 
 // взять все группы пользователей
 $arRes[\'allUsersGroups\'] = accessUserGroup::getAccessGroup();
 
 function checkProperty($arr, $arRes){
-	$result = true;
-	foreach ($arRes[\'user_property\'] as $val){	
+    $result = true;
+    foreach ($arRes[\'user_property\'] as $val){	
         if (empty($arr[$val])){
             $result = false;
         }    
-	}
+    }
     
     if($result){
         foreach ($arr[\'groups\'] as $value) {  // TODO протестировать
@@ -2535,22 +3876,22 @@ function checkProperty($arr, $arRes){
         }
     }
     
-	return $result;
+    return $result;
 }
 
 if (!empty($data[\'Добавить\']) && ($data[\'Добавить\'] == \'Добавить\')) {
-	if(checkProperty($data, $arRes)){
-		// добавление пользователя
-		global $user;
-		$arDaraUser = array();
-		foreach ($arRes[\'user_property\'] as $val){
-			$arDaraUser[$val] = $data[$val];
-		}
+    if(checkProperty($data, $arRes)){
+        // добавление пользователя
+        global $user;
+        $arDaraUser = array();
+        foreach ($arRes[\'user_property\'] as $val){
+            $arDaraUser[$val] = $data[$val];
+        }
 		
         // убрать группы из добавления
         unset($arDaraUser[\'groups\']);
        
-		if( $user->addUsers($arDaraUser)){
+        if( $user->addUsers($arDaraUser)){
             // найти id добавленного пользователя
             global $db;		   
             global $crypto;
@@ -2559,8 +3900,8 @@ if (!empty($data[\'Добавить\']) && ($data[\'Добавить\'] == \'Д�
                 array(\'*\'),
                 array(
                     \'AND\' => array(
-                        \'=\' => array(\'login\', "\'".$arDaraUser[\'login\']."\'"),
-                        \'AND\' => array(\'=\' => array(\'pass\', "\'".md5($arDaraUser[\'pass\'].$crypto->getSole())."\'") )
+                        array(\'=\' => array(\'login\', "\'".$arDaraUser[\'login\']."\'")),
+                        array(\'=\' => array(\'pass\', "\'".md5($arDaraUser[\'pass\'].$crypto->getSole())."\'") )
                     )
                 )
             );
@@ -2572,24 +3913,24 @@ if (!empty($data[\'Добавить\']) && ($data[\'Добавить\'] == \'Д�
                 accessUserGroup::addUserInGroup($dataAddNewUser[\'id\'], $value);
             }
             
-			$arRes["stat"] = \'ok\';
-		} else{
-			$arRes["stat"] = \'err\';
-		}
+            $arRes["stat"] = \'ok\';
+        } else{
+            $arRes["stat"] = \'err\';
+        }
 				
-	}else{
-		$arRes["stat-text"] = \'! Не все поля заполнены\';
-		$arRes["stat"] = \'err\';
-	}
+    }else{
+        $arRes["stat-text"] = \'! Не все поля заполнены\';
+        $arRes["stat"] = \'err\';
+    }
 	
 } elseif( (!empty($arRes["stat"]) && ($arRes["stat"] != \'err\')) || empty($arRes["stat"]) ) {
-	$arRes["stat"] = \'add\';
+    $arRes["stat"] = \'add\';
 }
 
 if (empty($data[\'stat\'])){
-	header( \'Location: \'.$redirectUrl.\'?stat=\'.$arRes["stat"] );
+    header( \'Location: \'.$redirectUrl.\'?stat=\'.$arRes["stat"] );
 }else{
-	$arRes["stat"] = $data[\'stat\'];
+    $arRes["stat"] = $data[\'stat\'];
 }
 
 // показать шаблон
@@ -2598,18 +3939,30 @@ $this->template->show($arRes, $this->arParam);
     'TYPE' => 'php',
     'DIR' => './gy/component/add_user/',
   ),
+  './gy/component/add_user/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Компонент нужен для добавление пользователя\',
+    \'property-back-url\' => \'Ссылка на страницу откуда идёт добавление пользователя\',
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/add_user/',
+  ),
   './gy/component/add_user/teplates/0/lang_template.php' => 
   array (
     'CODE' => '<? // языковой файл для шаблона компонента
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
-	\'button\' => \'Добавить\',
-	\'id\' => \'id\', 
-	\'login\' => \'Логин\', 
-	\'name\' => \'Имя\', 
-	\'pass\' => \'Пароль\', 
-	\'groups\' => \'Группа прав\',
+    \'button\' => \'Добавить\',
+    \'id\' => \'id\', 
+    \'login\' => \'Логин\', 
+    \'name\' => \'Имя\', 
+    \'pass\' => \'Пароль\', 
+    \'groups\' => \'Группа прав\',
     \'title-add\' => \'Добавление нового пользователя\',
     \'back\' => \'<< Назад\',
     \'ok\' => \'ok\',
@@ -2624,7 +3977,7 @@ $mess[\'rus\'] = array(
   './gy/component/add_user/teplates/0/template.php' => 
   array (
     'CODE' => '<?
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 ?>
 <h3><?=$this->lang->GetMessage(\'title-add\');?></h3>
@@ -2633,15 +3986,15 @@ if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !==
 if (!empty($arParam[\'back-url\'])){?>
     <br/>
     <br/>
-	<a class="gy-admin-button" href="<?=$arParam[\'back-url\'];?>"><?=$this->lang->GetMessage(\'back\');?></a>
-	<br/>
-	<br/>
+    <a class="gy-admin-button" href="<?=$arParam[\'back-url\'];?>"><?=$this->lang->GetMessage(\'back\');?></a>
+    <br/>
+    <br/>
 <?}?>
 <? if ($arRes["stat"] == \'add\') {?>
-	<form>
-		<? foreach ($arRes["user_property"] as $key => $val ){?>
-			<?=$this->lang->GetMessage($val);?>:<br/>
-			<?if($val != \'groups\'){?>
+    <form>
+        <? foreach ($arRes["user_property"] as $key => $val ){?>
+            <?=$this->lang->GetMessage($val);?>:<br/>
+            <?if($val != \'groups\'){?>
                 <input type="<?=(($val == \'pass\')? \'password\': \'text\');?>" name="<?=$val;?>" />
             <?}else{?>
                 <select multiple name="groups[]">
@@ -2652,11 +4005,11 @@ if (!empty($arParam[\'back-url\'])){?>
                     <?}?>
                 </select>
             <?}?>
-            <br/>
-		<?}?>
-		<input class="gy-admin-button" type="submit" name="<?=$this->lang->GetMessage(\'button\');?>" value="<?=$this->lang->GetMessage(\'button\');?>" />
+        <br/>
+        <?}?>
+    <input class="gy-admin-button" type="submit" name="<?=$this->lang->GetMessage(\'button\');?>" value="<?=$this->lang->GetMessage(\'button\');?>" />
 
-	</form>	
+    </form>	
 	
 <?}elseif($arRes["stat"] == \'ok\'){?>
     <div class="gy-admin-good-message"><?=$this->lang->GetMessage(\'add-ok\');?></div>
@@ -2664,9 +4017,9 @@ if (!empty($arParam[\'back-url\'])){?>
     <a href="<?=$arParam[\'back-url\'];?>" class="gy-admin-button"><?=$this->lang->GetMessage(\'ok\');?></a>
 <?}elseif($arRes["stat"] == \'err\'){?>
     <div class="gy-admin-error-message"><?=$this->lang->GetMessage(\'add-err\');?></div>
-	<?if (!empty($arRes["stat-text"])){?>
-		<br/> <?=$arRes["stat-text"];?>
-	<?}?>
+    <?if (!empty($arRes["stat-text"])){?>
+        <br/> <?=$arRes["stat-text"];?>
+    <?}?>
     <br/>
     <a href="<?=$arParam[\'back-url\'];?>" class="gy-admin-button"><?=$this->lang->GetMessage(\'ok\');?></a>
 <? } 
@@ -2674,10 +4027,28 @@ if (!empty($arParam[\'back-url\'])){?>
     'TYPE' => 'php',
     'DIR' => './gy/component/add_user/teplates/0/',
   ),
+  './gy/component/admin/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/component/admin/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'admin\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+    \'all-property\' => array()
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/admin/',
+  ),
   './gy/component/admin/controller.php' => 
   array (
     'CODE' => '<?php
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $arRes = array();
 
@@ -2689,13 +4060,24 @@ $this->template->show($arRes, $this->arParam);
     'TYPE' => 'php',
     'DIR' => './gy/component/admin/',
   ),
+  './gy/component/admin/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Запустит внутри себя компонент form_auth\',
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/admin/',
+  ),
   './gy/component/admin/lang_controller.php' => 
   array (
     'CODE' => '<? // языковой файл для компонента
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
-	//\'test\' => \'ok\',
+    //\'test\' => \'ok\',
 );
 ',
     'TYPE' => 'php',
@@ -2704,10 +4086,10 @@ $mess[\'rus\'] = array(
   './gy/component/admin/teplates/0/lang_template.php' => 
   array (
     'CODE' => '<? // языковой файл для шаблона компонента
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
-	\'hi\' => \'Админка gy framework\',
+    \'hi\' => \'Админка gy framework\',
 );
 
 ',
@@ -2718,15 +4100,17 @@ $mess[\'rus\'] = array(
   array (
     'CODE' => '<?/*<H2><?=$this->lang->GetMessage(\'hi\');?></h2>*/?>
 <?
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 global $app;
 
 $app->component(
-	\'form_auth\',
-	\'0\',
-	array( 
-	)
+    \'form_auth\',
+    \'0\',
+    array( 
+        \'test\' => \'asd\',
+        \'idComponent\' => 1,
+    )
 );
 
 
@@ -2734,10 +4118,217 @@ $app->component(
     'TYPE' => 'php',
     'DIR' => './gy/component/admin/teplates/0/',
   ),
+  './gy/component/admin-button-public-site/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/component/admin-button-public-site/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'admin-button-public-site\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+    \'all-property\' => array()
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/admin-button-public-site/',
+  ),
+  './gy/component/admin-button-public-site/controller.php' => 
+  array (
+    'CODE' => '<?php 
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $user;
+
+// если есть права просматривать админку
+if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
+    // получить логин пользователя
+    $thisLogin = $user->getDataThisUser()[\'name\'];	
+    $arRes["auth_user"] = $thisLogin;    
+    
+    $this->template->show($arRes, $this->arParam);
+}',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/admin-button-public-site/',
+  ),
+  './gy/component/admin-button-public-site/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Отобразит панель администратора в публичной части\',
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/admin-button-public-site/',
+  ),
+  './gy/component/admin-button-public-site/teplates/0/lang_template.php' => 
+  array (
+    'CODE' => '<? // языковой файл для шаблона компонента
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'button-admin\' => \'Gy - раздел администрирования сайта\',
+    \'hi\' => \'Привет, \',
+    \'exit\' => \'Выйти\',
+    \'button-work-page\' => \'Работа со страницами сайта\'
+);
+
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/admin-button-public-site/teplates/0/',
+  ),
+  './gy/component/admin-button-public-site/teplates/0/style.css' => 
+  array (
+    'CODE' => '.gy-admin-panel{
+    width: 735px;
+    height: 140px;
+    /*background-color: #adade4;*/
+    margin-left: -10;
+    margin-top: -10;
+    padding-left: 8px;
+    border-radius: 7px;
+    background: url(/gy/images/fon.png) #9292ef;
+    box-shadow: 0.4em 0.4em 5px rgba(122,122,122,0.5);
+}
+
+.gy-admin-panel > H2{
+    padding-top: 8px;
+    margin-bottom: 12px;
+}
+.gy-admin-panel > .edit-button{
+    padding-top: 10px;
+    margin-top: 30px;
+}
+
+
+
+.gy-admin-edit-button{
+    box-shadow: 0.4em 0.4em 5px rgba(122,122,122,0.5);
+    margin: 0px;
+    border: 0;
+    height: auto;
+    padding: 2px 30px 4px;
+    background-color: #265ed0 ;
+    border-radius: 2px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+} 
+.gy-admin-edit-button:hover { 
+    background: #5b81ce; 
+}
+.gy-admin-edit-button:active { 
+    background: #5b81ce; 
+}
+
+.gy-admin-panel-button{
+    box-shadow: 0.4em 0.4em 5px rgba(122,122,122,0.5);
+    margin: 0px;
+    border: 0;
+    height: auto;
+    padding: 2px 30px 4px;
+    background-color: #639;
+    border-radius: 2px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+} 
+.gy-admin-panel-button:hover { 
+    background: #8b5db9; 
+}
+.gy-admin-panel-button:active { 
+    background: #412260; 
+}
+
+.gy-admin-panel > .gy-admin-logo{
+    text-shadow: 1px 1px 2px #05ff07, 0 0 1em #0205ff;
+
+}
+.div-button-admin-panel{
+    float: left;
+    width: 70%;
+}
+.div-login{
+    float: left;
+    width: 30%;
+}
+
+.version-gy-core-admin-panel{
+    padding-left: 0px;
+    position: absolute;
+    top: 30px;
+    font-size: 9pt;
+    font-style: italic;
+    background-color: aquamarine;
+    left: 270px;
+}',
+    'TYPE' => 'css',
+    'DIR' => './gy/component/admin-button-public-site/teplates/0/',
+  ),
+  './gy/component/admin-button-public-site/teplates/0/template.php' => 
+  array (
+    'CODE' => '<?if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );?>
+
+<div class="gy-admin-panel">
+    <h2 class="gy-admin-logo">Админка gy framework</h2>
+    <?
+    global $app;
+    if(!empty($app->options[\'v-gy\'])){?>
+        <span class="version-gy-core-admin-panel">v <?=$app->options[\'v-gy\']?></span>
+        <br/>
+    <?}?>
+    <div>
+        <div class="div-button-admin-panel">
+            <a href="/gy/admin/" class="gy-admin-panel-button"><?=$this->lang->GetMessage(\'button-admin\');?></a>
+           
+        </div>
+        <div class="div-login">
+            <?=$this->lang->GetMessage(\'hi\');?><?=$arRes["auth_user"]?>
+            &nbsp;
+            <a 
+                href="/gy/admin?<?=$this->lang->GetMessage(\'exit\');?>=<?=$this->lang->GetMessage(\'exit\');?>" 
+                class="gy-admin-panel-button"
+            >
+                <?=$this->lang->GetMessage(\'exit\');?>
+            </a>
+        </div>
+        
+    </div>
+    <div class="edit-button"> <?// TODO надо что бы была возможность добавлять кнопки из модулей?>
+        <a href="/gy/admin/get-admin-page.php?page=work-page-site" class="gy-admin-edit-button"><?=$this->lang->GetMessage(\'button-work-page\');?></a>
+    </div>
+</div>',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/admin-button-public-site/teplates/0/',
+  ),
+  './gy/component/capcha/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/component/capcha/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'capcha\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+    \'all-property\' => array()
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/capcha/',
+  ),
   './gy/component/capcha/controller.php' => 
   array (
     'CODE' => '<?php 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 global $app;
 
@@ -2757,10 +4348,21 @@ if (!empty($_REQUEST[\'capcha_get_image\']) && ($_REQUEST[\'capcha_get_image\'] 
     'TYPE' => 'php',
     'DIR' => './gy/component/capcha/',
   ),
+  './gy/component/capcha/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Капча, выведет картинку с буквами/цифрами, полем ввода и кнопкой отправить\',
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/capcha/',
+  ),
   './gy/component/capcha/teplates/0/lang_template.php' => 
   array (
     'CODE' => '<? // языковой файл для шаблона компонента
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
 );
@@ -2771,7 +4373,7 @@ $mess[\'rus\'] = array(
   ),
   './gy/component/capcha/teplates/0/template.php' => 
   array (
-    'CODE' => '<?if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );?>
+    'CODE' => '<?if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );?>
 
 <div>
     <img src="?capcha_get_image=1" />
@@ -2780,10 +4382,415 @@ $mess[\'rus\'] = array(
     'TYPE' => 'php',
     'DIR' => './gy/component/capcha/teplates/0/',
   ),
+  './gy/component/edit-all-users-propertys/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/component/edit-all-users-propertys/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'edit-all-users-propertys\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+    \'all-property\' => array()
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/edit-all-users-propertys/',
+  ),
+  './gy/component/edit-all-users-propertys/controller.php' => 
+  array (
+    'CODE' => '<?php 
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$data = $_REQUEST;
+
+// получить все возможные типы свойств
+$arRes[\'allTypePropertys\'] = generalUsersPropertys::getAllTypeAllUsersPropertys();
+
+// сохранить новое свойство
+if(
+    !empty($data[\'name_property\'])
+    && !empty($data[\'type_property\'])   
+    && !empty($arRes[\'allTypePropertys\'] )   
+    && !empty($arRes[\'allTypePropertys\'][$data[\'type_property\']]) 
+    && !empty($data[\'code\'])
+){
+    $flag = generalUsersPropertys::addUsersPropertys(
+        $data[\'name_property\'], 
+        $data[\'type_property\'], 
+        $data[\'code\'] 
+    );
+    
+    if($flag){
+        $arRes[\'stat\'] = \'ok\';
+    }else{
+        $arRes[\'stat\'] = \'err\';
+    }
+}
+
+
+// получить все общие свойства пользователей которые были созданы
+$arRes[\'allUsersCreatePropertys\'] = generalUsersPropertys::getAllGeneralUsersPropertys();
+
+// если удаление свойства
+if(
+    is_numeric($data[\'del-id\'])    
+    && !empty($data[\'del-id\'])
+    && !empty($arRes[\'allUsersCreatePropertys\'][$data[\'del-id\']])
+){
+    $flag = generalUsersPropertys::deleteUserProperty($data[\'del-id\']);
+    if($flag){
+        $arRes[\'stat\'] = \'ok\';
+    }else{
+        $arRes[\'stat\'] = \'err\';
+    }
+}
+
+// показать шаблон
+$this->template->show($arRes, $this->arParam);
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/edit-all-users-propertys/',
+  ),
+  './gy/component/edit-all-users-propertys/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Редактирование общих свойств пользователей\',
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/edit-all-users-propertys/',
+  ),
+  './gy/component/edit-all-users-propertys/teplates/0/lang_template.php' => 
+  array (
+    'CODE' => '<? // языковой файл для шаблона компонента
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'ok\' => \'Ok\',
+    \'title\' => \'Общие свойства пользователей\',
+    \'name\' => \'Имя свойства\',
+    \'type\' => \'Тип свойства\',
+    \'code\' => \'Код свойства\',
+    \'del-property\' => \'Удалить\',
+    \'edit-property\' => \'Изменить\',
+    \'stat-ok\' => \'Действие выполнено\',
+    \'stat-err\' => \'Произошла ошибка\',
+    \'not-propertys\' => \'Ещё нет общих пользовательских свойств\',
+    \'add-property\' => \'Добавить\',
+    \'title-add-property\' => \'Добавление нового общего свойства для пользователей\'
+);
+
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/edit-all-users-propertys/teplates/0/',
+  ),
+  './gy/component/edit-all-users-propertys/teplates/0/template.php' => 
+  array (
+    'CODE' => '<?if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );?>
+
+<h1><?=$this->lang->GetMessage(\'title\');?></h1>
+
+<?if (!empty($arRes[\'stat\']) ){?>
+    <?if ( $arRes[\'stat\'] == \'ok\'){ ?>
+        <div class="gy-admin-good-message"><?=$this->lang->GetMessage(\'stat-ok\');?></div>
+        <br/>
+    <?}?>
+
+    <?if ($arRes[\'stat\'] == \'err\'){?>
+        <div class="gy-admin-error-message"><?=$this->lang->GetMessage(\'stat-err\');?></div>
+        <br/>
+    <?}?>
+    <a href="edit-all-users-propertys.php" class="gy-admin-button"><?=$this->lang->GetMessage(\'ok\');?></a>
+<?}else{?>
+
+    <?if($arRes[\'allUsersCreatePropertys\']){?>
+        <table border="1" class="gy-table-all-users">
+            <tr>
+                <th>id</th>
+                <th><?=$this->lang->GetMessage(\'name\');?></th>
+                <th><?=$this->lang->GetMessage(\'type\');?></th>
+                <th><?=$this->lang->GetMessage(\'code\');?></th>
+                <th></th>
+            </tr>
+
+                <?foreach ($arRes[\'allUsersCreatePropertys\'] as $key => $val){?>
+                    <tr>
+                        <td><?=$val[\'id\'];?></td>
+                        <td><?=$val[\'name_property\'];?></td>
+                        <td><?=$val[\'type_property\'];?></td>
+                        <td><?=$val[\'code\'];?></td>
+
+                        <td>  
+                            <br/>
+                            <a href="?del-id=<?=$val[\'id\'];?>" class="gy-admin-button"><?=$this->lang->GetMessage(\'del-property\');?></a>
+                            <br/>
+                            <br/>
+                        </td>
+                    </tr>
+                <?}?>
+
+        </table>
+    <?}else{?>
+        <?=$this->lang->GetMessage(\'not-propertys\');?>
+    <?}?>
+    
+    <br/>
+    <br/>
+    
+    <?if (!empty($arRes[\'allTypePropertys\'])){?>
+    
+        <h3><?=$this->lang->GetMessage(\'title-add-property\');?></h3>
+    
+        <form method="post" >
+            
+            <table border="1" class="gy-table-all-users">
+
+                <tr>
+                    <td><?=$this->lang->GetMessage(\'name\');?></td>
+                    <td><input type="text" name="name_property" ></td> 
+                </tr>
+                
+                <tr>
+                    <td><?=$this->lang->GetMessage(\'type\');?></td>
+                    <td>
+                        <select name="type_property">
+                            <? foreach ($arRes[\'allTypePropertys\'] as $value) { ?>
+                                <option value="<?=$value[\'id\']?>"><?=$value[\'name_type\']?> - <?=$value[\'info\']?></option> 
+                            <?}?>  
+                        </select>
+                    </td>
+                </tr>
+            
+                <tr>
+                    <td><?=$this->lang->GetMessage(\'code\');?></td>
+                    <td><input type="text"  name="code" ></td>
+                </tr>
+            </table>
+            <input type="submit" class="gy-admin-button" value="<?=$this->lang->GetMessage(\'add-property\');?>" />
+        </form>
+    <?}?>
+<?}?>
+        ',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/edit-all-users-propertys/teplates/0/',
+  ),
+  './gy/component/edit-users-propertys/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/component/edit-users-propertys/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'edit-users-propertys\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+    \'all-property\' => array(
+        \'id-user\'
+    ),
+    \'all-property-text\' => array(
+        \'id-user\' => $langComponentInfo->GetMessage(\'property-id-user\')
+    )
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/edit-users-propertys/',
+  ),
+  './gy/component/edit-users-propertys/controller.php' => 
+  array (
+    'CODE' => '<?php 
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$data = $_REQUEST;
+
+// получить все возможные типы свойств
+$arRes[\'allTypePropertys\'] = generalUsersPropertys::getAllTypeAllUsersPropertys();
+
+// получить все общие свойства пользователей которые были созданы
+$arRes[\'allUsersCreatePropertys\'] = generalUsersPropertys::getAllGeneralUsersPropertys();
+
+// получить значения свойств конкретного пользователя
+$arRes[\'valuePropertysThisUser\'] = generalUsersPropertys::getAllValueUserProperty( $this->arParam[\'id-user\'], \'text\'); // text - т.к. пока только такие типы свойств реализованы
+
+// собираю общий массив
+$arRes[\'propertys\'] = array();
+foreach ($arRes[\'allUsersCreatePropertys\'] as $key => $value) {
+    
+    $val = \'\';
+    if(!empty($arRes[\'valuePropertysThisUser\'][$value[\'id\']])){
+        $val = $arRes[\'valuePropertysThisUser\'][$value[\'id\']][\'value\'];
+    }
+    
+//    $id = \'-\';
+//    if(!empty($arRes[\'valuePropertysThisUser\'][$value[\'id\']])){
+//        $id = $arRes[\'valuePropertysThisUser\'][$value[\'id\']][\'id\'];
+//    }
+    
+    $arRes[\'propertys\'][] = array(
+        \'name_property\' => $value[\'name_property\'],
+        //\'id\' => $id,
+        \'id_property\' => $value[\'id\'],
+        \'value\' => $val
+    );
+}
+
+// проверка пришедшие значения свойств, есть ли такие свойства
+function isTrueDataInProperty($propertys, $allUsersCreatePropertys){
+    $result = true;
+    foreach ($propertys as $idProperty => $value) {
+        if(!isset($allUsersCreatePropertys[$idProperty])){
+            $result = false;
+        }
+    }
+    return $result;
+}
+
+// сохраняем пришедшее
+if(
+    !empty($data[\'edit-id\']) 
+    && is_numeric($data[\'edit-id\'])
+    && !empty($data[\'id-user\'])
+    && is_numeric($data[\'id-user\'])
+    && ($data[\'edit-id\'] == $data[\'id-user\'])
+    && !empty($data[\'property\'])
+    && is_array($data[\'property\'])
+    && isTrueDataInProperty($data[\'property\'], $arRes[\'allUsersCreatePropertys\'])
+){
+    foreach ($data[\'property\'] as $idProperty => $value) {
+        if($arRes[\'valuePropertysThisUser\'][$idProperty]){ // было ли уже задано когда то такое значение, для такого своства
+            // если да то обновляем то что есть уже
+            generalUsersPropertys::updateValueProperty($data[\'id-user\'], \'text\', $idProperty, $value);
+        }else{
+            // если нет создаём новое значение
+            generalUsersPropertys::addValueProperty($data[\'id-user\'], \'text\', $idProperty, $value);
+        }
+    }
+    $arRes[\'stat\'] = \'ok\';
+    // TODO может обработать возможные ошибки
+}
+    
+
+// показать шаблон
+$this->template->show($arRes, $this->arParam);
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/edit-users-propertys/',
+  ),
+  './gy/component/edit-users-propertys/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Компонент для редактирования пользовательских свойств (общих свойств)\',
+    \'property-id-user\' => \'Id Пользователя которого надо редактировать\'
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/edit-users-propertys/',
+  ),
+  './gy/component/edit-users-propertys/teplates/0/lang_template.php' => 
+  array (
+    'CODE' => '<? // языковой файл для шаблона компонента
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'ok\' => \'Ok\',
+    \'title\' => \'Редактирование свойств пользователя с id=\',
+    \'save\' => \'Сохранить\',
+    \'stat-ok\' => \'Данные сохранены\',
+    \'stat-err\' => \'Произошла ошибка\',
+    \'name-property\' => \'Имя свофства\',
+    \'value-property\' => \'Значение свойства\'
+);
+
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/edit-users-propertys/teplates/0/',
+  ),
+  './gy/component/edit-users-propertys/teplates/0/template.php' => 
+  array (
+    'CODE' => '<?if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );?>
+
+<h1><?=$this->lang->GetMessage(\'title\');?><?=$arParam[\'id-user\']?></h1>
+
+<?if (!empty($arRes[\'stat\']) ){?>
+    <?if ( $arRes[\'stat\'] == \'ok\'){ ?>
+        <div class="gy-admin-good-message"><?=$this->lang->GetMessage(\'stat-ok\');?></div>
+        <br/>
+    <?}?>
+
+    <?if ($arRes[\'stat\'] == \'err\'){?>
+        <div class="gy-admin-error-message"><?=$this->lang->GetMessage(\'stat-err\');?></div>
+        <br/>
+    <?}?>
+    <a href="/gy/admin/edit-users-propertys.php?edit-id=<?=$arParam[\'id-user\']?>" class="gy-admin-button"><?=$this->lang->GetMessage(\'ok\');?></a>
+<?}else{?>
+
+    <form method="post" >
+
+        <input type="hidden" name="id-user" value="<?=$arParam[\'id-user\']?>" />
+        
+        <table border="1" class="gy-table-all-users">
+
+            <tr>
+                <th><?=$this->lang->GetMessage(\'name-property\');?></th>
+                <th><?=$this->lang->GetMessage(\'value-property\');?></th>
+            </tr>
+            
+            <? foreach ($arRes[\'propertys\'] as $value) { ?>
+                <tr>
+                    <td><?=$value[\'name_property\']?></td>
+                    <td>
+                        <input type="text" name="property[<?=$value[\'id_property\']?>]" value="<?=$value[\'value\']?>" >
+                    </td> 
+                </tr>    
+            <?}?>
+
+        </table>
+        <input type="submit" class="gy-admin-button" value="<?=$this->lang->GetMessage(\'save\');?>" />
+    </form>
+    
+<?}?>
+        ',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/edit-users-propertys/teplates/0/',
+  ),
+  './gy/component/edit_user/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/component/edit_user/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'edit_user\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+    \'all-property\' => array(
+        \'back-url\',
+        \'id-user\'
+    ),
+    \'all-property-text\' => array(
+        \'back-url\' => $langComponentInfo->GetMessage(\'property-back-url\'),
+        \'id-user\' => $langComponentInfo->GetMessage(\'property-id-user\')
+    )
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/edit_user/',
+  ),
   './gy/component/edit_user/controller.php' => 
   array (
     'CODE' => '<?php 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $data  = $_REQUEST;
 
@@ -2791,10 +4798,10 @@ $data  = $_REQUEST;
 $notUpdatePass = (!empty($data[\'no-update-pass\']) && ($data[\'no-update-pass\'] == \'on\') );
 
 $arRes[\'user_property\'] = array(
-	\'login\' => \'login\', 
-	\'name\' => \'name\', 
-	\'pass\' => \'pass\', 
-	\'groups\' => \'groups\'
+    \'login\' => \'login\', 
+    \'name\' => \'name\', 
+    \'pass\' => \'pass\', 
+    \'groups\' => \'groups\'
 );
 
 // если идёт обновление пользователя без пароля то убрать пароль из списка свойств пользователя
@@ -2808,12 +4815,12 @@ global $user;
 $arRes[\'allUsersGroups\'] = accessUserGroup::getAccessGroup();
 
 function checkProperty($arr, $arRes){
-	$result = true;
-	foreach ($arRes[\'user_property\'] as $val){	
+    $result = true;
+    foreach ($arRes[\'user_property\'] as $val){	
         if (empty($arr[$val])){
             $result = false;
         } 
-	}
+    }
         
     if($result){
         foreach ($arr[\'groups\'] as $value) {  // TODO протестировать
@@ -2828,7 +4835,7 @@ function checkProperty($arr, $arRes){
         }
     }
     
-	return $result;
+    return $result;
 }
 
 // получить данные пользователя
@@ -2844,7 +4851,7 @@ if (!empty($data[\'Сохранить\'])
     && ($data[\'edit-id\'] != 1)  
 ) {
         
-	if(checkProperty($data, $arRes)){
+    if(checkProperty($data, $arRes)){
 
         // подготовить массив данных для обновления пользователей
         $dataUpdateUser = array();
@@ -2860,7 +4867,7 @@ if (!empty($data[\'Сохранить\'])
         }
         
         // обновить данные пользователя
-		global $user;
+        global $user;
         $res = $user->updateUserById($data[\'edit-id\'], $dataUpdateUser);
         
         if($res){
@@ -2870,20 +4877,20 @@ if (!empty($data[\'Сохранить\'])
             $arRes["stat"] = \'err\';
         }
         			
-	}else{
-		$arRes["stat-text"] = \'! Не все поля заполнены\';
-		$arRes["stat"] = \'err\';
-	}
+    }else{
+        $arRes["stat-text"] = \'! Не все поля заполнены\';
+        $arRes["stat"] = \'err\';
+    }
 	
 	
 } elseif( (!empty($arRes["stat"]) && ($arRes["stat"] != \'err\')) || empty($arRes["stat"]) ) {
-	$arRes["stat"] = \'edit\';
+    $arRes["stat"] = \'edit\';
 }
 
 if (empty($data[\'stat\'])){
-	header( \'Location: ?stat=\'.$arRes["stat"].\'&edit-id=\'.$this->arParam[\'id-user\'] );
+    header( \'Location: ?stat=\'.$arRes["stat"].\'&edit-id=\'.$this->arParam[\'id-user\'] );
 }else{
-	$arRes["stat"] = $data[\'stat\'];
+    $arRes["stat"] = $data[\'stat\'];
 }
      
 // показать шаблон
@@ -2892,24 +4899,38 @@ $this->template->show($arRes, $this->arParam);
     'TYPE' => 'php',
     'DIR' => './gy/component/edit_user/',
   ),
+  './gy/component/edit_user/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Редактирование пользователя\',
+    \'property-back-url\' => \'Ссылка на страницу откуда идёт редактирование\',
+    \'property-id-user\' => \'Id Пользователя которого надо редактировать\'
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/edit_user/',
+  ),
   './gy/component/edit_user/teplates/0/lang_template.php' => 
   array (
     'CODE' => '<? // языковой файл для шаблона компонента
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
-	\'button\' => \'Сохранить\',
-	\'id\' => \'id\', 
-	\'login\' => \'Логин\', 
-	\'name\' => \'Имя\', 
-	\'pass\' => \'Пароль\', 
-	\'groups\' => \'Группа прав\',
+    \'button\' => \'Сохранить\',
+    \'id\' => \'id\', 
+    \'login\' => \'Логин\', 
+    \'name\' => \'Имя\', 
+    \'pass\' => \'Пароль\', 
+    \'groups\' => \'Группа прав\',
     \'title\' => \'Изменение пользователя\',
     \'back\' => \'<< Назад\',
     \'ok\' => \'ok\',
     \'stat-ok\' => \'Данные сохранены\',
     \'edit-err\' => \'error, попробуйте заново\',
-    \'no-update-pass-text\' => \'Не изменять пароль\'
+    \'no-update-pass-text\' => \'Не изменять пароль\',
+    \'edit-propertys\' => \'Изменить своства (общие свойства)\'
 );
 
 ',
@@ -2919,7 +4940,7 @@ $mess[\'rus\'] = array(
   './gy/component/edit_user/teplates/0/template.php' => 
   array (
     'CODE' => '<?
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 ?>
 <h3><?=$this->lang->GetMessage(\'title\');?></h3>
@@ -2927,15 +4948,15 @@ if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !==
 if (!empty($arParam[\'back-url\']) && empty($arRes["stat"])){?>
     <br/>
     <br/>
-	<a class="gy-admin-button" href="<?=$arParam[\'back-url\'];?>"><?=$this->lang->GetMessage(\'back\');?></a>
-	<br/>
-	<br/>
+    <a class="gy-admin-button" href="<?=$arParam[\'back-url\'];?>"><?=$this->lang->GetMessage(\'back\');?></a>
+    <br/>
+    <br/>
 <?}?>
 <? if (empty($arRes["stat"]) || ($arRes["stat"] == \'edit\') ) {?>
-	<form>
+    <form>
         <input type="hidden" name="edit-id" value="<?=$arParam[\'id-user\'];?>" />
-		<? foreach ($arRes["user_property"] as $key => $val ){?>
-			<?=$this->lang->GetMessage($val);?>:<br/>
+        <? foreach ($arRes["user_property"] as $key => $val ){?>
+            <?=$this->lang->GetMessage($val);?>:<br/>
             <?if ($val != \'groups\'){?>
                 <input 
                     type="<?=(($val == \'pass\')? \'password\': \'text\');?>" 
@@ -2956,21 +4977,24 @@ if (!empty($arParam[\'back-url\']) && empty($arRes["stat"])){?>
                     <?}?>
                 </select>
             <?}?>    
-			<br/>
-		<?}?>
-		<input class="gy-admin-button" type="submit" name="<?=$this->lang->GetMessage(\'button\');?>" value="<?=$this->lang->GetMessage(\'button\');?>" />
+            <br/>
+        <?}?>
+        <input class="gy-admin-button" type="submit" name="<?=$this->lang->GetMessage(\'button\');?>" value="<?=$this->lang->GetMessage(\'button\');?>" />
 
-	</form>	
-	
+    </form>	
+    
+    <br/>
+    <a class="gy-admin-button" href="/gy/admin/edit-users-propertys.php?edit-id=<?=$arParam[\'id-user\'];?>"><?=$this->lang->GetMessage(\'edit-propertys\');?></a>
+    
 <?}elseif($arRes["stat"] == \'ok\'){?>
     <div class="gy-admin-good-message"><?=$this->lang->GetMessage(\'stat-ok\');?></div>
     <br/>
     <a href="/gy/admin/users.php" class="gy-admin-button"><?=$this->lang->GetMessage(\'ok\');?></a>
 <?}elseif($arRes["stat"] == \'err\'){?>
     <div class="gy-admin-error-message"><?=$this->lang->GetMessage(\'edit-err\');?></div>
-	<?if (!empty($arRes["stat-text"])){?>
-		<br/> <?=$arRes["stat-text"];?>
-	<?}?>
+    <?if (!empty($arRes["stat-text"])){?>
+        <br/> <?=$arRes["stat-text"];?>
+    <?}?>
     <br/>
     <a href="edit-user.php?edit-id=<?=$arParam[\'id-user\'];?>" class="gy-admin-button"><?=$this->lang->GetMessage(\'ok\');?></a>
 <? } 
@@ -2978,16 +5002,39 @@ if (!empty($arParam[\'back-url\']) && empty($arRes["stat"])){?>
     'TYPE' => 'php',
     'DIR' => './gy/component/edit_user/teplates/0/',
   ),
+  './gy/component/form_auth/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/component/form_auth/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'form_auth\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+    \'all-property\' => array(
+        \'idComponent\'
+    ),
+    \'all-property-text\' => array(
+        \'idComponent\' => $langComponentInfo->GetMessage(\'property-idComponent\')
+    )
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/form_auth/',
+  ),
   './gy/component/form_auth/controller.php' => 
   array (
     'CODE' => '<?php 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 // контроллер компонента form_auth (форма авторизации)
 
 // подключить модель // include model this component
 if (isset($this->model) ){
-	$this->model->includeModel(); 
+    $this->model->includeModel(); 
 }	
 
 // были доступны параметры
@@ -3008,13 +5055,13 @@ global $user;
 
 $isShowAdminPanel = accessUserGroup::accessThisUserByAction( \'show_admin_panel\');
 
-$redirectUrl = str_replace(\'index.php\', \'\', $_SERVER[\'DOCUMENT_URI\']);
+$redirectUrl = str_replace(\'index.php\', \'\', $_SERVER[\'SCRIPT_NAME\']);
 
 if ($isShowAdminPanel === true){
 		
-	$thisLogin = $user->getDataThisUser()[\'name\'];	
-	$arRes["auth_ok"] = \'ok\';
-	$arRes["auth_user"] = $thisLogin;
+    $thisLogin = $user->getDataThisUser()[\'name\'];	
+    $arRes["auth_ok"] = \'ok\';
+    $arRes["auth_user"] = $thisLogin;
 		
 } elseif ( !empty($_REQUEST[\'auth\']) && !empty($_REQUEST[\'pass\']) && !empty($_REQUEST[\'capcha\'])) {
 	
@@ -3044,17 +5091,17 @@ if ($isShowAdminPanel === true){
         header( \'Location: \'.$redirectUrl.\'?err=err_capcha\' );
     }
 } else {
-	if (!empty($_REQUEST[\'err\'])){
-		$arRes["err"] = $_REQUEST[\'err\']; 
-	}
-	$arRes[\'form_input\']["auth"] = "auth";
-	$arRes[\'form_input\']["pass"] = "pass";
+    if (!empty($_REQUEST[\'err\'])){
+        $arRes["err"] = $_REQUEST[\'err\']; 
+    }
+    $arRes[\'form_input\']["auth"] = "auth";
+    $arRes[\'form_input\']["pass"] = "pass";
 }
 
 if ( !empty($arRes["auth_ok"]) && ($arRes["auth_ok"] == \'ok\') && !empty($_REQUEST[\'Выйти\'])){
-	if ($user->userExit() ){
-		header( \'Location: \'.$redirectUrl );
-	}
+    if ($user->userExit() ){
+        header( \'Location: \'.$redirectUrl );
+    }
 }
 
 // показать шаблон
@@ -3063,16 +5110,28 @@ $this->template->show($arRes, $this->arParam);
     'TYPE' => 'php',
     'DIR' => './gy/component/form_auth/',
   ),
+  './gy/component/form_auth/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Форма авторизации\',
+    \'property-idComponent\' => \'Уникальное число (придумать надо самому) в рамках страницы сайта где вызывается компонент (сделано если два одинаковых компонента будут на одной странице сайта)\'
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/form_auth/',
+  ),
   './gy/component/form_auth/teplates/0/lang_template.php' => 
   array (
     'CODE' => '<? // языковой файл для шаблона компонента
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
-	\'button\' => \'Авторизоваться\',
-	\'err1\' => \'! Логин или пароль неправильные.\',
-	\'exit\' => \'Выйти\',
-	\'err_capcha\' => \'! Ошибка в capcha, попробуйте ещё раз\'
+    \'button\' => \'Авторизоваться\',
+    \'err1\' => \'! Логин или пароль неправильные.\',
+    \'exit\' => \'Выйти\',
+    \'err_capcha\' => \'! Ошибка в capcha, попробуйте ещё раз\'
 );
 
 ',
@@ -3082,15 +5141,15 @@ $mess[\'rus\'] = array(
   './gy/component/form_auth/teplates/0/template.php' => 
   array (
     'CODE' => '<? // шаблон компонента // template component form_auth
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 if ( empty($arRes["auth_ok"]) ) :?>
-	<form>
-		<input type="hidden" name="idComponent" value="<?=$arParam[\'idComponent\']?>" />
+    <form>
+        <input type="hidden" name="idComponent" value="<?=$arParam[\'idComponent\']?>" />
 
-		<?foreach ($arRes[\'form_input\'] as $key => $value) { ?>
-			<input type="<?=(($key == \'pass\')? \'password\': \'text\');?>" name="<?=$key;?>"  /><br/>
-		<?}?>
+        <?foreach ($arRes[\'form_input\'] as $key => $value) { ?>
+            <input type="<?=(($key == \'pass\')? \'password\': \'text\');?>" name="<?=$key;?>"  /><br/>
+        <?}?>
 
         <? // показать капчу
         global $app;
@@ -3101,32 +5160,63 @@ if ( empty($arRes["auth_ok"]) ) :?>
             )
         );?>
             
-		<?if ( !empty($arRes[\'err\']) ){?>
-			<div class="gy-admin-error-message"><?=$this->lang->GetMessage($arRes[\'err\']);?></div>
-		<?}?>	
+        <?if ( !empty($arRes[\'err\']) ){?>
+            <div class="gy-admin-error-message"><?=$this->lang->GetMessage($arRes[\'err\']);?></div>
+        <?}?>	
 		
         <input class="gy-admin-button" type="submit" name="<?=$this->lang->GetMessage(\'button\');?>" value="<?=$this->lang->GetMessage(\'button\');?>" />
         
-	</form>	
+    </form>	
 <?else:?>
-	<h1>Привет, <?=$arRes["auth_user"];?></h1>
-	<form>
-		<input class="gy-admin-button" type="submit" name="<?=$this->lang->GetMessage(\'exit\');?>" value="<?=$this->lang->GetMessage(\'exit\');?>" />
-	</form>
+    <h1>Привет, <?=$arRes["auth_user"];?></h1>
+    <form>
+        <input class="gy-admin-button" type="submit" name="<?=$this->lang->GetMessage(\'exit\');?>" value="<?=$this->lang->GetMessage(\'exit\');?>" />
+    </form>
 <?endif;?>',
     'TYPE' => 'php',
     'DIR' => './gy/component/form_auth/teplates/0/',
   ),
+  './gy/component/form_auth_test/.LCKcontroller.php~' => 
+  array (
+    'CODE' => '/var/www/gy-test.ru/gy/component/form_auth_test/controller.php',
+    'TYPE' => 'hp~',
+    'DIR' => './gy/component/form_auth_test/',
+  ),
+  './gy/component/form_auth_test/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/component/form_auth_test/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'form_auth_test\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+    \'all-property\' => array(
+        \'test\',
+        \'idComponent\',
+    ),
+    \'all-property-text\' => array(
+        \'test\' => $langComponentInfo->GetMessage(\'property-test\'),
+        \'idComponent\' => $langComponentInfo->GetMessage(\'property-idComponent\')
+    )
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/form_auth_test/',
+  ),
   './gy/component/form_auth_test/controller.php' => 
   array (
     'CODE' => '<?php 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 // контроллер компонента form_auth_test (форма авторизации)
 
 // подключить модель // include model this component
 if (isset($this->model) ){
-	$this->model->includeModel(); 
+    $this->model->includeModel(); 
 }	
 
 // были доступны параметры
@@ -3139,10 +5229,10 @@ $isChackIdComponent = ( empty($this->arParam[\'idComponent\'])
 
 // $model - теоретически должно быть тут доступно
 if ($isChackIdComponent && !empty($_REQUEST[\'auth\']) ){
-	$arRes["auth_ok"] = \'ok\';
-	$arRes["auth_user"] = $_REQUEST[\'auth\'].\' \'.model_setAuth($_REQUEST[\'auth\']);
+    $arRes["auth_ok"] = \'ok\';
+    $arRes["auth_user"] = $_REQUEST[\'auth\'].\' \'.model_setAuth($_REQUEST[\'auth\']);
 } else {
-	$arRes["auth"] = "auth";
+    $arRes["auth"] = "auth";
 }
 
 // показать шаблон
@@ -3151,13 +5241,26 @@ $this->template->show($arRes, $this->arParam);
     'TYPE' => 'php',
     'DIR' => './gy/component/form_auth_test/',
   ),
+  './gy/component/form_auth_test/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Форма авторизации тестовая, авторизации в ядре gy не происходит (просто демонстрация работы нескольких компонентов одновременно)\',
+    \'property-test\' => \'Поле для теста\',
+    \'property-idComponent\' => \'Уникальное число (придумать надо самому) в рамках страницы сайта где вызывается компонент (сделано если два одинаковых компонента будут на одной странице сайта)\'
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/form_auth_test/',
+  ),
   './gy/component/form_auth_test/lang_controller.php' => 
   array (
     'CODE' => '<? // языковой файл для компонента
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
-	\'test\' => \'ok\',
+    \'test\' => \'ok\',
 );
 ',
     'TYPE' => 'php',
@@ -3166,7 +5269,7 @@ $mess[\'rus\'] = array(
   './gy/component/form_auth_test/model.php' => 
   array (
     'CODE' => '<? 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 /**
  * это модель класса, тут должны быть функции к которым будет обращаться компонент
@@ -3179,7 +5282,7 @@ if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !==
  */
 
 function model_setAuth($auth){ // test model
-	return \'(test = ok)\';
+    return \'(test = ok)\';
 }
 
 ',
@@ -3189,15 +5292,15 @@ function model_setAuth($auth){ // test model
   './gy/component/form_auth_test/teplates/0/lang_template.php' => 
   array (
     'CODE' => '<? // языковой файл для шаблона компонента
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
-	\'button\' => \'Отправить\',
+    \'button\' => \'Отправить\',
     \'get-text\' => \'Введите любой текст\'
 );
 
 $mess[\'eng\'] = array(
-	\'button\' => \'Send\',
+    \'button\' => \'Send\',
     \'get-text\' => \'pleas input any text\'
 );',
     'TYPE' => 'php',
@@ -3220,32 +5323,50 @@ $mess[\'eng\'] = array(
   './gy/component/form_auth_test/teplates/0/template.php' => 
   array (
     'CODE' => '<? // шаблон компонента // template component form_auth_test
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 if ( empty($arRes["auth_ok"]) ) :?>
-	<form>
-        <p><?=$this->lang->GetMessage(\'get-text\');?></p>
-		<? 
-		foreach ($arRes as $key => $value) {
-		?>
-		<input type="hidden" name="idComponent" value="<?=$arParam[\'idComponent\']?>" />
-			<input type="text" name="<?=$key;?>"  />
-		<?}?>
+    <form>
+    <p><?=$this->lang->GetMessage(\'get-text\');?></p>
+        <? 
+        foreach ($arRes as $key => $value) {
+        ?>
+            <input type="hidden" name="idComponent" value="<?=$arParam[\'idComponent\']?>" />
+            <input type="text" name="<?=$key;?>"  />
+        <?}?>
 
-		<input type="submit" name="<?=$this->lang->GetMessage(\'button\');?>" value="<?=$this->lang->GetMessage(\'button\');?>" />
+        <input type="submit" name="<?=$this->lang->GetMessage(\'button\');?>" value="<?=$this->lang->GetMessage(\'button\');?>" />
 
-	</form>	
+    </form>	
 <?else:?>
-	<h1>Привет, <?=$arRes["auth_user"];?></h1>
+    <h1>Привет, <?=$arRes["auth_user"];?></h1>
 
 <?endif;?>',
     'TYPE' => 'php',
     'DIR' => './gy/component/form_auth_test/teplates/0/',
   ),
+  './gy/component/gy_options/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/component/gy_options/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'gy_options\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+    \'all-property\' => array()
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/gy_options/',
+  ),
   './gy/component/gy_options/controller.php' => 
   array (
     'CODE' => '<?php 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $data = $_POST;
 
@@ -3271,13 +5392,24 @@ $this->template->show($arRes, $this->arParam);
     'TYPE' => 'php',
     'DIR' => './gy/component/gy_options/',
   ),
+  './gy/component/gy_options/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Настройки gy админ панели\',
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/gy_options/',
+  ),
   './gy/component/gy_options/teplates/0/lang_template.php' => 
   array (
     'CODE' => '<? // языковой файл для шаблона компонента
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
-	\'title\' => \'Настройки\',
+    \'title\' => \'Настройки\',
     \'cacheClear\' => \'Сбросить кеш\',
     \'ok\' => \'ОК\',
     \'cacheClear-ok\' => \'! кеш сброшен\'
@@ -3290,7 +5422,7 @@ $mess[\'rus\'] = array(
   './gy/component/gy_options/teplates/0/template.php' => 
   array (
     'CODE' => '<?
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );?>
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );?>
 
 <h1><?=$this->lang->GetMessage(\'title\');?></h1>
 
@@ -3310,12 +5442,96 @@ if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !==
     'TYPE' => 'php',
     'DIR' => './gy/component/gy_options/teplates/0/',
   ),
+  './gy/component/includeHtml/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/component/includeHtml/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'includeHtml\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+    \'all-property\' => array(
+        \'html\',
+        //\'test\'
+    ),
+    \'all-property-text\' => array(
+        \'html\' => $langComponentInfo->GetMessage(\'property-html\')
+    )
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/includeHtml/',
+  ),
+  './gy/component/includeHtml/controller.php' => 
+  array (
+    'CODE' => '<?php 
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+// показать шаблон
+$this->template->show($arRes, $this->arParam);
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/includeHtml/',
+  ),
+  './gy/component/includeHtml/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Компонент для вывода html кода\',
+    \'property-html\' => \'Любой html код\'
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/includeHtml/',
+  ),
+  './gy/component/includeHtml/teplates/0/template.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );?>
+<?if(!empty($arParam[\'html\']) ){?>
+    <?=$arParam[\'html\']?>
+<?}',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/includeHtml/teplates/0/',
+  ),
+  './gy/component/menu/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/component/menu/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'menu\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+    \'all-property\' => array(
+        \'buttons\'
+    ),
+    \'all-property-text\' => array(
+        \'buttons\' => $langComponentInfo->GetMessage(\'property-buttons\')
+    )
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/menu/',
+  ),
   './gy/component/menu/controller.php' => 
   array (
     'CODE' => '<?php 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $arRes[\'thisUrl\'] = $_SERVER[\'SCRIPT_NAME\'];
+
+if(($arRes[\'thisUrl\'] == \'/gy/admin/get-admin-page.php\') && !empty($_GET[\'page\']) ){
+    $arRes[\'thisUrl\'] = \'/gy/admin/get-admin-page.php?page=\'.htmlspecialchars($_GET[\'page\']);
+}
 
 // показать шаблон
 $this->template->show($arRes, $this->arParam);
@@ -3323,13 +5539,25 @@ $this->template->show($arRes, $this->arParam);
     'TYPE' => 'php',
     'DIR' => './gy/component/menu/',
   ),
+  './gy/component/menu/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Меню\',
+    \'property-buttons\' => \'Массив с элементами меню, вида : названия кнопки => ссылка\'
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/menu/',
+  ),
   './gy/component/menu/lang_controller.php' => 
   array (
     'CODE' => '<? // языковой файл для компонента
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
-	//\'test\' => \'ok\',
+    //\'test\' => \'ok\',
 );
 ',
     'TYPE' => 'php',
@@ -3338,10 +5566,10 @@ $mess[\'rus\'] = array(
   './gy/component/menu/teplates/0/lang_template.php' => 
   array (
     'CODE' => '<? // языковой файл для шаблона компонента
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
-	\'hi\' => \'Админка gy framework\',
+    \'hi\' => \'Админка gy framework\',
 );
 
 ',
@@ -3351,22 +5579,310 @@ $mess[\'rus\'] = array(
   './gy/component/menu/teplates/0/template.php' => 
   array (
     'CODE' => '<?
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 if ($arParam[\'buttons\']){?>
-	<div class="gy-admin-menu">
-		<? foreach ($arParam[\'buttons\'] as $key => $val){?>
-			<a href="<?=$val;?>" class="<?=(($val == $arRes[\'thisUrl\'])? \'active-menu\': \'\');?>"><?=$key;?></a>
-		<?}?>
-	</div>
+    <div class="gy-admin-menu">
+        <? foreach ($arParam[\'buttons\'] as $key => $val){?>
+            <a href="<?=$val;?>" class="<?=(($val == $arRes[\'thisUrl\'])? \'active-menu\': \'\');?>"><?=$key;?></a>
+        <?}?>
+    </div>
 <?}',
     'TYPE' => 'php',
     'DIR' => './gy/component/menu/teplates/0/',
   ),
+  './gy/component/show_include_modules/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/component/show_include_modules/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'show_include_modules\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+    \'all-property\' => array()
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/show_include_modules/',
+  ),
+  './gy/component/show_include_modules/controller.php' => 
+  array (
+    'CODE' => '<?php 
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+// подключить даныне по всем подключенным модулям
+$module = module::getInstance();
+$arRes[\'info-modules\'] = $module->getInfoAllIncludeModules();
+
+// показать шаблон
+$this->template->show($arRes, $this->arParam);
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/show_include_modules/',
+  ),
+  './gy/component/show_include_modules/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Таблица с подключёнными модулями к gy и их версии\',
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/show_include_modules/',
+  ),
+  './gy/component/show_include_modules/teplates/0/lang_template.php' => 
+  array (
+    'CODE' => '<? // языковой файл для шаблона компонента
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'hi\' => \'Модули подключенные к ядру gy\',
+);
+
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/show_include_modules/teplates/0/',
+  ),
+  './gy/component/show_include_modules/teplates/0/template.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+?>
+<h2><?=$this->lang->GetMessage($arRes[\'h1\']);?></h2>
+<?if ($arRes[\'info-modules\']){?>
+
+    <table border="1" class="gy-table-all-users">
+        <tr><th>Имя модуля</th><th>Версия</th></tr>
+
+        <?foreach ($arRes[\'info-modules\'] as $key => $val){?>
+            <tr>
+                <td><?=$key;?></td>
+                <td><?=$val;?></td>
+            </tr>
+        <?}?>     
+    </table>
+<?}',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/show_include_modules/teplates/0/',
+  ),
+  './gy/component/show_user/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/component/show_user/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'show_user\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+    \'all-property\' => array(
+        \'id\'
+    ),
+    \'all-property-text\' => array(
+        \'id\' => $langComponentInfo->GetMessage(\'property-id-user\')
+    )
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/show_user/',
+  ),
+  './gy/component/show_user/controller.php' => 
+  array (
+    'CODE' => '<?php 
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+if(!empty($this->arParam[\'id\']) && is_numeric($this->arParam[\'id\'])){
+    global $user;
+    $dateUser = $user->getUserById($this->arParam[\'id\']);
+
+    if(!empty($dateUser)){
+        // взять все группы пользователей
+        $allUsersGroups = accessUserGroup::getAccessGroup();
+        
+        $arRes[\'dataUser\'] = array(
+            \'id\' => $dateUser[\'id\'],
+            \'login\' => $dateUser[\'login\'],
+            \'name\' => $dateUser[\'name\']
+        );
+        
+        $groups = array();
+        if(!empty($dateUser[\'groups\'])){
+            foreach ($dateUser[\'groups\'] as $value) {
+                if(!empty($allUsersGroups[$value])){
+                    $groups[$value] = $allUsersGroups[$value][\'name\'].\' - \'.$allUsersGroups[$value][\'text\'];
+                }
+            }
+        }
+        $arRes[\'dataUser\'][\'groups\'] = $groups;
+        
+        // получить свойства и значения
+        
+        // получить все общие свойства пользователей которые были созданы
+        $allUsersCreatePropertys = generalUsersPropertys::getAllGeneralUsersPropertys();
+
+        // получить значения свойств конкретного пользователя
+        $valuePropertysThisUser = generalUsersPropertys::getAllValueUserProperty( $this->arParam[\'id\'], \'text\'); // text - т.к. пока только такие типы свойств реализованы
+
+        // собираю общий массив
+        $propertys = array();
+        foreach ($allUsersCreatePropertys as $key => $value) {
+
+            $val = \'\';
+            if(!empty($valuePropertysThisUser[$value[\'id\']])){
+                $val = $valuePropertysThisUser[$value[\'id\']][\'value\'];
+            }
+
+            $propertys[] = array(
+                \'name_property\' => $value[\'name_property\'],
+                \'id_property\' => $value[\'id\'],
+                \'value\' => $val
+            );
+        }
+        $arRes[\'dataUser\'][\'propertys\'] = $propertys;
+    }
+        
+}
+
+// показать шаблон
+$this->template->show($arRes, $this->arParam);
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/show_user/',
+  ),
+  './gy/component/show_user/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Просмотреть все данные пользователя (и значения общих свойств)\',
+    \'property-id-user\' => \'Id Пользователя данные по которому надо просмотреть\'
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/show_user/',
+  ),
+  './gy/component/show_user/teplates/0/lang_template.php' => 
+  array (
+    'CODE' => '<? // языковой файл для шаблона компонента
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'title\' => \'Просмотр данных пользователя с id=\',
+    \'err-data\' => \'Данные по пользователю не найдены\',
+    \'name-property\' => \'Имя\',
+    \'value-property\' => \'Значение\',
+    \'title-property\' => \'Значения общих пользовательских свойств\',
+    \'title-property-standart\' => \'Основные данные пользователя\'
+    
+);
+
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/show_user/teplates/0/',
+  ),
+  './gy/component/show_user/teplates/0/template.php' => 
+  array (
+    'CODE' => '<?if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );?>
+<h1><?=$this->lang->GetMessage(\'title\');?><?=$arParam[\'id\']?></h1>
+
+<?if(!empty($arRes[\'dataUser\'])){?>
+    <h3><?=$this->lang->GetMessage(\'title-property-standart\');?></h3>
+    <table border="1" class="gy-table-all-users">
+
+        <tr>
+            <th><?=$this->lang->GetMessage(\'name-property\');?></th>
+            <th><?=$this->lang->GetMessage(\'value-property\');?></th>
+        </tr>
+
+        <tr>
+            <td>id</td>
+            <td><?=$arRes[\'dataUser\'][\'id\']?></td> 
+        </tr>    
+        <tr>
+            <td>login</td>
+            <td><?=$arRes[\'dataUser\'][\'login\']?></td> 
+        </tr>    
+        <tr>
+            <td>name</td>
+            <td><?=$arRes[\'dataUser\'][\'name\']?></td> 
+        </tr>    
+        <tr>
+            <td>groups</td>
+            <td>
+                <?if(!empty($arRes[\'dataUser\'][\'groups\'])){?>
+                    <? foreach ($arRes[\'dataUser\'][\'groups\'] as $value) { ?>
+                        <?=$value?>
+                        </br>
+                    <?}?>
+                <?}else{?>
+                    -
+                <?}?>
+            </td> 
+        </tr>    
+
+
+    </table>
+
+    <?if(!empty($arRes[\'dataUser\'][\'propertys\'])){?>
+        <h3><?=$this->lang->GetMessage(\'title-property\');?></h3>
+
+        <table border="1" class="gy-table-all-users">
+
+            <tr>
+                <th><?=$this->lang->GetMessage(\'name-property\');?></th>
+                <th><?=$this->lang->GetMessage(\'value-property\');?></th>
+            </tr>
+
+            <? foreach ($arRes[\'dataUser\'][\'propertys\'] as $value) { ?>
+                <tr>
+                    <td><?=$value[\'name_property\']?></td>
+                    <td>
+                        <?=$value[\'value\']?>
+                    </td> 
+                </tr>    
+            <?}?>
+
+        </table>
+    <?}?>
+<?}else{?>
+    <?=$this->lang->GetMessage(\'err-data\');?>
+<?}?>
+
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/show_user/teplates/0/',
+  ),
+  './gy/component/users_all_tables/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/component/users_all_tables/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'users_all_tables\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+    \'all-property\' => array()
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/users_all_tables/',
+  ),
   './gy/component/users_all_tables/controller.php' => 
   array (
     'CODE' => '<?php 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$data = $_REQUEST;
 
 global $user;
 $arRes[\'allUsers\'] = $user->getAllDataUsers();
@@ -3374,22 +5890,53 @@ $arRes[\'allUsers\'] = $user->getAllDataUsers();
 // взять все группы пользователей
 $arRes[\'allUsersGroups\'] = accessUserGroup::getAccessGroup();
 
+// если идёт удаление пользователя 
+if(!empty($data[\'del-id\']) 
+    && is_numeric($data[\'del-id\'])
+    && ($data[\'del-id\'] != 1)
+    && accessUserGroup::accessThisUserByAction( \'show_admin_panel\')
+){
+    $res = $user->deleteUserById($data[\'del-id\']);
+    if ($res){
+        $arRes[\'del-stat\'] = \'ok\';
+    }else{
+        $arRes[\'del-stat\'] = \'err\';
+    }
+}
+
 // показать шаблон
 $this->template->show($arRes, $this->arParam);
 ',
     'TYPE' => 'php',
     'DIR' => './gy/component/users_all_tables/',
   ),
+  './gy/component/users_all_tables/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Таблица со всеми пользователями\',
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/users_all_tables/',
+  ),
   './gy/component/users_all_tables/teplates/0/lang_template.php' => 
   array (
     'CODE' => '<? // языковой файл для шаблона компонента
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
-	\'del-user\' => \'удалить\',
-	\'edit-user\' => \'изменить\',
+    \'del-user\' => \'Удалить\',
+    \'edit-user\' => \'Изменить\',
     \'title\' => \'Пользователи\',
-    \'add-user\' => \'Добавить пользователя\'
+    \'add-user\' => \'Добавить пользователя\',
+    \'del-ok\' => \'Пользователь - удалён\',
+    \'del-err\' => \'Ошибка при удаление\',
+    \'ok\' => \'Ок\',
+    \'options-groups\' => \'Настройка групп прав доступа\',
+    \'list-all-user-propertys\' => \'Список общих пользовательских свойств\',
+    \'show-user\' => \'Посмотреть все данные\'
 );
 
 ',
@@ -3398,53 +5945,99 @@ $mess[\'rus\'] = array(
   ),
   './gy/component/users_all_tables/teplates/0/template.php' => 
   array (
-    'CODE' => '<?if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );?>
+    'CODE' => '<?if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );?>
 
 <h1><?=$this->lang->GetMessage(\'title\');?></h1>
 
-<?if ($arRes[\'allUsers\']){?>
-	<table border="1" class="gy-table-all-users">
-		<tr><th>id</th><th>login</th><th>name</th><th>group</th><th></th></tr>
-		<?foreach ($arRes[\'allUsers\'] as $key => $val){?>
-			<tr>
-				<td><?=$val[\'id\'];?></td>
-				<td><?=$val[\'login\'];?></td>
-				<td><?=$val[\'name\'];?></td>
-				<td>
-                    <? foreach ($val[\'groups\'] as $groupIs) {?>
-                        -
-                        <?=$arRes[\'allUsersGroups\'][$groupIs][\'name\'];?>
-                        (
-                        <?=$arRes[\'allUsersGroups\'][$groupIs][\'code\'];?>
-                        );
-                        <br/>
-                    <?}?>
-                 
-                </td>
-				<td>
-					<?if ($val[\'id\'] != 1){?>
-                        <button  class="del-user gy-admin-button" data-id-user="<?=$val[\'id\'];?>"><?=$this->lang->GetMessage(\'del-user\');?></button>
-                        <a href="edit-user.php?edit-id=<?=$val[\'id\'];?>" class="gy-admin-button"><?=$this->lang->GetMessage(\'edit-user\');?></a>
-                    <?} ?>
-				</td>
-			</tr>
-		<?}?>
-	</table>
+<?if (!empty($arRes[\'del-stat\']) ){?>
+    <?if ( $arRes[\'del-stat\'] == \'ok\'){ ?>
+        <div class="gy-admin-good-message"><?=$this->lang->GetMessage(\'del-ok\');?></div>
+        <br/>
+    <?}?>
 
-    	
-    <br/>
-    <br/>
-	<a class="gy-admin-button" href="add-user.php"><?=$this->lang->GetMessage(\'add-user\');?></a>
-	<br/>
-	<br/>
-<?}',
+    <?if ($arRes[\'del-stat\'] == \'err\'){?>
+        <div class="gy-admin-error-message"><?=$this->lang->GetMessage(\'del-err\');?></div>
+        <br/>
+    <?}?>
+    <a href="users.php" class="gy-admin-button"><?=$this->lang->GetMessage(\'ok\');?></a>
+<?}else{?>
+
+    <?if ($arRes[\'allUsers\']){?>
+        <table border="1" class="gy-table-all-users">
+            <tr><th>id</th><th>login</th><th>name</th><th>group</th><th></th></tr>
+
+                <?foreach ($arRes[\'allUsers\'] as $key => $val){?>
+                    <tr>
+                        <td><?=$val[\'id\'];?></td>
+                        <td><?=$val[\'login\'];?></td>
+                        <td><?=$val[\'name\'];?></td>
+                        <td>
+                            <? foreach ($val[\'groups\'] as $groupIs) {?>
+                                -
+                                <?=$arRes[\'allUsersGroups\'][$groupIs][\'name\'];?>
+                                (
+                                <?=$arRes[\'allUsersGroups\'][$groupIs][\'code\'];?>
+                                );
+                                <br/>
+                            <?}?>
+
+                        </td>
+                        <td>
+                            <?if ($val[\'id\'] != 1){?>
+                                <br/>
+                                <a href="users.php?del-id=<?=$val[\'id\'];?>" class="gy-admin-button"><?=$this->lang->GetMessage(\'del-user\');?></a>
+                                <a href="edit-user.php?edit-id=<?=$val[\'id\'];?>" class="gy-admin-button"><?=$this->lang->GetMessage(\'edit-user\');?></a>
+                                <a href="?show-id=<?=$val[\'id\'];?>" class="gy-admin-button"><?=$this->lang->GetMessage(\'show-user\');?></a> <?// TODO ?>
+                                <br/>
+                                <br/>
+                            <?} ?>
+                        </td>
+                    </tr>
+                <?}?>
+
+        </table>
+
+        <br/>
+        <br/>
+        <a class="gy-admin-button" href="add-user.php"><?=$this->lang->GetMessage(\'add-user\');?></a>
+        <br/>
+        <br/>
+        <br>
+        <br>
+        <a href="group-user.php" class="gy-admin-button"><?=$this->lang->GetMessage(\'options-groups\');?></a> 
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <a href="edit-all-users-propertys.php" class="gy-admin-button"><?=$this->lang->GetMessage(\'list-all-user-propertys\');?></a>
+    <?}?>
+<?}?>
+        ',
     'TYPE' => 'php',
     'DIR' => './gy/component/users_all_tables/teplates/0/',
+  ),
+  './gy/component/users_group_manager/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/component/users_group_manager/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'users_group_manager\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+    \'all-property\' => array()
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/users_group_manager/',
   ),
   './gy/component/users_group_manager/controller.php' => 
   array (
     'CODE' => '<?php 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $arRes = array();
 $data = $_REQUEST;
@@ -3521,13 +6114,24 @@ $this->template->show($arRes, $this->arParam);
     'TYPE' => 'php',
     'DIR' => './gy/component/users_group_manager/',
   ),
+  './gy/component/users_group_manager/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Пользовательские группы и их права\',
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/users_group_manager/',
+  ),
   './gy/component/users_group_manager/teplates/0/lang_template.php' => 
   array (
     'CODE' => '<? // языковой файл для шаблона компонента
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
-	\'title\' => \'Настройка групп прав доступа\',
+    \'title\' => \'Настройка групп прав доступа\',
     \'back\' => \'Отмена\',
     \'save\' => \'Сохранить\',
     \'text-ok\' => \'Настройки успешно сохранены\',
@@ -3547,7 +6151,7 @@ $mess[\'rus\'] = array(
   './gy/component/users_group_manager/teplates/0/template.php' => 
   array (
     'CODE' => '<?php 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 if ( !empty($arRes["allUsersGroups"]) && !empty($arRes["allActionUser"]) ) {?>
 
@@ -3640,17 +6244,40 @@ if ( !empty($arRes["allUsersGroups"]) && !empty($arRes["allActionUser"]) ) {?>
   './gy/config/gy_config.php' => 
   array (
     'CODE' => '<?
-if (!defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && GY_GLOBAL_FLAG_CORE_INCLUDE !== true ) die(\'err_core\');
+if (!defined("GY_CORE") && GY_CORE !== true ) die(\'err_core\');
 
 $gy_config = array(
     \'lang\' => \'rus\', // eng
     \'sole\' => \'pass1021asz#_@)A\',
     \'db_config\' => array(
-        \'db_type\' => \'mysql\',
+        
+        //--- example connect mysql---
+        \'db_type\' => \'mysql\', 
         \'db_host\' => \'localhost\',
         \'db_user\' => \'root\', // заменить на настоящего пользователя // replace by true user 
-        \'db_pass\' => \'********\', // заменить на настоящий пароль // replace by true password
+        \'db_pass\' => \'\', 
         \'db_name\' => \'gy_db\',
+        \'db_port\' => \'31006\',
+        //---
+        
+        //--- example connect PhpFileSql---
+        //\'db_host\' => \'localhost\',
+        //\'db_url\' => \'C:/OSPanel/domains/demo-gy.lc/customDir/db/\',
+        //\'db_type\' => \'PhpFileSqlClientForGy\', 
+        //\'db_user\' => \'root\', // заменить на настоящего пользователя // replace by true user 
+        //\'db_pass\' => \'12345678\', // заменить на настоящий пароль // replace by true password
+        //\'db_name\' => \'gy_db\',
+        //---
+        
+        //--- example connect PostgreSQL---
+        //\'db_type\' => \'pgsql\', 
+        //\'db_host\' => \'localhost\',
+        //\'db_user\' => \'postgres\', // заменить на настоящего пользователя // replace by true user 
+        //\'db_pass\' => \'\', 
+        //\'db_name\' => \'gy_db\',
+        //\'db_port\' => \'5432\',
+        //---
+        
     ),
     \'type_cache\' => \'cacheFiles\'
 );',
@@ -3660,130 +6287,164 @@ $gy_config = array(
   './gy/gy.php' => 
   array (
     'CODE' => '<?php
-define("GY_GLOBAL_FLAG_CORE_INCLUDE", true); // флаг о том что ядро подключено // flag include core
+// если ядро не подключено подключаем всё а если уже подключено то не надо
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) {
 
-include_once("config/gy_config.php"); // подключение настроек ядра // include options
+    ob_start();
+    define("GY_CORE", true); // флаг о том что ядро подключено // flag include core
 
-// подключаем класс модуля 
-// (нужен для подключения модулей до определения авто подключения классов)
-include_once(__DIR__ . \'/classes/module.php\');
+    include_once("config/gy_config.php"); // подключение настроек ядра // include options
 
-// подключить модули
-//global $module;
-$module = module::getInstance();
-$module->setUrlGyCore(__DIR__);
-//$module->includeModule(\'containerdata\');
-$module->includeAllModules();
+    // подключаем класс модуля 
+    // (нужен для подключения модулей до определения авто подключения классов)
+    include_once(__DIR__ . \'/classes/module.php\');
 
-// авто подключение классов
-function __autoload($calssname){ 
-    
-    // проверю есть ли класс в подключённых модулях и подключу, иначе как всегда всё
-    global $module;
-    $meyByClassModule = $module->getUrlModuleClassByNameClass($calssname);
-    if($meyByClassModule !== false){
-        require_once( $meyByClassModule );
-    }else{
-        if (file_exists(__DIR__ . \'/classes/\'.$calssname.\'.php\' )){
-            require_once( "classes/$calssname.php" );          
-        } elseif(file_exists(__DIR__ . \'/classes/abstract/\'.$calssname.\'.php\' )){
-            // подключение abstract классов (что бы они хранились в отдельном разделе)
-            require_once( "classes/abstract/$calssname.php" );   
+    // подключить модули
+    //global $module;
+    $module = module::getInstance();
+    $module->setUrlGyCore(__DIR__);
+    //$module->includeModule(\'containerdata\');
+    $module->includeAllModules();
+
+    // путь к проекту
+    global $urlProject;
+    $urlProject = substr(__DIR__, 0, (strlen(__DIR__) - 3) );
+
+    // авто подключение классов
+    function __autoload($calssname){ 
+        global $urlProject;
+
+        // проверю есть ли класс в подключённых модулях и подключу, иначе как всегда всё
+        global $module;
+        $meyByClassModule = $module->getUrlModuleClassByNameClass($calssname);
+        if($meyByClassModule !== false){
+            require_once( $meyByClassModule );
         }else{
-            die(\'class \'.$calssname.\' not find\' );
+
+            if(file_exists($urlProject."/customDir/classes/".$calssname.".php" ) ){ // сюда будут подключаться пользовательские классы
+                require_once( $urlProject."/customDir/classes/".$calssname.".php" );   
+            }elseif (file_exists(__DIR__ . \'/classes/\'.$calssname.\'.php\' )){
+                require_once( "classes/$calssname.php" );          
+            } elseif(file_exists(__DIR__ . \'/classes/abstract/\'.$calssname.\'.php\' )){
+                // подключение abstract классов (что бы они хранились в отдельном разделе)
+                require_once( "classes/abstract/$calssname.php" );   
+            }else{
+                die(\'class \'.$calssname.\' not find\' );
+            }
         }
     }
-}
 
-global $app;
-$app = app::createApp(__DIR__, $gy_config);
-unset($gy_config);
+    // обезопасить получаемый конфиг
+    $gy_config = security::filterInputData($gy_config);
 
-// подключить класс работы с базой данный // include class work database
-if (isset($app->options[\'db_config\']) 
-    && isset($app->options[\'db_config\'][\'db_type\']) 
-    && isset($app->options[\'db_config\'][\'db_host\']) 
-    && isset($app->options[\'db_config\'][\'db_user\']) 
-    && isset($app->options[\'db_config\'][\'db_pass\']) 
-    && isset($app->options[\'db_config\'][\'db_name\']) 
-){
+    global $app;
+    // добавлю версию ядра gy 
+    $gy_config[\'v-gy\'] = \'0.1-alpha\';
+    $app = app::createApp($urlProject, $gy_config);
+    unset($gy_config);
+
+    // подключить класс работы с базой данный // include class work database
+    if (isset($app->options[\'db_config\']) 
+        && isset($app->options[\'db_config\'][\'db_type\']) 
+        && isset($app->options[\'db_config\'][\'db_host\']) 
+        && isset($app->options[\'db_config\'][\'db_user\']) 
+        && isset($app->options[\'db_config\'][\'db_pass\']) 
+        && isset($app->options[\'db_config\'][\'db_name\']) 
+    ){
+        global $db;
+        $db = new $app->options[\'db_config\'][\'db_type\']($app->options[\'db_config\']); // mysql - for test work db mysql
+    }
+
+    global $crypto;	
+    $crypto = new crypto();
+    if (!empty($app->options[\'sole\'])){
+            $crypto->setSole($app->options[\'sole\']);
+    }
+
+    global $user;
+    $user = new user(); 
+
+    // объявить имя класса для кеша // TODO пока так но сделать надо получше (заменить на фабрику или ещё какой патерн)
+    if (!isset($app->options[\'type_cache\'])) {  
+        $app->options[\'type_cache\'] = \'cacheFiles\';
+    } 
+    global $cacheClassName;
+    $cacheClassName = $app->options[\'type_cache\'];
+
+    session_start();
+
+    // нужно обезопасить все входные данные  
+    // на этой странице не проверять, т.к. там могут сохраняться данные html (своства контейнера данных)
+    // TODO - может как то это пофиксить
+    if( ($app->getUrlTisPageNotGetProperty() != \'/gy/admin/get-admin-page.php\')  
+        && ($_REQUEST[\'page\'] != \'container-data-element-property\' ) 
+    ){
+        $_REQUEST = security::filterInputData($_REQUEST);
+        $_GET = security::filterInputData($_GET);
+        $_POST = security::filterInputData($_POST);
+    }
+
+
+    /*
+    Примеры как можно прокидывать where условия в запросы 
+     (возможно не рабочие но можно увидеть логику работы)
+
+    issues/24 - теперь будет так
     global $db;
-    $db = new $app->options[\'db_config\'][\'db_type\']($app->options[\'db_config\']); // mysql - for test work db mysql
-}
+    $res = $db->selectDb(
+        $db->db, 
+        \'users\', 
+        array(\'*\'), 
+        array( 
+            \'AND\' => array(
+                array(\'=\' => array(\'logIn\', "\'admin\'") ), 
+                array(\'=\' => array(\'logIn\', "\'admin2\'") ) 
+            ),  
+        )
+    );
 
-global $crypto;	
-$crypto = new crypto();
-if (!empty($app->options[\'sole\'])){
-	$crypto->setSole($app->options[\'sole\']);
-}
+    */
 
-global $user;
-$user = new user();
+    /*
+    $res = $db->selectDb(
+        $db->db, 
+        \'users\', 
+        array(\'*\'), 
+        array( 
+            \'=\' => array(\'id\', 1 ), 
+        )
+    );*/
 
-
-// объявить имя класса для кеша // TODO пока так но сделать надо получше (заменить на фабрику или ещё какой патерн)
-if (!isset($app->options[\'type_cache\'])) {  
-    $app->options[\'type_cache\'] = \'cacheFiles\';
-} 
-global $cacheClassName;
-$cacheClassName = $app->options[\'type_cache\'];
-
-session_start();
-
-
-/*
-Примеры как можно прокидывать where условия в запросы 
- (возможно не рабочие но можно увидеть логику работы)
-
-global $db;
-$res = $db->selectDb(
-    $db->db, 
-    \'users\', 
-    array(\'*\'), 
-    array( \'AND\' => array(
-        \'=\' => array(\'logIn\', "\'admin\'"), 
-        //\'>\' => array(\'id\', 0),
-        \'AND\' =>  array(\'=\' => array(\'logIn\', "\'admin2\'") //,
-            //\'AND\' =>  array(\'=\' => array(\'logIn\', "\'admin2\'") )
-            ),
-        
-        //\'<\' => array(\'asd\', 2),
-        ) 
-    )
-);*/
-
-/*
-$res = $db->selectDb(
-    $db->db, 
-    \'users\', 
-    array(\'*\'), 
-    array( 
-        \'=\' => array(\'id\', 1,), 
-        
-    )
-);*/
-',
+}',
     'TYPE' => 'php',
     'DIR' => './gy/',
   ),
   './gy/gy_functions.php' => 
   array (
     'CODE' => '<?php
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 function GetMessageCore($code_text) {
-	$msg = "gy: err core function GetMessageCore";
+    $msg = "gy: err core function GetMessageCore";
 
-	global $arLong;
+    global $arLong;
 
-	if (!empty($arLong)) {
-		$msg = $arLong[$code_text];
-	}
-	return $msg;
+    if (!empty($arLong)) {
+        $msg = $arLong[$code_text];
+    }
+    return $msg;
 } 
 ',
     'TYPE' => 'php',
     'DIR' => './gy/',
+  ),
+  './gy/images/fon.png' => 
+  array (
+    'CODE' => '�PNG
+
+' . "\0" . '' . "\0" . '' . "\0" . 'IHDR' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . 'ש��' . "\0" . '' . "\0" . '' . "\0" . 'tEXtSoftware' . "\0" . 'Adobe ImageReadyq�e<' . "\0" . '' . "\0" . ' iTXtXML:com.adobe.xmp' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '<?xpacket begin="﻿" id="W5M0MpCehiHzreSzNTczkc9d"?> <x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 5.0-c060 61.134777, 2010/02/12-17:32:00        "> <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"> <rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/" xmlns:stRef="http://ns.adobe.com/xap/1.0/sType/ResourceRef#" xmp:CreatorTool="Adobe Photoshop CS5 Windows" xmpMM:InstanceID="xmp.iid:0F0274D29CFD11EA92E7AE773D58B7DC" xmpMM:DocumentID="xmp.did:0F0274D39CFD11EA92E7AE773D58B7DC"> <xmpMM:DerivedFrom stRef:instanceID="xmp.iid:0F0274D09CFD11EA92E7AE773D58B7DC" stRef:documentID="xmp.did:0F0274D19CFD11EA92E7AE773D58B7DC"/> </rdf:Description> </rdf:RDF> </x:xmpmeta> <?xpacket end="r"?>�1	L' . "\0" . '' . "\0" . '' . "\0" . 'PLTE������:���' . "\0" . '' . "\0" . '' . "\0" . 'tRNS�' . "\0" . '�0J' . "\0" . '' . "\0" . '' . "\0" . '%IDATx�b`ddd``�$p�32��jb�)9�!�*�' . "\0" . '' . "\0" . 'S�!�b��' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . 'IEND�B`�',
+    'TYPE' => 'png',
+    'DIR' => './gy/images/',
   ),
   './gy/index.php' => 
   array (
@@ -3852,7 +6513,7 @@ function createTextForFileCofig($options){
     if (!empty($options)){
         
         $fileText = \'<?\'.$br.\'
-if (!defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && GY_GLOBAL_FLAG_CORE_INCLUDE !== true ) die("err_core");\'.$br.\'
+if (!defined("GY_CORE") && GY_CORE !== true ) die("err_core");\'.$br.\'
 
 $gy_config = array(\'.$br;
             
@@ -3927,9 +6588,12 @@ if($isRunConsole){ // пока запускать только из консол
     'TYPE' => 'php',
     'DIR' => './gy/install/',
   ),
-  './gy/install/installMysqlTable.php' => 
+  './gy/install/installDataBaseTable.php' => 
   array (
-    'CODE' => '<? // TODO сделать нормально по шагам потом
+    'CODE' => '<? 
+// TODO сделать нормально по шагам потом (+графический интерфейс)
+// TODO проверку на ошибки переделать с учётом установки на пострис
+
 global $argv;
 $isRunConsole = isset($argv);
 $br = "\\n";
@@ -3954,8 +6618,8 @@ if($isRunConsole){
             //\'groups int\'
         )
     );        
-
-    if ($res === true){
+    
+   // if ($res === true){
         echo $br.\'install user table = OK!\';
 
         echo $br.\'add admin user (and test user) = start\';
@@ -3980,14 +6644,14 @@ if($isRunConsole){
             )
         );
 
-        if($res === true){
+//        if($res === true){
             echo $br.\'add admin user = OK!\';
-        }else{
-            echo $br.\'add admin user = ERROR!\';
-        }
-    }else{
-        echo $br.\'install user table = ERROR!\';
-    }
+//        }else{
+//            echo $br.\'add admin user = ERROR!\';
+//        }
+//    }else{
+//        echo $br.\'install user table = ERROR!\';
+//    }
 
     // задать группы прав доступа и действия разрешаемые для пользователей групп
     echo $br.\'install access users = start\';
@@ -4003,7 +6667,7 @@ if($isRunConsole){
         )
     );        
 
-    if ($res === true){
+    //if ($res === true){
         
         $db->insertDb(
             \'action_user\', 
@@ -4028,7 +6692,7 @@ if($isRunConsole){
                 \'text\' => \'Изменение пользователей (кроме админов)\', 
             )
         );  
-    }
+    //}
     
     echo $br.\'install access users = OK!\';
     
@@ -4046,7 +6710,7 @@ if($isRunConsole){
         )
     );        
 
-    if ($res === true){
+    //if ($res === true){
         
         $db->insertDb(
             \'access_group\', 
@@ -4097,7 +6761,7 @@ if($isRunConsole){
             )
         );
         
-    }
+    //}
     echo $br.\'install user groups = OK!\';
     
     echo $br.\'add users in user groups = start\';
@@ -4106,33 +6770,78 @@ if($isRunConsole){
         \'users_in_groups\',
         array( 
             \'id int PRIMARY KEY AUTO_INCREMENT\', 
-            \'codeGroup varchar(255)\', 
-            \'idUser int\', 
+            \'code_group varchar(255)\', 
+            \'id_user int\', 
         )
     );
     
-    if ($res === true){
+    //if ($res === true){
         
         $db->insertDb(
             \'users_in_groups\', 
             array(
-                \'codeGroup\' => \'admins\', 
-                \'idUser\' => 1,
+                \'code_group\' => \'admins\', 
+                \'id_user\' => 1,
             )
         );
         
         $db->insertDb(
             \'users_in_groups\', 
             array(
-                \'codeGroup\' => \'user_admin\', 
-                \'idUser\' => 2,
+                \'code_group\' => \'user_admin\', 
+                \'id_user\' => 2,
             )
         );
-    }    
+    //}    
     
     echo $br.\'add users in user groups = OK\';
     
+    // общие свойства для пользователей
+    echo $br.\'install all users propertys = start\';
+    // таблица с общими свойствами (список общих свойств для всех пользователей)
+    $res = $db->createTable(
+        \'create_all_users_property\',
+        array( 
+            \'id int PRIMARY KEY AUTO_INCREMENT\', 
+            \'name_property varchar(255)\', 
+            \'type_property int\', 
+            \'code varchar(255)\',
+        )
+    );
     
+    // типы общих свойств для пользователей
+    $res = $db->createTable(
+        \'type_all_user_propertys\',
+        array( 
+            \'id int PRIMARY KEY AUTO_INCREMENT\', 
+            \'name_type varchar(255)\', 
+            \'info varchar(255)\',
+            \'code varchar(255)\',
+        )
+    );
+    
+    $db->insertDb(
+        \'type_all_user_propertys\', 
+        array( 
+            \'name_type\' => \'text\', 
+            \'info\' => \'input type text\',
+            \'code\' => \'text\',
+        )
+    );
+    
+    // значения общего свойства типа текст 
+    $res = $db->createTable(
+        \'value_all_user_propertys_text\',
+        array( 
+            \'id int PRIMARY KEY AUTO_INCREMENT\', 
+            \'value varchar(255)\', 
+            \'id_users int\',  
+            \'id_property int\',  
+        )
+    );
+
+    echo $br.\'install all users propertys = OK\';
+        
     echo $br.\'install all modules db = start\';
     
     // теперь установка частей БД относящихся к модулям
@@ -4153,32 +6862,32 @@ if($isRunConsole){
   ),
   './gy/js/main.js' => 
   array (
-    'CODE' => '$(function(){
-    $(\'.del-user\').click(function(){
-        
-        var button = $(this);
-        var id = $(this).data(\'id-user\')
-        var action = \'user-del\';
-        
-        var url = \'/gy/admin/ajax.php?action=\'+action+\'&id-user=\'+id;
-        
-        if (typeof id != "undefined"){
-            button.hide();
-            $.ajax({
-                url,
-                success: function(res){
-                    result = JSON.parse(res);
-                    if (result[\'stat\'] == \'ok\'){
-                        alert(\'! Пользователь удалён\');
-                        window.location.replace(document.location.href);
-                    } else {
-                        button.show();
-                    }
-                }
-            });
-        }
-    });
-});
+    'CODE' => '//$(function(){
+//    $(\'.del-user\').click(function(){
+//        
+//        var button = $(this);
+//        var id = $(this).data(\'id-user\')
+//        var action = \'user-del\';
+//        
+//        var url = \'/gy/admin/ajax.php?action=\'+action+\'&id-user=\'+id;
+//        
+//        if (typeof id != "undefined"){
+//            button.hide();
+//            $.ajax({
+//                url,
+//                success: function(res){
+//                    result = JSON.parse(res);
+//                    if (result[\'stat\'] == \'ok\'){
+//                        alert(\'! Пользователь удалён\');
+//                        window.location.replace(document.location.href);
+//                    } else {
+//                        button.show();
+//                    }
+//                }
+//            });
+//        }
+//    });
+//});
 ',
     'TYPE' => '.js',
     'DIR' => './gy/js/',
@@ -4186,9 +6895,9 @@ if($isRunConsole){
   './gy/lang/ru.php' => 
   array (
     'CODE' => '<?php // сообщения доя Русского языка 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 $arLong = array(
-	"err_include_core" => "Ядро gy не было подключено", //ошибки подключения ядра
+    "err_include_core" => "Ядро gy не было подключено", //ошибки подключения ядра
 );
 ',
     'TYPE' => 'php',
@@ -4197,11 +6906,11 @@ $arLong = array(
   './gy/modules/containerdata/admin/container-data-add.php' => 
   array (
     'CODE' => '<?
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
 	
-	include "../../gy/admin/header-admin.php";
+    include "../../gy/admin/header-admin.php";
 
     if (accessUserGroup::accessThisUserByAction( \'edit_container_data\')){
         $app->component(
@@ -4211,10 +6920,10 @@ if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
         );
     }
 
-	include "../../gy/admin/footer-admin.php";
+    include "../../gy/admin/footer-admin.php";
 
 } else {
-	header( \'Location: /gy/admin/\' );
+    header( \'Location: /gy/admin/\' );
 }',
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/admin/',
@@ -4222,13 +6931,13 @@ if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
   './gy/modules/containerdata/admin/container-data-edit.php' => 
   array (
     'CODE' => '<?
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
 	
-	include "../../gy/admin/header-admin.php";?>
+    include "../../gy/admin/header-admin.php";
     
-    <?
+    
     if (accessUserGroup::accessThisUserByAction( \'edit_container_data\') && is_numeric($_GET[\'ID\'])){
         $id = $_GET[\'ID\'];
 
@@ -4243,12 +6952,11 @@ if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
     }else{
         echo \'error not id container-data\';
     }
-	?>
     
-	<?include "../../gy/admin/footer-admin.php";
+    include "../../gy/admin/footer-admin.php";
 
 } else {
-	header( \'Location: /gy/admin/\' );
+    header( \'Location: /gy/admin/\' );
 }',
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/admin/',
@@ -4256,13 +6964,13 @@ if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
   './gy/modules/containerdata/admin/container-data-element-list.php' => 
   array (
     'CODE' => '<?
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
 	
-	include "../../gy/admin/header-admin.php";?>
+    include "../../gy/admin/header-admin.php";
     
-    <?
+    
     if (accessUserGroup::accessThisUserByAction( \'edit_container_data\') && is_numeric($_GET[\'container-data-id\'])){
         $id = $_GET[\'container-data-id\'];
 
@@ -4277,12 +6985,11 @@ if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
     }else{
         echo \'error not id container-data\';
     }
-	?>
-    
-	<?include "../../gy/admin/footer-admin.php";
+	
+    include "../../gy/admin/footer-admin.php";
 
 } else {
-	header( \'Location: /gy/admin/\' );
+    header( \'Location: /gy/admin/\' );
 }',
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/admin/',
@@ -4290,11 +6997,11 @@ if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
   './gy/modules/containerdata/admin/container-data-element-property.php' => 
   array (
     'CODE' => '<?
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
 	
-	include "../../gy/admin/header-admin.php";
+    include "../../gy/admin/header-admin.php";
     
     if(accessUserGroup::accessThisUserByAction( \'edit_container_data\')){
     
@@ -4316,11 +7023,10 @@ if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
         }
     }
 	
-    
-	include "../../gy/admin/footer-admin.php";
+    include "../../gy/admin/footer-admin.php";
 
 } else {
-	header( \'Location: /gy/admin/\' );
+    header( \'Location: /gy/admin/\' );
 }',
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/admin/',
@@ -4328,11 +7034,11 @@ if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
   './gy/modules/containerdata/admin/container-data-property-edit.php' => 
   array (
     'CODE' => '<?
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
 	
-	include "../../gy/admin/header-admin.php";
+    include "../../gy/admin/header-admin.php";
     
     if (accessUserGroup::accessThisUserByAction( \'edit_container_data\') && is_numeric($_GET[\'container-data-id\'])){
         $id = $_GET[\'container-data-id\'];
@@ -4349,10 +7055,10 @@ if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
         echo \'error not id container-data\';
     }
 
-	include "../../gy/admin/footer-admin.php";
+    include "../../gy/admin/footer-admin.php";
 
 } else {
-	header( \'Location: /gy/admin/\' );
+    header( \'Location: /gy/admin/\' );
 }',
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/admin/',
@@ -4360,11 +7066,11 @@ if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
   './gy/modules/containerdata/admin/container-data.php' => 
   array (
     'CODE' => '<?
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
 	
-	include "../../gy/admin/header-admin.php";
+    include "../../gy/admin/header-admin.php";
     
     if(accessUserGroup::accessThisUserByAction( \'edit_container_data\')){
 
@@ -4376,10 +7082,10 @@ if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
         
     }
     
-	include "../../gy/admin/footer-admin.php";
+    include "../../gy/admin/footer-admin.php";
 
 } else {
-	header( \'Location: /gy/admin/\' );
+    header( \'Location: /gy/admin/\' );
 }',
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/admin/',
@@ -4387,7 +7093,7 @@ if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
   './gy/modules/containerdata/classes/containerData.php' => 
   array (
     'CODE' => '<?
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 class containerData{            
     public static $table_container_data = \'container_data\';
@@ -4431,15 +7137,15 @@ class containerData{
     public static function addContainerData($arParams){
         $result = false;
 
-		// id, login, name, pass, groups
-		global $db;		
+        // id, login, name, pass, groups
+        global $db;		
         $res = $db->insertDb(self::$table_container_data, $arParams);
         
         if ($res){
-			$result = true;
-		}
+            $result = true;
+        }
 			
-		return $result;
+        return $result;
     }
     
     /**
@@ -4451,8 +7157,8 @@ class containerData{
     public static function deleteContainerData($id){
         $result = false;
 
-		// id, login, name, pass, groups
-		global $db;		
+        // id, login, name, pass, groups
+        global $db;		
         $res = $db->deleteDb(self::$table_container_data, array(\'=\' => array(\'id\', $id)));
         
         if ($res){
@@ -4479,10 +7185,10 @@ class containerData{
                 array(\'=\' => array(\'id_container_data\', $id) )  
             );
             
-			$result = true;
-		}
+            $result = true;
+        }
 			
-		return $result; 
+        return $result; 
     }
     
     /**
@@ -4494,14 +7200,14 @@ class containerData{
     public static function updateContainerData($arParams, $where){
         $result = false;
 
-		global $db;		
+        global $db;		
         $res = $db->updateDb(self::$table_container_data, $arParams, $where);
         
         if ($res){
-			$result = true;
-		}
+            $result = true;
+        }
 			
-		return $result; 
+        return $result; 
     }
     
     /**
@@ -4549,15 +7255,15 @@ class containerData{
     public static function addPropertyContainerData($arParams){
         $result = false;
 
-		// id, login, name, pass, groups
-		global $db;		
+        // id, login, name, pass, groups
+        global $db;		
         $res = $db->insertDb(self::$table_list_propertys_container_data, $arParams);
         
         if ($res){
-			$result = true;
-		}
+            $result = true;
+        }
 			
-		return $result;
+        return $result;
     
     }
     
@@ -4578,31 +7284,16 @@ class containerData{
             array(\'*\'),
             array(
                 \'AND\' => array(
-                    \'=\' => array(
-                        \'id_container_data\', 
-                        $idContainerData
-                    ),
-                    \'AND\' => array( 
-                        \'AND\' => array(
-                            \'=\' => array( 
-                                \'id_element_container_data\',
-                                $idElementContainerData
-                            ), 
-                            \'AND\' => array(
-                                \'=\' => array(
-                                    \'id_property_container_data\', 
-                                    $idProperty
-                                ) 
-                            )    
-                        )
-                    )
+                    array(\'=\' => array(\'id_container_data\', $idContainerData) ),
+                    array(\'=\' => array(\'id_element_container_data\', $idElementContainerData) ), 
+                    array(\'=\' => array(\'id_property_container_data\', $idProperty) ) 
                 )    
             )
         );
                       
         if ($arRes = $db->fetch($res)){
-			$result = $arRes;
-		}
+            $result = $arRes;
+        }
         return $result;
     }
     
@@ -4710,15 +7401,15 @@ class containerData{
     public static function addElementContainerData($arParams){
         $result = false;
 
-		// id, login, name, pass, groups
-		global $db;		
+        // id, login, name, pass, groups
+        global $db;		
         $res = $db->insertDb(self::$table_element_container_data, $arParams);
         
         if ($res){
-			$result = true;
-		}
+            $result = true;
+        }
 			
-		return $result;
+        return $result;
     }
     
     /**
@@ -4729,7 +7420,7 @@ class containerData{
     public static function deleteElementContainerData($id){
         $result = false;
 
-		global $db;		
+        global $db;		
         $res = $db->deleteDb(self::$table_element_container_data, array(\'=\' => array(\'id\', $id)));
         
         if ($res){
@@ -4744,10 +7435,10 @@ class containerData{
             );
         
                     
-			$result = true;
-		}
+            $result = true;
+        }
 			
-		return $result;
+        return $result;
     }
     
     /**
@@ -4758,15 +7449,15 @@ class containerData{
     public static function updateElementContainerData($arParams, $where){
         $result = false;
 
-		// id, login, name, pass, groups
-		global $db;		
+        // id, login, name, pass, groups
+        global $db;		
         $res = $db->updateDb(self::$table_element_container_data, $arParams, $where);
         
         if ($res){
-			$result = true;
-		}
+            $result = true;
+        }
 			
-		return $result;
+        return $result;
     }
     
     /** //TODO протестировать за комментировать
@@ -4810,10 +7501,28 @@ class containerData{
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/classes/',
   ),
+  './gy/modules/containerdata/component/containerdata/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/modules/containerdata/component/containerdata/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'containerdata\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+    \'all-property\' => array()
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/containerdata/component/containerdata/',
+  ),
   './gy/modules/containerdata/component/containerdata/controller.php' => 
   array (
     'CODE' => '<?php 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $data = $_POST;
 
@@ -4836,13 +7545,24 @@ $this->template->show($arRes, $this->arParam);
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/component/containerdata/',
   ),
+  './gy/modules/containerdata/component/containerdata/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Выведет список контейнеров данных\',
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/containerdata/component/containerdata/',
+  ),
   './gy/modules/containerdata/component/containerdata/teplates/0/lang_template.php' => 
   array (
     'CODE' => '<? // языковой файл для шаблона компонента
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
-	\'del\' => \'Удалить\',
+    \'del\' => \'Удалить\',
     \'add\' => \'Добавить\',
     \'edit\' => \'Редактировать\',
     \'show-element\' => \'Работа с элементами контейнера данных\',
@@ -4860,7 +7580,7 @@ $mess[\'rus\'] = array(
   './gy/modules/containerdata/component/containerdata/teplates/0/template.php' => 
   array (
     'CODE' => '<?
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );?>
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );?>
 
 <h1><?=$this->lang->GetMessage(\'title-container-data\');?></h1>
 
@@ -4910,10 +7630,28 @@ if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !==
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/component/containerdata/teplates/0/',
   ),
+  './gy/modules/containerdata/component/containerdata_add/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/modules/containerdata/component/containerdata_add/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'containerdata_add\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+    \'all-property\' => array()
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/containerdata/component/containerdata_add/',
+  ),
   './gy/modules/containerdata/component/containerdata_add/controller.php' => 
   array (
     'CODE' => '<?php 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 //global $user;
 //$arRes[\'ITEMS\'] = containerData::getContainerData(array(), array(\'*\') );
@@ -4952,13 +7690,24 @@ $this->template->show($arRes, $this->arParam);
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/component/containerdata_add/',
   ),
+  './gy/modules/containerdata/component/containerdata_add/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Добавление контейнера данных\',
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/containerdata/component/containerdata_add/',
+  ),
   './gy/modules/containerdata/component/containerdata_add/teplates/0/lang_template.php' => 
   array (
     'CODE' => '<? // языковой файл для шаблона компонента
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
-	\'save\' => \'Создать\',
+    \'save\' => \'Создать\',
     \'back\' => \'Отменить\',
     \'title\' => \'Создание контейнера данных\',
     \'add-err\' => \'Ошибка! попробуйте ещё раз\', 
@@ -4973,7 +7722,7 @@ $mess[\'rus\'] = array(
   './gy/modules/containerdata/component/containerdata_add/teplates/0/template.php' => 
   array (
     'CODE' => '<?
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 if ($arRes[\'status\'] == \'add\'){ ?>
     <h1><?=$this->lang->GetMessage(\'title\');?></h1>
@@ -5006,10 +7755,33 @@ if ($arRes[\'status\'] == \'add\'){ ?>
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/component/containerdata_add/teplates/0/',
   ),
+  './gy/modules/containerdata/component/containerdata_edit/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/modules/containerdata/component/containerdata_edit/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'containerdata_edit\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+    \'all-property\' => array(
+        \'ID\'
+    ),
+    \'all-property-text\' => array(
+        \'ID\' => $langComponentInfo->GetMessage(\'property-ID\')
+    )
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/containerdata/component/containerdata_edit/',
+  ),
   './gy/modules/containerdata/component/containerdata_edit/controller.php' => 
   array (
     'CODE' => '<?php 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 //global $user;
 //$arRes[\'ITEMS\'] = containerData::getContainerData(array(), array(\'*\') );
@@ -5052,13 +7824,25 @@ $this->template->show($arRes, $this->arParam);
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/component/containerdata_edit/',
   ),
+  './gy/modules/containerdata/component/containerdata_edit/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Изменение контейнера данных\',
+    \'property-ID\' => \'ID контейнера данных\',
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/containerdata/component/containerdata_edit/',
+  ),
   './gy/modules/containerdata/component/containerdata_edit/teplates/0/lang_template.php' => 
   array (
     'CODE' => '<? // языковой файл для шаблона компонента
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
-	\'save\' => \'Сохранить\',
+    \'save\' => \'Сохранить\',
     \'back\' => \'Отменить\',
     \'title\' => \'Редактирование контейнера данных\',
     \'add-err\' => \'Ошибка! попробуйте ещё раз\', 
@@ -5074,18 +7858,20 @@ $mess[\'rus\'] = array(
   './gy/modules/containerdata/component/containerdata_edit/teplates/0/template.php' => 
   array (
     'CODE' => '<?
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
-if (!empty($arRes[\'data-this-nfo-box\'][0])){
+
+$value = array_shift($arRes[\'data-this-nfo-box\']);
+if (!empty($value)){
     ?>
     <h1><?=$this->lang->GetMessage(\'title\');?></h1>
     <form method="post">
-        <input name="ID" type="hidden" value="<?=$arRes[\'data-this-nfo-box\'][0][\'id\']?>" />
+        <input name="ID" type="hidden" value="<?=$value[\'id\']?>" />
         <table border="1" class="gy-table-all-users">
             <? foreach ($arRes[\'property\'] as $val){?>
                 <tr>
                     <td><?=$val?></td>
-                    <td><input type="text" name="<?=$val?>" value="<?=$arRes[\'data-this-nfo-box\'][0][$val]?>" /></td>
+                    <td><input type="text" name="<?=$val?>" value="<?=$value[$val]?>" /></td>
                 </tr>
             <?}?>
         </table> 
@@ -5097,7 +7883,7 @@ if (!empty($arRes[\'data-this-nfo-box\'][0])){
     <br/>
     <br/>
     <br/>
-    <a href="/gy/admin/get-admin-page.php?page=container-data-property-edit&container-data-id=<?=$arRes[\'data-this-nfo-box\'][0][\'id\']?>" class="gy-admin-button"><?=$this->lang->GetMessage(\'edit-property\');?></a>
+    <a href="/gy/admin/get-admin-page.php?page=container-data-property-edit&container-data-id=<?=$value[\'id\']?>" class="gy-admin-button"><?=$this->lang->GetMessage(\'edit-property\');?></a>
 <?}?>    
    
 <?if(!empty($arRes[\'status\'])){?>    
@@ -5116,10 +7902,33 @@ if (!empty($arRes[\'data-this-nfo-box\'][0])){
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/component/containerdata_edit/teplates/0/',
   ),
+  './gy/modules/containerdata/component/containerdata_element_list/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/modules/containerdata/component/containerdata_element_list/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'containerdata_element_list\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+    \'all-property\' => array(
+        \'container-data-id\'
+    ),
+    \'all-property-text\' => array(
+        \'container-data-id\' => $langComponentInfo->GetMessage(\'property-container-data-id\'),
+    )
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/containerdata/component/containerdata_element_list/',
+  ),
   './gy/modules/containerdata/component/containerdata_element_list/controller.php' => 
   array (
     'CODE' => '<?php 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $arRes = array();
 
@@ -5198,13 +8007,25 @@ $this->template->show($arRes, $this->arParam);
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/component/containerdata_element_list/',
   ),
+  './gy/modules/containerdata/component/containerdata_element_list/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Работа с элементами контейнера данных\',
+    \'property-container-data-id\' => \'Id контейнера данных\',
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/containerdata/component/containerdata_element_list/',
+  ),
   './gy/modules/containerdata/component/containerdata_element_list/teplates/0/lang_template.php' => 
   array (
     'CODE' => '<? // языковой файл для шаблона компонента
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
-	\'ITEMS-NULL\' => \'!Элементов ещё нет\',
+    \'ITEMS-NULL\' => \'!Элементов ещё нет\',
     \'title-add-element\' => \'Добавить новый элемент\',
     \'add\' => \'Добавить\',
     \'save\' => \'Изменить\',
@@ -5226,7 +8047,7 @@ $mess[\'rus\'] = array(
   ),
   './gy/modules/containerdata/component/containerdata_element_list/teplates/0/template.php' => 
   array (
-    'CODE' => '<?if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );?>
+    'CODE' => '<?if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );?>
 
 <h4><?=$this->lang->GetMessage(\'title\');?></H4>
 
@@ -5317,10 +8138,35 @@ if( (empty($arRes[\'stat\']) && empty($arRes[\'stat-edit\']) && empty($arRes[\'s
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/component/containerdata_element_list/teplates/0/',
   ),
+  './gy/modules/containerdata/component/containerdata_element_property/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/modules/containerdata/component/containerdata_element_property/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'containerdata_element_property\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+    \'all-property\' => array(
+        \'container-data-id\',
+        \'el-id\'
+    ),
+    \'all-property-text\' => array(
+        \'container-data-id\' => $langComponentInfo->GetMessage(\'property-container-data-id\'),
+        \'el-id\' => $langComponentInfo->GetMessage(\'property-el-id\')
+    )
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/containerdata/component/containerdata_element_property/',
+  ),
   './gy/modules/containerdata/component/containerdata_element_property/controller.php' => 
   array (
     'CODE' => '<?php 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $arRes = array();
 
@@ -5354,19 +8200,21 @@ if(!empty($this->arParam[\'container-data-id\']) && !empty($this->arParam[\'el-i
     $arRes[\'PROPERTY_VALUE\'] = array();
     
     // получить значения
-    foreach($arRes[\'PROPERTY\'] as $key => $val){
-        $propertyValue = containerData::getValuePropertysContainerData(
-            $this->arParam[\'container-data-id\'], 
-            $this->arParam[\'el-id\'],
-            $val[\'id\'],
-            $arRes[\'PROPERTY_TYPE\'][$val[\'id_type_property\']][\'name_table\']
-        );
-        
-        if(!empty($propertyValue)){
-            $arRes[\'PROPERTY_VALUE\'][$val[\'id\']] = $propertyValue;
+    if(!empty($arRes[\'PROPERTY\']) && is_array($arRes[\'PROPERTY\']) ){
+        foreach($arRes[\'PROPERTY\'] as $key => $val){
+            $propertyValue = containerData::getValuePropertysContainerData(
+                $this->arParam[\'container-data-id\'], 
+                $this->arParam[\'el-id\'],
+                $val[\'id\'],
+                $arRes[\'PROPERTY_TYPE\'][$val[\'id_type_property\']][\'name_table\']
+            );
+
+            if(!empty($propertyValue)){
+                $arRes[\'PROPERTY_VALUE\'][$val[\'id\']] = $propertyValue;
+            }
         }
     }
-    
+        
     $arKeyValue = array();
     foreach ($arRes[\'PROPERTY_VALUE\'] as $key => $value) {
 
@@ -5394,19 +8242,20 @@ if(!empty($this->arParam[\'container-data-id\']) && !empty($this->arParam[\'el-i
     $arRes[\'PROPERTY_VALUE\'] = array();
     
     // получить значения
-    foreach($arRes[\'PROPERTY\'] as $key => $val){
-         $propertyValue = containerData::getValuePropertysContainerData(
-            $this->arParam[\'container-data-id\'], 
-            $this->arParam[\'el-id\'],
-            $val[\'id\'],
-            $arRes[\'PROPERTY_TYPE\'][$val[\'id_type_property\']][\'name_table\']
-        );
-        
-        if(!empty($propertyValue)){
-            $arRes[\'PROPERTY_VALUE\'][$val[\'id\']] = $propertyValue;
+    if(!empty($arRes[\'PROPERTY\']) && is_array($arRes[\'PROPERTY\']) ){
+        foreach($arRes[\'PROPERTY\'] as $key => $val){
+            $propertyValue = containerData::getValuePropertysContainerData(
+                $this->arParam[\'container-data-id\'], 
+                $this->arParam[\'el-id\'],
+                $val[\'id\'],
+                $arRes[\'PROPERTY_TYPE\'][$val[\'id_type_property\']][\'name_table\']
+            );
+
+            if(!empty($propertyValue)){
+                $arRes[\'PROPERTY_VALUE\'][$val[\'id\']] = $propertyValue;
+            }
         }
     }
-    
 }
 
 // показать шаблон
@@ -5415,13 +8264,26 @@ $this->template->show($arRes, $this->arParam);
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/component/containerdata_element_property/',
   ),
+  './gy/modules/containerdata/component/containerdata_element_property/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Работа со свойствами конкретного элемента контейнера данных\',
+    \'property-container-data-id\' => \'Id контейнера данных\',
+    \'property-el-id\' => \'Id элемента\'
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/containerdata/component/containerdata_element_property/',
+  ),
   './gy/modules/containerdata/component/containerdata_element_property/teplates/0/lang_template.php' => 
   array (
     'CODE' => '<? // языковой файл для шаблона компонента
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
-	\'save\' => \'Сохранить\',
+    \'save\' => \'Сохранить\',
     \'back\' => \'Отменить\',
     \'title\' => \'Значения свойств элемента\',
     \'name\' =>  \'Название\',
@@ -5439,7 +8301,7 @@ $mess[\'rus\'] = array(
   ),
   './gy/modules/containerdata/component/containerdata_element_property/teplates/0/template.php' => 
   array (
-    'CODE' => '<?if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );?>
+    'CODE' => '<?if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );?>
 
 <h1><?=$this->lang->GetMessage(\'title\');?></h1>
 
@@ -5510,10 +8372,37 @@ if(empty($arRes[\'stat-save\'] )){
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/component/containerdata_element_property/teplates/0/',
   ),
+  './gy/modules/containerdata/component/containerdata_element_show/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/modules/containerdata/component/containerdata_element_show/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'containerdata_element_show\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+    \'all-property\' => array(
+        \'container-data-code\' ,
+        \'element-code\',
+        \'cacheTime\'
+    ),
+    \'all-property-text\' => array(
+        \'container-data-code\' => $langComponentInfo->GetMessage(\'property-container-data-code\'),
+        \'element-code\' => $langComponentInfo->GetMessage(\'property-element-code\'),
+        \'cacheTime\' => $langComponentInfo->GetMessage(\'property-cacheTime\')
+    )
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/containerdata/component/containerdata_element_show/',
+  ),
   './gy/modules/containerdata/component/containerdata_element_show/controller.php' => 
   array (
     'CODE' => '<?php 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $arRes = array();
 
@@ -5567,16 +8456,8 @@ if(!empty($this->arParam[\'container-data-code\']) && !empty($this->arParam[\'el
         $dataElement = containerData::getElementContainerData(
             array(
                 \'AND\' => array(
-                    \'=\' => array(
-                        \'id_container_data\', 
-                        $dataContainerData[\'id\']
-                    ),
-                    \'AND\' => array(
-                        \'=\' => array(
-                            \'code\',
-                            "\'".$this->arParam[\'element-code\']."\'"
-                        )
-                    )
+                    array( \'=\' => array( \'id_container_data\', $dataContainerData[\'id\'])),
+                    array( \'=\' => array( \'code\', "\'".$this->arParam[\'element-code\']."\'"))
                 )
             )
         );
@@ -5605,9 +8486,23 @@ $this->template->show($arRes, $this->arParam);
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/component/containerdata_element_show/',
   ),
+  './gy/modules/containerdata/component/containerdata_element_show/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Вывод элемента контейнера данных\',
+    \'property-container-data-code\' => \'Код контейнера данных\',
+    \'property-element-code\' => \'Код элемента\',
+    \'property-cacheTime\' => \'Время кеширования\'
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/containerdata/component/containerdata_element_show/',
+  ),
   './gy/modules/containerdata/component/containerdata_element_show/teplates/0/template.php' => 
   array (
-    'CODE' => '<?if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+    'CODE' => '<?if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 if(!empty($arRes[\'ITEMS\'])){
     foreach ($arRes[\'ITEMS\'] as $value) { 
@@ -5617,10 +8512,33 @@ if(!empty($arRes[\'ITEMS\'])){
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/component/containerdata_element_show/teplates/0/',
   ),
+  './gy/modules/containerdata/component/containerdata_property_edit/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/modules/containerdata/component/containerdata_property_edit/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'containerdata_property_edit\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+    \'all-property\' => array(
+        \'container-data-id\'
+    ),
+    \'all-property-text\' => array(
+        \'container-data-id\' => $langComponentInfo->GetMessage(\'property-container-data-id\')
+    )
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/containerdata/component/containerdata_property_edit/',
+  ),
   './gy/modules/containerdata/component/containerdata_property_edit/controller.php' => 
   array (
     'CODE' => '<?php 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $arRes = array();
 
@@ -5674,13 +8592,25 @@ $this->template->show($arRes, $this->arParam);
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/component/containerdata_property_edit/',
   ),
+  './gy/modules/containerdata/component/containerdata_property_edit/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Работа с свойствами элементов контейнера данных (можно задавать свойства, которые будут доступны для заполнения у всех элементов конкретного контейнера данных)\',
+    \'property-container-data-id\' => \'Id контейнера данных\'
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/containerdata/component/containerdata_property_edit/',
+  ),
   './gy/modules/containerdata/component/containerdata_property_edit/teplates/0/lang_template.php' => 
   array (
     'CODE' => '<? // языковой файл для шаблона компонента
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
-	\'save\' => \'Сохранить\',
+    \'save\' => \'Сохранить\',
     \'back\' => \'Отменить\',
     \'not-property\' => \'свойства не заданы\',
     \'title-add-property\' => \'Добавить новое свойство\',
@@ -5700,7 +8630,7 @@ $mess[\'rus\'] = array(
   './gy/modules/containerdata/component/containerdata_property_edit/teplates/0/template.php' => 
   array (
     'CODE' => '<?
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 if(empty($arRes[\'status\'])){?>
 
@@ -5783,7 +8713,7 @@ if(empty($arRes[\'status\'])){?>
   './gy/modules/containerdata/init.php' => 
   array (
     'CODE' => '<?
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 /** 
  * описываю что есть в модуле 
@@ -5827,14 +8757,18 @@ $pagesFromAdminMenu = array(
 // в меню админки кнопки $pagesFromAdminMenu
 $isShowButtonsMenuAdminPanetThisModule = \'edit_container_data\';
 
-$nameThisModule = \'containerdata\';',
+// имя текущего модуля
+$nameThisModule = \'containerdata\';
+
+// версия текущего модуля
+$versionThisModule = \'0.1\';',
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/',
   ),
-  './gy/modules/containerdata/install/installMysqlTable.php' => 
+  './gy/modules/containerdata/install/installDataBaseTable.php' => 
   array (
     'CODE' => '<? 
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 global $argv;
 $isRunConsole = isset($argv);
@@ -5971,16 +8905,8 @@ if($isRunConsole){
     $dataElement = containerData::getElementContainerData(
         array(
             \'AND\' => array(
-                \'=\' => array(
-                    \'id_container_data\', 
-                    $dataContentContainerData[0][\'id\']
-                ),
-                \'AND\' => array(
-                    \'=\' => array(
-                        \'code\',
-                        "\'html-index-page\'"
-                    )
-                )
+                array( \'=\' => array( \'id_container_data\', $dataContentContainerData[0][\'id\']) ),
+                array( \'=\' => array( \'code\', "\'html-index-page\'"))
             )
         )
     );
@@ -6021,8 +8947,8 @@ if($isRunConsole){
     $db->insertDb(
         \'users_in_groups\', 
         array(
-            \'codeGroup\' => \'content\', 
-            \'idUser\' => 2,
+            \'code_group\' => \'content\', 
+            \'id_user\' => 2,
         )
     );
     
@@ -6042,20 +8968,1130 @@ if($isRunConsole){
     echo $br.\'--install table module - containerData = OK!--\'.$br;
     
 }else{
-	echo \'! нужно запустить скрипт в консоли\';
+    echo \'! нужно запустить скрипт в консоли\';
 
 }',
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/install/',
   ),
+  './gy/modules/filemodule/admin/work-page-site.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
+	
+    include "../../gy/admin/header-admin.php";
+
+    if (accessUserGroup::accessThisUserByAction( \'work_file_module\')){
+        $app->component(
+            \'work_page_site\',
+            \'0\',
+            array() 
+        );
+    }
+
+    include "../../gy/admin/footer-admin.php";
+
+} else {
+    header( \'Location: /gy/admin/\' );
+}',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/filemodule/admin/',
+  ),
+  './gy/modules/filemodule/classes/appFromConstructorPageComponent.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+/**
+ * class appFromConstructorPageComponent подменит собой обьект app 
+ *  что бы подловить подключаемые компоненты
+ */
+
+class appFromConstructorPageComponent{
+    
+    private $allDateIncludeComponents = array();
+    private $intKey = 0;
+    public $urlProject;
+    public $options; // настройки проекта 
+    
+    public function __construct($urlProject, $options) {
+        $this->urlProject = $urlProject;
+        $this->options = $options;
+    }
+    
+    /**
+     * getInfoAboutComponent
+     *  - получить информацию о компоненте если есть файл componentInfo.php 
+     * 
+     * @param string $name
+     * @param string $template
+     * @param array $arParam
+     * @param string $url
+     * @return array
+     */
+    public function getInfoAboutComponent( $name, $template, $arParam, $url ){
+        // нужно попробовать найти подключаемый компонент среди подключённых модулей
+        $module = module::getInstance();
+        $urlComponentInModule = $module->getModulesComponent($name);
+        $componentInfo = array();     
+        
+        if ( file_exists($url.\'/customDir/component/\'.$name.\'/componentInfo.php\' ) ){ 
+            require $url.\'/customDir/component/\'.$name.\'/componentInfo.php\'; 
+        }elseif(($urlComponentInModule !== false) && file_exists($urlComponentInModule.\'/componentInfo.php\' )){
+            require $urlComponentInModule.\'/componentInfo.php\'; // может и не быть
+        }elseif( file_exists($url.\'/gy/component/\'.$name.\'/componentInfo.php\' ) ){ 
+            require $url.\'/gy/component/\'.$name.\'/componentInfo.php\'; // может и не быть
+        } 
+        
+        return $componentInfo;
+    }
+
+    /**
+     * component 
+     *  - метод подключения компонента, а в нашем классе возьмёт просто информацию
+     *    о подключаемом компоненте
+     * 
+     * @global type $app
+     * @param type $name
+     * @param type $template
+     * @param type $arParam
+     */
+    public function component($name, $template, $arParam  ){
+        global $app;      
+        $this->allDateIncludeComponents[$this->intKey] = array(
+            \'name\' => $name,
+            \'template\' => $template,
+            \'arParam\' => $arParam,
+            \'componentInfo\' => self::getInfoAboutComponent( $name, $template, $arParam, $this->urlProject)
+        ); 
+         
+        $this->intKey++;
+    }
+    
+    /**
+     * getAllDataIncludeComponents
+     *  - получить данные по всем подключенным компонентам
+     *
+     * @return array
+     */
+    public function getAllDataIncludeComponents(){
+        return $this->allDateIncludeComponents;
+    }
+    
+    /**
+     * getCodeIncludeComponent
+     *  - сделать php код вызова коппонента из переданных параметров
+     * 
+     * @param string $componentName
+     * @param string $templateName
+     * @param array $arParams
+     * @return string
+     */
+    public static function getCodeIncludeComponent($componentName, $templateName, $arParams){
+        
+        $codeIncludeComponent = "\\n".\'$app->component(\'."\\n";
+        $codeIncludeComponent .= "   \'".$componentName."\',"."\\n";
+        $codeIncludeComponent .= "   \'".$templateName."\',"."\\n";
+        $codeIncludeComponent .= \'   array(\'."\\n";
+        if(!empty($arParams)){
+            foreach ($arParams as $key => $value) {
+                if(!is_numeric($value)){
+                    $codeIncludeComponent .= "     \'".$key."\' => \'".$value."\',"."\\n";
+                }else{
+                    $codeIncludeComponent .= "     \'".$key."\' => ".$value.",\\n";
+                }
+            }
+        }
+        $codeIncludeComponent .= \'   )\'."\\n";
+        
+        $codeIncludeComponent .= \');\'."\\n";
+        
+        return $codeIncludeComponent;
+    }
+    
+}',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/filemodule/classes/',
+  ),
+  './gy/modules/filemodule/classes/files.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+/**
+ * files - класс для работы с файлами
+ */
+
+class files{
+        
+     
+    /**
+     * createFile 
+     *  - создать файл по урлу
+     * 
+     * @param string $url - путь к файлу
+     * @return boolean
+     */
+    static function createFile($url){
+        return file_put_contents($url, \'\');
+    }
+    
+    /**
+     * deleteFile
+     *  - удалить файл по урлу
+     * 
+     * @param string $url - путь к файлу
+     * @return boolean
+     */
+    static function deleteFile($url){
+        return unlink($url);
+    }
+    
+    /**
+     * saveFile
+     *  - сохранить текст в файл по урлу
+     * 
+     * @param string $url - путь к файлу
+     * @param string $date - данные для записи в файл
+     * @return boolean
+     */
+    static function saveFile($url, $date){
+        return file_put_contents($url, $date);
+    }
+    
+    /**
+     * getContentFile
+     *  - прочитать файл
+     * 
+     * @param string $url
+     * @return boolean
+     */
+    static function getContentFile($url){
+        return file_get_contents($url); 
+    }
+    
+    
+} ',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/filemodule/classes/',
+  ),
+  './gy/modules/filemodule/classes/sitePages.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+/**
+ * classsitePages - класс для работы со страницами сайта
+ */
+class sitePages{
+    
+    /**
+     * разделы в которых нельзя редактировать страницы
+     * @var array 
+     */
+    private $notEditPages = array(
+        \'/gy/\',
+        \'/customDir/\'
+    );
+    
+    /**
+     * имя файла страницы сайта
+     * @var string 
+     */
+    private $nameFilePageSite = \'index.php\';
+   
+    /**
+     * путь до проекта
+     * @var string/false (false - пока не определён) 
+     */
+    private $urlProject = false;
+    
+    /**
+     * - текст ошибки
+     * @var false/string - (false - нет ошибок, или текст ошибки)
+     */
+    public $err = false;
+
+    public function __construct($urlProject){
+        if(file_exists($urlProject)){
+            $this->urlProject = $urlProject;
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    /**
+     * createSitePage
+     *  - создать страницу сайта (пустую)
+     * 
+     * @param string $urlPage - путь к файлу (до раздела без index.php)
+     * @return boolean
+     */
+    public function createSitePage($urlPage){
+        if( ($this->urlProject !== false) && $this->checkUrl(\'/\'.$urlPage.\'/\') ){
+            // если нет директории создать её
+            if(file_exists($this->urlProject.$urlPage.\'/\') === false){ // TODO вынести в класс files
+                mkdir($this->urlProject.$urlPage.\'/\', 0755, true);   
+            }            
+            return files::createFile($this->urlProject.$urlPage.\'/\'.$this->nameFilePageSite);
+        }else{
+            return false;
+        }
+    }
+    
+    /**
+     * deleteSitePage 
+     *  - удалить страницу сайта 
+     * 
+     * @param string $urlPage - путь к файлу (до раздела без index.php)
+     * @return boolean
+     */
+    public function deleteSitePage($urlPage){
+        if( ($this->urlProject !== false) && $this->checkUrl(\'/\'.$urlPage.\'/\') ){
+            $res = files::deleteFile($this->urlProject.$urlPage.\'/\'.$this->nameFilePageSite);
+            
+            // если файлов не осталось удалить директорию // TODO вынести в класс files
+            if($res !== false){
+                if( count(scandir($this->urlProject.$urlPage.\'/\')) == 2 ){  // 2ва т.е. . и .. в разделе всегда есть
+                    rmdir( $this->urlProject.$urlPage.\'/\' );
+                }
+            }
+            
+            return $res;
+        }else{
+            return false;
+        }
+    }
+    
+    /**
+     * getContextPage 
+     *  - получить содержимое страницы, просто в виде текста
+     * 
+     * @param string $urlPage - путь к файлу (до раздела без index.php)
+     * @return false/string
+     */
+    public function getContextPage($urlPage){
+        if( ($this->urlProject !== false) &&  $this->checkUrl(\'/\'.$urlPage.\'/\')   ){
+            return files::getContentFile($this->urlProject.$urlPage.\'/\'.$this->nameFilePageSite);
+        }else{
+            return false;
+        }
+    }
+    
+    /**
+     * putContextPage 
+     *  - сохранить на страницу текст
+     * 
+     * @param string $urlPage - путь к файлу (до раздела без index.php)
+     * @param string $date - содержимое страницы
+     * @return boolean
+     */
+    public function putContextPage($urlPage, $date){
+        if( ($this->urlProject !== false) && $this->checkUrl(\'/\'.$urlPage.\'/\') ){
+            return files::saveFile($this->urlProject.$urlPage.\'/\'.$this->nameFilePageSite, $date);
+        }else{
+            return false;
+        }
+    }
+    
+    /**
+     * checkUrl
+     *  - проверит можно ли работать с урлом
+     * 
+     * @param string $url
+     * @return boolean
+     */
+    private function checkUrl($url){
+        $result = true;
+        foreach ($this->notEditPages as $value) {
+            if(strripos($url, $value) !== false ){
+                $result = false;
+            }
+        }
+        return $result;
+    }
+    
+}',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/filemodule/classes/',
+  ),
+  './gy/modules/filemodule/component/work_page_site/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/modules/filemodule/component/work_page_site/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'work_page_site\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+    \'all-property\' => array()
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/filemodule/component/work_page_site/',
+  ),
+  './gy/modules/filemodule/component/work_page_site/controller.php' => 
+  array (
+    'CODE' => '<?php 
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$data = $_POST;
+
+global $arRes;
+
+// создание страницы сайта
+if( !empty($data[\'action-1\']) ){
+    
+    global $app;
+    $sitePage = new sitePages($app->urlProject.\'/\');
+        
+    $res = $sitePage->createSitePage($data[\'url-site-page\']);
+    
+    if($res !== false){
+        $arRes[\'status\'] = \'add-ok\';
+    }else{
+        $arRes[\'status\'] = \'err\';
+    }
+}
+
+// удаление страницы
+if( !empty($data[\'action-3\']) && empty($arRes[\'status\']) ){
+    
+    global $app;
+    $sitePage = new sitePages($app->urlProject.\'/\');
+        
+    $res = $sitePage->deleteSitePage($data[\'url-site-page\']);
+    
+    if($res !== false){
+        $arRes[\'status\'] = \'del-ok\';
+    }else{
+        $arRes[\'status\'] = \'err\';
+    }
+}
+
+// изменение страницы
+if( !empty($data[\'action-2\']) && empty($arRes[\'status\']) ){
+    
+    global $app;
+    $sitePage = new sitePages($app->urlProject.\'/\');
+            
+    $res = $sitePage->getContextPage($data[\'url-site-page\']);
+    
+    if($res !== false){
+        $arRes[\'data-file\'] = $res;
+        $arRes[\'url-site-page\'] = $data[\'url-site-page\'];
+        $arRes[\'status\'] = \'edit\';
+    }else{
+        $arRes[\'status\'] = \'err\';
+    }
+}
+
+// изменение файла
+if( !empty($data[\'action-2-1\'])  && !empty($data[\'url-site-page\'])  && !empty($data[\'new-text-page\']) ){
+    global $app;
+    $sitePage = new sitePages($app->urlProject.\'/\');
+        
+    $res = $sitePage->putContextPage($data[\'url-site-page\'], $data[\'new-text-page\']);
+    if($res !== false){
+        $arRes[\'status\'] = \'edit-ok\';
+    }else{
+        $arRes[\'status\'] = \'err\';
+    }
+}
+
+// открыть редактируемую страницу
+if( !empty($data[\'action-4\']) ){
+    header("Location: /".$data[\'url-site-page\'] );
+}
+
+if( !empty($data[\'action-5\']) ){
+    // сохраним основной app обьект
+    global $app;
+    $appGlobal = $app;
+    
+    // переопределим app
+    $app = new appFromConstructorPageComponent($app->urlProject, $app->options );
+
+    $url = $appGlobal->urlProject.((!empty($data[\'url-site-page\']))? "/" : "").$data[\'url-site-page\']."/index.php";
+    
+    include $url; // !! надо не подключать ядро
+
+    $arRes[\'dataIncludeAllComponentsInThisPageSite\'] = $app->getAllDataIncludeComponents();
+    
+    // хочу найти поля обьявленные в компоненте как возможные но не заполненные в коде
+    foreach ($arRes[\'dataIncludeAllComponentsInThisPageSite\'] as $key => $value) {
+        if(!empty($value[\'componentInfo\'][\'all-property\'])){
+            foreach ($value[\'componentInfo\'][\'all-property\'] as $key2 => $value2) {
+                if(empty( $value[\'arParam\'][$value2] )){
+                    $arRes[\'dataIncludeAllComponentsInThisPageSite\'][$key][\'arParam\'][$value2] = \'\';
+                }
+            }
+        }
+    }
+    
+    $arRes[\'url-site-page\'] = $data[\'url-site-page\'];
+    
+    // вернём как было
+    $app = $appGlobal;
+    unset($appGlobal);
+    $arRes[\'status\'] = \'constructor\';
+}
+
+function getCodePageByArrayComponents($arrayComponents){
+    $codePage = \'<? include $_SERVER["DOCUMENT_ROOT"]."/gy/gy.php"; // подключить ядро // include core 
+
+global $app;
+
+    \';
+    
+    // добавить коды компонентов
+    if(is_array($arrayComponents)){
+        foreach ($arrayComponents as $value) {
+            $codeIncludeComponent = appFromConstructorPageComponent::getCodeIncludeComponent($value[\'component\'], $value[\'tempalate\'], $value[\'params\']);
+            $codePage .= $codeIncludeComponent."\\n";   
+        }
+    }   
+    return $codePage;
+}
+
+function savePageByArrayComponents($page, $arrayComponents){
+    $codePage = getCodePageByArrayComponents($arrayComponents);
+    
+    global $app;
+    $sitePage = new sitePages($app->urlProject.\'/\');
+            
+    $res = $sitePage->putContextPage( $page, $codePage);
+    
+    global $arRes;
+    if($res !== false){
+        $arRes[\'status\'] = \'edit-ok\';
+    }else{
+        $arRes[\'status\'] = \'err\';
+    }
+}
+
+// сохранить всю страницу по компонентам
+if(!empty($data[\'action-6\'])){    
+    savePageByArrayComponents($data[\'url-site-page\'], $data[\'component\']);
+}
+
+// перемещение компонента ниже
+if(!empty($data[\'action7_2\']) && is_array($data[\'action7_2\'])){
+    foreach ($data[\'action7_2\'] as $key => $value) {
+        //
+    }
+    
+    if(!empty($data[\'component\'][$key+1]) ){
+        $temp = $data[\'component\'][$key];
+        $data[\'component\'][$key] = $data[\'component\'][$key+1];
+        $data[\'component\'][$key+1] = $temp;
+        unset($temp);
+    }
+    
+    // записать всё обратно из получившегося набора компонентов
+    savePageByArrayComponents($data[\'url-site-page\'], $data[\'component\']);
+                
+}
+
+// перемещение компонента выше
+if(!empty($data[\'action7_1\']) && is_array($data[\'action7_1\'])){
+    foreach ($data[\'action7_1\'] as $key => $value) {
+        //
+    }
+    
+    if( ($key - 1) >= 0 ){
+        $temp = $data[\'component\'][$key];
+        $data[\'component\'][$key] = $data[\'component\'][$key-1];
+        $data[\'component\'][$key-1] = $temp;
+        unset($temp);
+    }
+    
+    // записать всё обратно из получившегося набора компонентов
+    savePageByArrayComponents($data[\'url-site-page\'], $data[\'component\']);
+}
+
+// удалить компонент
+if(!empty($data[\'action7_3\']) && is_array($data[\'action7_3\'])){
+    foreach ($data[\'action7_3\'] as $key => $value) {
+        //
+    }
+    
+    if( !empty($data[\'component\'][$key])){
+        unset($data[\'component\'][$key]);
+    }
+    
+    // записать всё обратно из получившегося набора компонентов
+    savePageByArrayComponents($data[\'url-site-page\'], $data[\'component\']);
+}
+
+// добавление компонента
+if(!empty($data[\'action_8\']) && is_array($data[\'action_8\'])){
+    foreach ($data[\'action_8\'] as $key => $value) {
+        //
+    }
+
+    $arRes[\'status\'] = \'addConstructor\';
+    $arRes[\'url-site-page\'] = $data[\'url-site-page\'];
+    $arRes[\'key\'] = $key; // где вставлять компонент в какую позицию
+
+}
+
+// первый шаг добавления компонента
+if( !empty($data[\'action_8_1\']) ){
+    
+    if(
+        !empty($data[\'url-site-page\'])
+        && (!empty($data[\'position_new_component\']) || ($data[\'position_new_component\'] == 0) )
+        && !empty($data[\'name_new_component\'])
+    ){
+    
+        // шаблон по умолчанию 0
+        if (empty($data[\'name_new_template\'])){
+            $data[\'name_new_template\'] = \'0\';
+        }
+
+        global $app;
+
+        // проверим есть ли такой компонент (точнее файл информации о нём)
+        $dataComponent = appFromConstructorPageComponent::getInfoAboutComponent(
+            $data[\'name_new_component\'], 
+            $data[\'name_new_template\'],
+            array(),
+            $app->urlProject
+        );
+
+        if(!empty($dataComponent)){
+            $arRes[\'status\'] = \'good-component\';
+
+            $arRes[\'url-site-page\'] = $data[\'url-site-page\'];
+            $arRes[\'position_new_component\'] = $data[\'position_new_component\'];
+
+            $arRes[\'data-component\'] = array(
+                \'name\' => $data[\'name_new_component\'],
+                \'template\' => $data[\'name_new_template\'],
+                \'arParam\' => $dataComponent[\'all-property\'],
+                \'componentInfo\' => $dataComponent
+            );  
+        }else{
+            $arRes[\'status\'] = \'error-not-component\';
+        }
+    }else{
+        $arRes[\'status\'] = \'error-not-component\';
+    }
+}
+
+// надо добавить новый компонент на выбранную страницу
+if(!empty($data[\'action_8_2\']) 
+    && !empty($data[\'url-site-page\'])
+    && (!empty($data[\'position_new_component\']) || ($data[\'position_new_component\'] == 0) )
+    && !empty($data[\'name_new_component\']) 
+    && (!empty($data[\'name_new_template\']) || ($data[\'name_new_template\'] == 0) )
+){
+    // надо взять все компоненты с редактируемой страницы
+    
+    // сохраним основной app обьект
+    global $app;
+    $appGlobal = $app;
+    
+    // переопределим app
+    $app = new appFromConstructorPageComponent($app->urlProject, $app->options );
+
+    $url = $appGlobal->urlProject.((!empty($data[\'url-site-page\']))? "/" : "").$data[\'url-site-page\']."/index.php";
+    
+    include $url; // !! надо не подключать ядро
+
+    $allComponentsThisPage = $app->getAllDataIncludeComponents();
+    // вернём как было
+    $app = $appGlobal;
+    unset($appGlobal);
+    
+    $newArrayComponents = array();
+    
+    if($data[\'position_new_component\'] == "\'-1\'"){
+        $newArrayComponents[] = array(
+            \'name\' => $data[\'name_new_component\'],
+            \'template\' => $data[\'name_new_template\'],
+            \'arParam\' => $data[\'params\']
+        );
+        foreach ($allComponentsThisPage as $value) {
+            $newArrayComponents[] = $value;
+        }
+    }elseif(is_numeric($data[\'position_new_component\'])){
+        $data[\'position_new_component\']++; 
+        $flagAdd = false;
+        foreach ($allComponentsThisPage as $key => $value) {
+            if($data[\'position_new_component\'] == $key){
+                $newArrayComponents[] =  array(
+                    \'name\' => $data[\'name_new_component\'],
+                    \'template\' => $data[\'name_new_template\'],
+                    \'arParam\' => $data[\'params\']
+                );
+                $flagAdd  = true;
+            }
+            $newArrayComponents[] = $value;
+        }
+        if(!$flagAdd){
+            $newArrayComponents[] =  array(
+                \'name\' => $data[\'name_new_component\'],
+                \'template\' => $data[\'name_new_template\'],
+                \'arParam\' => $data[\'params\']
+            );
+        }
+    }
+    unset($allComponentsThisPage);
+        
+    // правильно подготовить массив с компонентами 
+    $trueNewArrayComponents = array();
+    foreach ($newArrayComponents as $value) {
+        $trueNewArrayComponents[] = array(
+            \'component\' => $value[\'name\'],
+            \'tempalate\' => $value[\'template\'],
+            \'params\' => $value[\'arParam\']
+        );
+    }
+    
+    // сохранить всё на страницу
+    savePageByArrayComponents($data[\'url-site-page\'], $trueNewArrayComponents);
+    
+}
+
+// показать шаблон
+$this->template->show($arRes, $this->arParam);
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/filemodule/component/work_page_site/',
+  ),
+  './gy/modules/filemodule/component/work_page_site/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Редактор страниц сайта (и конструктор по компонентам)\',
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/filemodule/component/work_page_site/',
+  ),
+  './gy/modules/filemodule/component/work_page_site/teplates/0/lang_template.php' => 
+  array (
+    'CODE' => '<? // языковой файл для шаблона компонента
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'title-edit-file\' => \'Работа со страницами сайта\',
+    \'text-input-url-page\' => \'Укажите путь к страницы над которой хотите произвести действие\',
+    \'ok\' => \'ok\',
+    \'add-ok\' => \'Страница успешно создана\',
+    \'del-ok\' => \'Страница успешно удалена\',
+    \'text-edit-page\' => \'Вы редактируете страницу\',
+    \'err\' => \'Произошла ошибка\',
+    \'edit-ok\' => \'Страница успешно изменена\',
+    \'title-action-5\' => \'Конструктор страницы (редактирование по компонентам)\',
+    \'title-action-4-show-page\' => \'Посмотреть страницу\',
+    \'title-delete-page\' => \'Удалить страницу\',
+    \'title-edit-page\' => \'Изменить страницу\',
+    \'title-add-page\' => \'Создать страницу (заменит если уже есть)\',
+    \'text-include-components\' => \'На странице подключено компонентов - \',
+    \'text-include-this-component\' => \'Компонент - \',
+    \'name-template\' => \'Имя шаблона:\',
+    \'params-component\' => \'Параметры вызова компонента:\',
+    \'param-name\' => \'Название параметра\',
+    \'param-value\' => \'Значение параметра\',
+    \'text-button-save\' => \'Сохранить\',
+    \'text-button-save2\' => \'Сохранить страницу\',
+    \'text-button-del-component\' => \'Удалить этот компонент (и сохранить изменения)\',
+    \'include-component\' => \'Вызываемый компонент страницы №\',
+    \'text-button-up-component\' => \'Переместить компонент выше (и сохранить изменения)\',
+    \'text-button-down-component\' => \'Переместить компонент ниже (и сохранить изменения)\',
+    \'add-component\' => \'Добавить компонент ниже\',
+    \'warning-text-1\' => \'Внимание! код страницы оформленный не компонентами уничтожится.\',
+    \'title-action-8\' => \'Добавление нового компонента на страницу\',
+    \'name-new-component\' => \'Введите имя компонента\',
+    \'name-new-template\' => \'Введите имя шаблона компонента (0 - по умолчанию)\',
+    \'next\' => \'Далее\',
+    \'not-component\' => \'Выбранного компонента не существует\',
+    \'next_final\' => \'Добавить компонент\',
+    \'this_component\' => \'Выбран компонент\',
+    \'this_v_component\' => \'Версия компонента\',
+    \'this_component_text_info\' => \'Описание компонента\',
+    \'this_template_component\' => \'Выбранный шаблон компонента\',
+    \'param-info-text\' => \'Описание\'
+);
+
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/filemodule/component/work_page_site/teplates/0/',
+  ),
+  './gy/modules/filemodule/component/work_page_site/teplates/0/style.css' => 
+  array (
+    'CODE' => '.textarea-code{
+    background-color: #e5e5ff;
+}
+.data-component{
+    background-color: #5f9ea0ba;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    padding: 10px;
+    width: 800px;
+    box-shadow: 0.4em 0.4em 5px rgba(122,122,122,0.5);
+    border: dashed #4f6c6d;
+}
+.title-n-component{
+    width: 100%;
+    text-align: center;
+    border-bottom: 2px solid #4f6b6d;
+}
+
+.gy-table-all-users th{
+    padding: 5px;
+    background-color: #21a2ff9e
+}
+.gy-table-all-users{
+    background-color: #8cc7f25e;
+}
+.button-function .gy-admin-button{
+    margin-bottom: 0px;
+}
+.button-function .gy-admin-button{
+    padding: 9px 30px 9px;
+    width: 500px;
+    margin-left: 0px;
+}
+form > .button-function > .input-text{
+    padding: 9px 30px 9px;
+    width: 420px;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+.warning{
+    color: #c73838;
+    font-size: 14pt;
+    font-weight: 700;
+}',
+    'TYPE' => 'css',
+    'DIR' => './gy/modules/filemodule/component/work_page_site/teplates/0/',
+  ),
+  './gy/modules/filemodule/component/work_page_site/teplates/0/template.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );?>
+
+<h1><?=$this->lang->GetMessage(\'title-edit-file\');?></h1>
+
+<?if(empty($arRes[\'status\'])){?>
+    <form method="post">
+        <h4><?=$this->lang->GetMessage(\'text-input-url-page\');?></h4>
+        <div class="button-function">
+            <span>/</span><input class="input-text" type="text" name="url-site-page" /><span>/index.php</span>
+            <?// TODO сделать выбор из имеющихся?>
+            <br/>
+            <input class="gy-admin-button" type="submit" name="action-1" value="<?=$this->lang->GetMessage(\'title-add-page\');?>" />
+            <br/>
+            <input class="gy-admin-button" type="submit" name="action-2" value="<?=$this->lang->GetMessage(\'title-edit-page\');?>" />
+            <br/>
+            <input class="gy-admin-button" type="submit" name="action-3" value="<?=$this->lang->GetMessage(\'title-delete-page\');?>" />
+            <br/>
+            <br/>
+            <input class="gy-admin-button" type="submit" name="action-4" value="<?=$this->lang->GetMessage(\'title-action-4-show-page\');?>" />
+            <br/>
+            <input class="gy-admin-button" type="submit" name="action-5" value="<?=$this->lang->GetMessage(\'title-action-5\');?>" />
+            <br/>
+        </div>
+    </form>
+<?}else{
+    if( ($arRes[\'status\'] != \'edit\') 
+        && ($arRes[\'status\'] != \'err\') 
+        && ($arRes[\'status\'] != \'constructor\') 
+        && ($arRes[\'status\'] != \'addConstructor\') 
+        && ($arRes[\'status\'] != \'error-not-component\')          
+        && ($arRes[\'status\'] != \'good-component\')          
+    ){?>
+        <div class="gy-admin-good-message"><?=$this->lang->GetMessage($arRes[\'status\']);?></div>
+        <br/>
+        <a href="/gy/admin/get-admin-page.php?page=work-page-site" class="gy-admin-button"><?=$this->lang->GetMessage(\'ok\');?></a>
+    <?}elseif($arRes[\'status\'] == \'edit\'){ ?>       
+        <form method="post">
+            <h4><?=$this->lang->GetMessage(\'text-edit-page\');?></h4>
+            <input type="hidden" name="url-site-page" value="<?=$arRes[\'url-site-page\']?>" />
+            <span><?=$arRes[\'url-site-page\']?>/index.php</span>
+            <br/>
+            <br/>
+            <textarea class="textarea-code" rows="50" cols="120" name="new-text-page"><?=$arRes[\'data-file\']?></textarea>
+            <br/>
+            <br/>
+            <input class="gy-admin-button" type="submit" name="action-2-1" value="<?=$this->lang->GetMessage(\'text-button-save\');?>" />
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+        </form>
+    <?}elseif($arRes[\'status\'] == \'err\'){ ?>
+        <div class="gy-admin-error-message"><?=$this->lang->GetMessage($arRes[\'status\']);?></div>
+        <br/>
+        <a href="/gy/admin/get-admin-page.php?page=work-page-site" class="gy-admin-button"><?=$this->lang->GetMessage(\'ok\');?></a>
+    <?}elseif($arRes[\'status\'] == \'constructor\'){?>        
+        <h4><?=$this->lang->GetMessage(\'title-action-5\');?></h4>
+        <?
+        $countIncludeComponentsInPageSite = count($arRes[\'dataIncludeAllComponentsInThisPageSite\']);?>
+        
+        <p><?=$this->lang->GetMessage(\'text-include-components\');?><?=$countIncludeComponentsInPageSite;?></p>
+
+        <form method="post">
+            <input type="hidden" name="url-site-page" value="<?=$arRes[\'url-site-page\']?>" />
+
+            <input 
+                class="gy-admin-button" 
+                type="submit" 
+                name="action_8[\'-1\']" 
+                value="<?=$this->lang->GetMessage(\'add-component\');?>" 
+            />
+            <? foreach ($arRes[\'dataIncludeAllComponentsInThisPageSite\'] as $key => $component) { ?>
+                <div class="data-component">
+                    <div class="title-n-component"><?=$this->lang->GetMessage(\'include-component\');?><?=$key?></div>
+                    <p><?=$this->lang->GetMessage(\'text-include-this-component\');?><?=$component[\'name\']?></p>
+                    <input type="hidden" name="component[<?=$key;?>][component]" value="<?=$component[\'name\']?>">
+                    <p>
+                        <?=$this->lang->GetMessage(\'name-template\');?>
+                        <input type="text" name="component[<?=$key;?>][tempalate]" value="<?=$component[\'template\']?>">
+                    </p>
+                   
+                    
+                    <?if(!empty($component[\'componentInfo\'][\'v\'])){?>
+                        <p>
+                            <?=$this->lang->GetMessage(\'this_v_component\');?>: <?=$component[\'componentInfo\'][\'v\']?>   
+                        </p>
+                    <?}?>
+                        
+                    <?if(!empty($component[\'componentInfo\'][\'text-info\'])){?>
+                        <p>
+                            <?=$this->lang->GetMessage(\'this_component_text_info\');?>: <?=$component[\'componentInfo\'][\'text-info\']?> 
+                        </p>
+                    <?}?>    
+                        
+                    <p>
+                        <?=$this->lang->GetMessage(\'params-component\');?>
+                    </p>
+                    <table border="1" class="gy-table-all-users">
+                        <tr>
+                            <th><?=$this->lang->GetMessage(\'param-name\');?></th>
+                            <th><?=$this->lang->GetMessage(\'param-value\');?></th>
+                            <th><?=$this->lang->GetMessage(\'param-info-text\');?></th>
+                        </tr>
+                        <? 
+                        // TODO компонент includeHtml в параметре html с кавычками и всё ламается
+                        //    пока заменил input на textarea надо протестить
+
+                        foreach ($component[\'arParam\'] as $keyParam => $valueParam) { ?>
+                            <tr>
+                                <td><?=$keyParam?></td>
+                                <td>
+                                    <textarea type="text" name="component[<?=$key;?>][params][<?=$keyParam?>]" ><?=$valueParam?></textarea>
+                                </td>
+                                <td>
+                                    <?if(!empty($component[\'componentInfo\'][\'all-property-text\'][$keyParam])){?>
+                                        <?=$component[\'componentInfo\'][\'all-property-text\'][$keyParam]?>
+                                    <?}?>
+                                </td>
+                            </tr>   
+                        <?}?>
+                    </table>    
+                    
+                    <div class="button-function">
+                        <input 
+                            class="gy-admin-button" 
+                            type="submit" 
+                            name="action7_3[<?=$key;?>]" 
+                            value="<?=$this->lang->GetMessage(\'text-button-del-component\');?>" 
+                        />
+                        <br/>
+                        <input 
+                            class="gy-admin-button" 
+                            type="submit" 
+                            name="action7_1[<?=$key;?>]" 
+                            value="<?=$this->lang->GetMessage(\'text-button-up-component\');?>" 
+                        />
+                        <br/>
+                        <input
+                            class="gy-admin-button" 
+                            type="submit" 
+                            name="action7_2[<?=$key;?>]" 
+                            value="<?=$this->lang->GetMessage(\'text-button-down-component\');?>" 
+                        />
+                        <br/>
+                        <input
+                            class="gy-admin-button" 
+                            type="submit" 
+                            name="action_8[<?=$key;?>]" 
+                            value="<?=$this->lang->GetMessage(\'add-component\');?>" 
+                        />
+                    </div>
+                    <br/>
+                </div>
+            <?}?>
+
+            <input class="gy-admin-button" type="submit" name="action-6" value="<?=$this->lang->GetMessage(\'text-button-save2\');?>" />
+            <br/>
+            <span class="warning">*<?=$this->lang->GetMessage(\'warning-text-1\');?></span>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+
+        </form>
+                
+    <?}elseif($arRes[\'status\'] == \'addConstructor\'){ // если добавление компонента ?>
+        <h4><?=$this->lang->GetMessage(\'title-action-8\');?></h4>
+        <form method="post">
+            <input type="hidden" name="url-site-page" value="<?=$arRes[\'url-site-page\']?>" />
+            <input type="hidden" name="position_new_component" value="<?=$arRes[\'key\']?>" />
+            <p>
+                <?=$this->lang->GetMessage(\'name-new-component\');?>
+                <input type="text" name="name_new_component" value="<?=$component[\'template\']?>">
+                <?// TODO сделать выбор из имеющихся + выводить описаие?>
+            </p>
+            <p>
+                <?=$this->lang->GetMessage(\'name-new-template\');?>
+                <input type="text" name="name_new_template" value="<?=$component[\'template\']?>">
+            </p>
+            <input
+                class="gy-admin-button" 
+                type="submit" 
+                name="action_8_1" 
+                value="<?=$this->lang->GetMessage(\'next\');?>" 
+            />
+            
+        </form>    
+    <?}elseif( $arRes[\'status\'] == \'error-not-component\'){ // ошибка при добавление компонента (не найден компонент)?>
+        <div class="gy-admin-error-message"><?=$this->lang->GetMessage(\'not-component\');?></div>
+        <br/>
+        <a href="/gy/admin/get-admin-page.php?page=work-page-site" class="gy-admin-button"><?=$this->lang->GetMessage(\'ok\');?></a>
+    <?}elseif($arRes[\'status\'] == \'good-component\'){ // последний шаг добавления компонента, ввод параметров компонента ?>   
+        <h4><?=$this->lang->GetMessage(\'title-action-8\');?></h4>
+        <form method="post">
+            <input type="hidden" name="url-site-page" value="<?=$arRes[\'url-site-page\']?>" />
+            <input type="hidden" name="position_new_component" value="<?=$arRes[\'position_new_component\']?>" />
+            <p>
+                <?=$this->lang->GetMessage(\'this_component\');?>: <?=$arRes[\'data-component\'][\'name\']?>
+                <input type="hidden" name="name_new_component" value="<?=$arRes[\'data-component\'][\'name\']?>">
+            </p>
+            
+            <?if (!empty($arRes[\'data-component\'][\'componentInfo\'][\'v\'])){?>
+                <p>
+                    <?=$this->lang->GetMessage(\'this_v_component\');?>: <?=$arRes[\'data-component\'][\'componentInfo\'][\'v\']?>
+                </p>
+            <?}?>
+                
+            <?if(!empty($arRes[\'data-component\'][\'componentInfo\'][\'text-info\'])){?>
+                <p>
+                    <?=$this->lang->GetMessage(\'this_component_text_info\');?>: <?=$arRes[\'data-component\'][\'componentInfo\'][\'text-info\']?> 
+                </p>
+            <?}?>   
+            
+            <p>
+                <?=$this->lang->GetMessage(\'this_template_component\');?>: <?=$arRes[\'data-component\'][\'template\']?>
+                <input type="hidden" name="name_new_template" value="<?=$arRes[\'data-component\'][\'template\']?>">
+            </p>
+           
+            <table border="1" class="gy-table-all-users">
+                <tr>
+                    <th><?=$this->lang->GetMessage(\'param-name\');?></th>
+                    <th><?=$this->lang->GetMessage(\'param-value\');?></th>
+                    <th><?=$this->lang->GetMessage(\'param-info-text\');?></th>
+                </tr>
+                <? 
+                foreach ($arRes[\'data-component\'][\'arParam\'] as $keyParam => $valueParam) { ?>
+                    <tr>
+                        <td><?=$valueParam?></td>
+                        <td>
+                            <textarea type="text" name="params[<?=$valueParam?>]" ></textarea>
+                        </td>
+                        <td>
+                            <?if(!empty($arRes[\'data-component\'][\'componentInfo\'][\'all-property-text\'][$valueParam])){?>
+                                <?=$arRes[\'data-component\'][\'componentInfo\'][\'all-property-text\'][$valueParam]?>
+                            <?}?>
+                        </td>
+                    </tr>   
+                <?}?>
+            </table>  
+            
+            <input
+                class="gy-admin-button" 
+                type="submit" 
+                name="action_8_2" 
+                value="<?=$this->lang->GetMessage(\'next_final\');?>" 
+            />
+            
+        </form> 
+        
+    <?}    
+}
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/filemodule/component/work_page_site/teplates/0/',
+  ),
+  './gy/modules/filemodule/init.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+/** 
+ * описываю что есть в модуле 
+ * - это на совести разработчика модуля
+ * перечисляются имеющиеся классы и модули, а они лежат в стандартных папках 
+ * (заранее обговорено какие есть разделы в модуле)
+ */
+
+// компоненты которые есть в модуле
+$componentsThisModule = array(
+    \'work_page_site\'
+);
+
+// классы этого можуля
+$classesThisModule = array(
+    \'files\',
+    \'sitePages\',
+    \'appFromConstructorPageComponent\'
+);
+
+// страници админки
+$adminPageThisModule = array(
+    \'work-page-site\',   
+);
+
+// кнопки для меню админки
+$pagesFromAdminMenu = array(
+    \'Работа со страницами сайта\' => \'/gy/admin/get-admin-page.php?page=work-page-site\'
+);
+
+// пользовательское действие, и если оно разрешено текущему пользователю то он увидит 
+// в меню админки кнопки $pagesFromAdminMenu
+$isShowButtonsMenuAdminPanetThisModule = \'work_file_module\';
+
+// имя текущего модуля
+$nameThisModule = \'filemodule\';
+
+//версия текущего модуля
+$versionThisModule = \'0.1\';',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/filemodule/',
+  ),
   './gy/style/main.css' => 
   array (
     'CODE' => '.gy-body-admin{
-    background-color: #adade4;
+    /*background-color: #adade4;*/
+    background: url(/gy/images/fon.png) #9292ef;
 }
 
 /*--форма авторизации--*/
 .gy-admin-button{
+    box-shadow: 0.4em 0.4em 5px rgba(122,122,122,0.5);
     margin: 15px;
     border: 0;
     height: auto;
@@ -6094,6 +10130,26 @@ if($isRunConsole){
     color: #040b57;
 }
 /*-----*/
+
+.gy-admin-button-min{
+    box-shadow: 0.4em 0.4em 5px rgba(122,122,122,0.5);
+    margin: 0px;
+    border: 0;
+    height: auto;
+    padding: 2px 30px 4px;
+    background-color: #639;
+    border-radius: 2px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+} 
+.gy-admin-button-min:hover { 
+    background: #8b5db9; 
+}
+.gy-admin-button-min:active { 
+    background: #412260; 
+}
 
 /*--меню--*/
 .gy-admin-menu{
@@ -6145,6 +10201,7 @@ if($isRunConsole){
 .gy-table-all-users{
     border-collapse: collapse;
     background-color: #8cc7f2;
+    box-shadow: 0.4em 0.4em 5px rgba(122,122,122,0.5);
 }
 
 .gy-table-all-users td{
@@ -6160,144 +10217,24 @@ if($isRunConsole){
 
 form{
     margin-bottom: 0px;
+}
+
+.version-gy-core{
+    padding-left: 0px;
+    position: absolute;
+    top: 30px;
+    font-size: 9pt;
+    font-style: italic;
+    background-color: aquamarine;
+    left: 270px;
 }',
     'TYPE' => 'css',
     'DIR' => './gy/style/',
   ),
-  './gy/tests/infoBox.php' => 
-  array (
-    'CODE' => '<?
-
-include "../gy.php"; 
-
-echo \'core - ok \';
-
-// container-data
-//$res = containerData::getContainerData(array(), array(\'*\') );
-//$res = containerData::addContainerData(array(\'name\' => \'asd\', \'code\'=> \'asd1\'));
-//$res = containerData::deleteContainerData(array(\'>\' => array(\'id\', 3)));
-
-// property container-data
-//$res = containerData::getPropertysContainerData(array(\'=\' => array(\'id_container_data\', 12)));
-
-//$arr = array(
-//    \'id_type_property\' => 1,
-//    \'id_container_data\' => 12,
-//    \'code\' => \'html 12\',
-//    \'name\' => \'html вставка\'
-//);
-//
-//$res = containerData::addPropertyContainerData( $arr );
-
-
-//$res = containerData::getAllTypePropertysContainerData();
-
-/*
-$res = containerData::deletePropertyContainerData( 17, 18);
-
-print_r($res);
-*/
-
-
-//$cache = new cacheFiles($app->url);
-//
-//
-//
-//$cacheName = \'getContainerData\';
-//$cacheTime = 120;
-//        
-//if($cache->cacheInit($cacheName, $cacheTime)){
-//    $data = $cache->getCacheData();
-//    echo \'cache ok)))\';
-//}else{
-//    echo \'cache NOT (((\';
-//    $data = array(\'test\' => \'test1\');
-//    $cache->setCacheData($data);
-//}
-//
-//echo "<pre>";
-//print_r($data);
-//echo "</pre>>";
-//
-//
-//$cache = new cache($app->url);
-//
-//$cacheName = \'getContainerData2\';
-//$cacheTime = 90;
-//        
-//if($cache->cacheInit($cacheName, $cacheTime)){
-//    $data = $cache->getCacheData();
-//    echo \'cache ok)))\';
-//}else{
-//    echo \'cache NOT (((\';
-//    $data = \'asdasd\';
-//    $cache->setCacheData($data);
-//}
-//
-//echo "<pre>";
-//print_r($data);
-//echo "</pre>>";',
-    'TYPE' => 'php',
-    'DIR' => './gy/tests/',
-  ),
-  './gy/tests/test.php' => 
-  array (
-    'CODE' => '<?
-
-include "../gy.php"; 
-
-echo \'core - ok \';
-
-//$res = accessUserGroup::getAccessGroup();
-//$res = accessUserGroup::getUserAction();
-//$res = accessUserGroup::getListGroupsByUser(2);
-
-//$res = accessUserGroup::deleteUserInAllGroups(2);
-
-//$res = accessUserGroup::addUserInGroup(2, \'user_admin\');
-//$res = accessUserGroup::addUserInGroup(2, \'content\');
-
-//$res = accessUserGroup::deleteAllActionsForGroup(\'user_admin\');
-//$res = accessUserGroup::addOptionsGroup(\'user_admin\', \'edit_container_data\');
-//echo "res <pre>";
-//print_r($res);
-//echo "</pre>";
-//$res = accessUserGroup::addOptionsGroup(\'user_admin\', \'edit_users\');
-
-//$res = accessUserGroup::accessThisUserByAction( \'edit_users\');
-
-//$res = accessUserGroup::accessUser( 2, \'action_all\' );
-
-//$res = accessUserGroup::addUserGroup(
-//    array(
-//        \'code\' => \'test\',
-//        \'text\' => \'test text\',
-//        \'name\' => \'test test 0\'
-//    ),
-//    array( \'show_admin_panel\', \'edit_users\' )
-//);
-
-// $res = accessUserGroup::deleteUserGroupByCode(\'test\');
-
-
-$res = accessUserGroup::getAccessGroup();
-
-echo "res <pre>";
-print_r($res);
-echo "</pre>";
-
-$res = accessUserGroup::getUserAction();
-
-echo "res <pre>";
-print_r($res);
-echo "</pre>";',
-    'TYPE' => 'php',
-    'DIR' => './gy/tests/',
-  ),
   './customDir/component/containerdata_element_show/teplates/0/lang_template.php' => 
   array (
     'CODE' => '<? // языковой файл для шаблона компонента
-if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
     \'add-custom-text\' => \'Сейчас запущен кастомный (пользовательский) шаблон компонента\'
@@ -6317,7 +10254,7 @@ $mess[\'rus\'] = array(
   ),
   './customDir/component/containerdata_element_show/teplates/0/template.php' => 
   array (
-    'CODE' => '<?if ( !defined("GY_GLOBAL_FLAG_CORE_INCLUDE") && (GY_GLOBAL_FLAG_CORE_INCLUDE !== true) ) die( "gy: err include core" );?>
+    'CODE' => '<?if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );?>
 
 <div class="user_custom_div">
     

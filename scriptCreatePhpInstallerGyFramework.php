@@ -176,7 +176,8 @@ if($isRunConsole){ ';
     rmRec("./install-file");
 
     unlink("./consoleInstallGyFramework.php"); // удалить этот скрипт
-
+    @unlink("./graphicalInstallGyFramework.php"); // удалить скрипт графической установки
+    
     echo "OK!";
     
 }else{

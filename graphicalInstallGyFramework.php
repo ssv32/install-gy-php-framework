@@ -2,13 +2,6 @@
 
 $data = $_POST;
 
-// --------------------
-
-// тутт то что будет устанавливаться, файлы и прочее как в phpInstallGyFramework
-
-
-////-------------------
-
 function getTextGPL30(){
     ?>
                      GNU GENERAL PUBLIC LICENSE
@@ -829,7 +822,7 @@ if(isset($data['step']) && in_array($data['step'], $steps)){
             }
 
             // удалить графический скрипт установки (это скрипт)
-            unlink("./graphicalInstallGyFramework.php"); 
+            @unlink("./graphicalInstallGyFramework.php"); 
         }
         
 
@@ -943,25 +936,7 @@ function getHtmlPage($step, $errText){
                 }
                 .steps td .active{
                     color: #000;
-                }
-                /*.button{
-                    font-weight: 700;
-                    color: white;
-                    text-decoration: none;
-                    padding: .8em 1em calc(.8em + 3px);
-                    border-radius: 3px;
-                    background: rgb(64,199,129);
-                    box-shadow: 0 -3px rgb(53,167,110) inset;
-                    transition: 0.2s;
-                }
-                .button:hover { 
-                    background: rgb(53, 167, 110); 
-                }
-                .button:active {
-                    background: rgb(33,147,90);
-                    box-shadow: 0 3px rgb(33,147,90) inset;
-                }*/
-                
+                }               
                 .button{
                     color: black;
                     text-decoration: none;

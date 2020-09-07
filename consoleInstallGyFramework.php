@@ -6440,9 +6440,10 @@ function GetMessageCore($code_text) {
   ),
   './gy/images/fon.png' => 
   array (
-    'CODE' => 'âPNG
+    'CODE' => 'ÔøΩPNG
 
-' . "\0" . '' . "\0" . '' . "\0" . 'IHDR' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '◊©Õ ' . "\0" . '' . "\0" . '' . "\0" . 'tEXtSoftware' . "\0" . 'Adobe ImageReadyq…e<' . "\0" . '' . "\0" . ' iTXtXML:com.adobe.xmp' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '<?xpacket begin="Ôªø" id="W5M0MpCehiHzreSzNTczkc9d"?> <x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 5.0-c060 61.134777, 2010/02/12-17:32:00        "> <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"> <rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/" xmlns:stRef="http://ns.adobe.com/xap/1.0/sType/ResourceRef#" xmp:CreatorTool="Adobe Photoshop CS5 Windows" xmpMM:InstanceID="xmp.iid:0F0274D29CFD11EA92E7AE773D58B7DC" xmpMM:DocumentID="xmp.did:0F0274D39CFD11EA92E7AE773D58B7DC"> <xmpMM:DerivedFrom stRef:instanceID="xmp.iid:0F0274D09CFD11EA92E7AE773D58B7DC" stRef:documentID="xmp.did:0F0274D19CFD11EA92E7AE773D58B7DC"/> </rdf:Description> </rdf:RDF> </x:xmpmeta> <?xpacket end="r"?>Î1	L' . "\0" . '' . "\0" . '' . "\0" . 'PLTE°©©ˇˇˇ:Õˆ˛' . "\0" . '' . "\0" . '' . "\0" . 'tRNSˇ' . "\0" . 'Â∑0J' . "\0" . '' . "\0" . '' . "\0" . '%IDATx⁄b`ddd``¿$pà32‡ájb§)9Í™!‚*Ä' . "\0" . '' . "\0" . 'SÁ!±b¨⁄' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . 'IENDÆB`Ç',
+' . "\0" . '' . "\0" . '' . "\0" . '
+IHDR' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '◊©ÔøΩÔøΩ' . "\0" . '' . "\0" . '' . "\0" . 'tEXtSoftware' . "\0" . 'Adobe ImageReadyqÔøΩe<' . "\0" . '' . "\0" . ' iTXtXML:com.adobe.xmp' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '<?xpacket begin="Ôªø" id="W5M0MpCehiHzreSzNTczkc9d"?> <x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 5.0-c060 61.134777, 2010/02/12-17:32:00        "> <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"> <rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/" xmlns:stRef="http://ns.adobe.com/xap/1.0/sType/ResourceRef#" xmp:CreatorTool="Adobe Photoshop CS5 Windows" xmpMM:InstanceID="xmp.iid:0F0274D29CFD11EA92E7AE773D58B7DC" xmpMM:DocumentID="xmp.did:0F0274D39CFD11EA92E7AE773D58B7DC"> <xmpMM:DerivedFrom stRef:instanceID="xmp.iid:0F0274D09CFD11EA92E7AE773D58B7DC" stRef:documentID="xmp.did:0F0274D19CFD11EA92E7AE773D58B7DC"/> </rdf:Description> </rdf:RDF> </x:xmpmeta> <?xpacket end="r"?>ÔøΩ1	L' . "\0" . '' . "\0" . '' . "\0" . 'PLTEÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ:ÔøΩÔøΩÔøΩ' . "\0" . '' . "\0" . '' . "\0" . 'tRNSÔøΩ' . "\0" . 'ÔøΩ0J' . "\0" . '' . "\0" . '' . "\0" . '%IDATxÔøΩb`ddd``ÔøΩ$pÔøΩ32ÔøΩÔøΩjbÔøΩ)9ÔøΩ!ÔøΩ*ÔøΩ' . "\0" . '' . "\0" . 'SÔøΩ!ÔøΩbÔøΩÔøΩ' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . 'IENDÔøΩB`ÔøΩ',
     'TYPE' => 'png',
     'DIR' => './gy/images/',
   ),
@@ -10335,6 +10336,7 @@ $mess[\'rus\'] = array(
     rmRec("./install-file");
 
     unlink("./consoleInstallGyFramework.php"); // —É–¥–∞–ª–∏—Ç—å —ç—Ç–æ—Ç —Å–∫—Ä–∏–ø—Ç
+    @unlink("./graphicalInstallGyFramework.php"); // —É–¥–∞–ª–∏—Ç—å —Å–∫—Ä–∏–ø—Ç –≥—Ä–∞—Ñ–∏—á–µ—Å–∫–æ–π —É—Å—Ç–∞–Ω–æ–≤–∫–∏
 
     echo "OK!";
     

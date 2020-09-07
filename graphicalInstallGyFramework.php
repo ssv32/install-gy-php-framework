@@ -810,7 +810,7 @@ if(isset($data['step']) && in_array($data['step'], $steps)){
                 global $argv;
                 $argv = 1;
                 ob_start();
-                include 'gy/install/installMysqlTable.php'; // TODO для нового релиза будет другая
+                include 'gy/install/installDataBaseTable.php';
                 $consoleLog = ob_get_contents();
                 ob_end_clean();
                 

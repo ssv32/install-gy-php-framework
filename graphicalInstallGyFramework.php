@@ -760,7 +760,7 @@ if(isset($data['step']) && in_array($data['step'], $steps)){
                 }
             }
         }
-            
+                    
         if(!$flag){
             $err['type'] = 0;
             $err['text'] = '! Не все параметры указаны';
@@ -821,6 +821,22 @@ if(isset($data['step']) && in_array($data['step'], $steps)){
                 }    
             }
 
+            // установить демо сайт 1, если надо
+            if(($err == false) && ($data['demo-site1'] == 'on') ){
+                global $argv;
+                $argv = 1;
+                ob_start();
+                include 'gy/install/installDemoSite1.php';
+                $consoleLog = ob_get_contents();
+                ob_end_clean();
+                
+                if( $consoleLog != 'OK!' ){ 
+                    $err['type'] = 1;
+                    $err['text'] = $consoleLog;
+                    $flag = false;
+                }  
+            }
+                
             // удалить графический скрипт установки (это скрипт)
             @unlink("./graphicalInstallGyFramework.php"); 
         }
@@ -1019,9 +1035,14 @@ function getHtmlPage($step, $errText){
                                                         </select>
                                                     </td>
                                                     <td><?=$value['text']?></td>
-                                                <?}?>
+                                                <?}?> 
                                             </tr>
                                         <?}?>
+                                        <tr>
+                                            <td></td>
+                                            <td><input type="checkbox" name="demo-site1" /></td>
+                                            <td>Нужно ли установить демо сайт v1<br/> (мини демонстрация gy, в неё входит раздел /customDir с примером кастомизации шаблона компонента и главная страница). </td>
+                                        </tr>
                                     </table>
                                 <?}?>
 

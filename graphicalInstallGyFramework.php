@@ -824,7 +824,8 @@ if(isset($data['step']) && in_array($data['step'], $steps)){
             // установить демо сайт 1, если надо
             if(($err == false) && ($data['demo-site1'] == 'on') ){
                 global $argv;
-                $argv = 1;
+                $argv[] = 1;
+                $argv[] = 'start';
                 ob_start();
                 include 'gy/install/installDemoSite1.php';
                 $consoleLog = ob_get_contents();

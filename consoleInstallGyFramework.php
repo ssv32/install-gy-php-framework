@@ -6,83 +6,6 @@ $br = "\n";
 if($isRunConsole){ 
     // все файлы проекта (php, js, css)
     $arrayDirGy = array (
-  './index.php' => 
-  array (
-    'CODE' => '<? include $_SERVER["DOCUMENT_ROOT"]."/gy/gy.php"; // подключить ядро // include core 
-
-$app->component(
-    \'admin-button-public-site\',
-    \'0\',
-    array()
-);
-
-$app->component(
-    \'includeHtml\',
-    \'0\',
-    array(
-        \'html\' => \'<h1>Пример использования gy CMS/framework</h1>\'
-    )
-);
-
-// пример вызова одинаковых компонентов // example run two component 
-$app->component(
-    \'includeHtml\',
-    \'0\',
-    array(
-        \'html\' => \'<h4>Вызов компонента "form_auth_test" (1 раз)</h4>\'
-    )
-);
-
-$app->component(
-    \'form_auth_test\',
-    \'0\',
-    array( 
-        \'test\' => \'asd\',
-        \'idComponent\' => 1,
-    )
-);
-
- // пример вызова одинаковых компонентов // example run two component 
-$app->component(
-    \'includeHtml\',
-    \'0\',
-    array(
-        \'html\' => \'<h4>Вызов компонента "form_auth_test" (2 раз)</h4>\'
-    )
-);
-
-$app->component(
-    \'form_auth_test\',
-    \'0\',
-    array( 
-        \'test\' => \'asd2\',
-        \'idComponent\' => 2,
-    )
-);
-
-/**
-пример вызова компонента с выводом контента,
-  + пример использования кастомного (пользовательского) шаблона компонента
-  (пользователя - разработчика использующего gy)
-*/
-$app->component(
-    \'containerdata_element_show\',
-    \'0\',
-    array( 
-        \'container-data-code\' => \'Content\',
-        \'element-code\' => \'html-index-page\',
-        \'cacheTime\' => 86400 // закешить на 24 ч.
-    )
-);
-
-    
-    
-    
-
-',
-    'TYPE' => 'php',
-    'DIR' => './',
-  ),
   './gy/admin/add-user.php' => 
   array (
     'CODE' => '<?
@@ -6440,10 +6363,9 @@ function GetMessageCore($code_text) {
   ),
   './gy/images/fon.png' => 
   array (
-    'CODE' => '�PNG
+    'CODE' => '�PNG
 
-' . "\0" . '' . "\0" . '' . "\0" . '
-IHDR' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . 'ש��' . "\0" . '' . "\0" . '' . "\0" . 'tEXtSoftware' . "\0" . 'Adobe ImageReadyq�e<' . "\0" . '' . "\0" . ' iTXtXML:com.adobe.xmp' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '<?xpacket begin="﻿" id="W5M0MpCehiHzreSzNTczkc9d"?> <x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 5.0-c060 61.134777, 2010/02/12-17:32:00        "> <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"> <rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/" xmlns:stRef="http://ns.adobe.com/xap/1.0/sType/ResourceRef#" xmp:CreatorTool="Adobe Photoshop CS5 Windows" xmpMM:InstanceID="xmp.iid:0F0274D29CFD11EA92E7AE773D58B7DC" xmpMM:DocumentID="xmp.did:0F0274D39CFD11EA92E7AE773D58B7DC"> <xmpMM:DerivedFrom stRef:instanceID="xmp.iid:0F0274D09CFD11EA92E7AE773D58B7DC" stRef:documentID="xmp.did:0F0274D19CFD11EA92E7AE773D58B7DC"/> </rdf:Description> </rdf:RDF> </x:xmpmeta> <?xpacket end="r"?>�1	L' . "\0" . '' . "\0" . '' . "\0" . 'PLTE������:���' . "\0" . '' . "\0" . '' . "\0" . 'tRNS�' . "\0" . '�0J' . "\0" . '' . "\0" . '' . "\0" . '%IDATx�b`ddd``�$p�32��jb�)9�!�*�' . "\0" . '' . "\0" . 'S�!�b��' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . 'IEND�B`�',
+' . "\0" . '' . "\0" . '' . "\0" . 'IHDR' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . 'ש��' . "\0" . '' . "\0" . '' . "\0" . 'tEXtSoftware' . "\0" . 'Adobe ImageReadyq�e<' . "\0" . '' . "\0" . ' iTXtXML:com.adobe.xmp' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '<?xpacket begin="﻿" id="W5M0MpCehiHzreSzNTczkc9d"?> <x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 5.0-c060 61.134777, 2010/02/12-17:32:00        "> <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"> <rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/" xmlns:stRef="http://ns.adobe.com/xap/1.0/sType/ResourceRef#" xmp:CreatorTool="Adobe Photoshop CS5 Windows" xmpMM:InstanceID="xmp.iid:0F0274D29CFD11EA92E7AE773D58B7DC" xmpMM:DocumentID="xmp.did:0F0274D39CFD11EA92E7AE773D58B7DC"> <xmpMM:DerivedFrom stRef:instanceID="xmp.iid:0F0274D09CFD11EA92E7AE773D58B7DC" stRef:documentID="xmp.did:0F0274D19CFD11EA92E7AE773D58B7DC"/> </rdf:Description> </rdf:RDF> </x:xmpmeta> <?xpacket end="r"?>�1	L' . "\0" . '' . "\0" . '' . "\0" . 'PLTE������:���' . "\0" . '' . "\0" . '' . "\0" . 'tRNS�' . "\0" . '�0J' . "\0" . '' . "\0" . '' . "\0" . '%IDATx�b`ddd``�$p�32��jb�)9�!�*�' . "\0" . '' . "\0" . 'S�!�b��' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . 'IEND�B`�',
     'TYPE' => 'png',
     'DIR' => './gy/images/',
   ),
@@ -6485,7 +6407,7 @@ function showHelpFromInstall(){
 }
 
 
-function parseOprions($optionsFromConsole){ // TODO надо распознавать параметры db и правильно записывать
+function parseOprions($optionsFromConsole){ 
     $arOptions = array();
     for($i = 2; $i < (count($optionsFromConsole)-1); $i = $i+2){
         if (empty($optionsFromConsole[$i+1])) {
@@ -6592,7 +6514,6 @@ if($isRunConsole){ // пока запускать только из консол
   './gy/install/installDataBaseTable.php' => 
   array (
     'CODE' => '<? 
-// TODO сделать нормально по шагам потом (+графический интерфейс)
 // TODO проверку на ошибки переделать с учётом установки на пострис
 
 global $argv;
@@ -6858,6 +6779,149 @@ if($isRunConsole){
 	echo \'! нужно запустить скрипт в консоли\';
 
 }',
+    'TYPE' => 'php',
+    'DIR' => './gy/install/',
+  ),
+  './gy/install/installDemoSite1.php' => 
+  array (
+    'CODE' => '<? 
+/**
+ * Скрипт установит демо сайт 
+ * 
+ */
+
+global $argv;
+$isRunConsole = isset($argv);
+$br = "\\n";
+
+if($isRunConsole){
+    if($argv[1] == \'start\'){
+                
+        if (!file_exists(__DIR__.\'/../../index.php\')) {          
+            
+            // записать основную страницу
+            file_put_contents(__DIR__.\'/../../index.php\', getCodeByUrlPage(\'index.php\'));
+            
+            mkdir(__DIR__.\'/../../customDir/component/containerdata_element_show/teplates/0/\', 0755, true);
+            mkdir(__DIR__.\'/../../customDir/classes/\', 0755, true);
+            
+            // записать файлы /customDir
+            file_put_contents(__DIR__.\'/../../customDir\\component\\containerdata_element_show\\teplates\\0\\template.php\', getCodeByUrlPage(\'customDir\\component\\containerdata_element_show\\teplates\\0\\template.php\'));
+            file_put_contents(__DIR__.\'/../../customDir\\component\\containerdata_element_show\\teplates\\0\\style.css\', getCodeByUrlPage(\'customDir\\component\\containerdata_element_show\\teplates\\0\\style.css\'));
+            file_put_contents(__DIR__.\'/../../customDir\\component\\containerdata_element_show\\teplates\\0\\lang_template.php\', getCodeByUrlPage(\'customDir\\component\\containerdata_element_show\\teplates\\0\\lang_template.php\'));
+
+            echo \'Install = OK!\';
+        }else{
+            echo \'! Did not install. The main page file already exists.\';
+        }
+    } else{
+        echo $br.\'This script will install demo data and one title page. Demo site 1.\';
+        echo $br.\'To start the installation, enter the start parameter when invoking the script in the console.\';
+        echo $br.\'!!! Carefully the script can destroy the main page and the customDir directory !!!\';
+    }
+}else{
+    echo \'! Error. You need to run the script in the console\';
+}
+
+function getCodeByUrlPage($page){
+    $arrayCodeByUrl = array(
+        \'index.php\' => \'<? include $_SERVER["DOCUMENT_ROOT"]."/gy/gy.php"; // подключить ядро // include core 
+
+            $app->component(
+                \\\'admin-button-public-site\\\',
+                \\\'0\\\',
+                array()
+            );
+
+            $app->component(
+                \\\'includeHtml\\\',
+                \\\'0\\\',
+                array(
+                    \\\'html\\\' => \\\'<h1>Пример использования gy CMS/framework</h1>\\\'
+                )
+            );
+
+            // пример вызова одинаковых компонентов // example run two component 
+            $app->component(
+                \\\'includeHtml\\\',
+                \\\'0\\\',
+                array(
+                    \\\'html\\\' => \\\'<h4>Вызов компонента "form_auth_test" (1 раз)</h4>\\\'
+                )
+            );
+
+            $app->component(
+                \\\'form_auth_test\\\',
+                \\\'0\\\',
+                array( 
+                    \\\'test\\\' => \\\'asd\\\',
+                    \\\'idComponent\\\' => 1,
+                )
+            );
+
+             // пример вызова одинаковых компонентов // example run two component 
+            $app->component(
+                \\\'includeHtml\\\',
+                \\\'0\\\',
+                array(
+                    \\\'html\\\' => \\\'<h4>Вызов компонента "form_auth_test" (2 раз)</h4>\\\'
+                )
+            );
+
+            $app->component(
+                \\\'form_auth_test\\\',
+                \\\'0\\\',
+                array( 
+                    \\\'test\\\' => \\\'asd2\\\',
+                    \\\'idComponent\\\' => 2,
+                )
+            );
+
+            /**
+            пример вызова компонента с выводом контента,
+              + пример использования кастомного (пользовательского) шаблона компонента
+              (пользователя - разработчика использующего gy)
+            */
+            $app->component(
+                \\\'containerdata_element_show\\\',
+                \\\'0\\\',
+                array( 
+                    \\\'container-data-code\\\' => \\\'Content\\\',
+                    \\\'element-code\\\' => \\\'html-index-page\\\',
+                    \\\'cacheTime\\\' => 86400 // закешить на 24 ч.
+                )
+            );
+        \',
+        \'customDir\\component\\containerdata_element_show\\teplates\\0\\template.php\' => \'<?if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );?>
+
+<div class="user_custom_div">
+    
+    <?if(!empty($arRes[\\\'ITEMS\\\'])){?>
+        <? foreach ($arRes[\\\'ITEMS\\\'] as $value) { ?>
+            <?=((!empty($value[\\\'value\\\']))? $value[\\\'value\\\'] : \\\'\\\');?>
+        <?}?> 
+    <?}?>    
+    
+    <br/>(<?=$this->lang->GetMessage(\\\'add-custom-text\\\');?>)
+      
+</div>\',
+        \'customDir\\component\\containerdata_element_show\\teplates\\0\\style.css\' => \'.user_custom_div{
+    background-color: #21a2ff; 
+    color: #05ff07;
+}\',
+        \'customDir\\component\\containerdata_element_show\\teplates\\0\\lang_template.php\' => \'<? // языковой файл для шаблона компонента
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\\\'rus\\\'] = array(
+    \\\'add-custom-text\\\' => \\\'Сейчас запущен кастомный (пользовательский) шаблон компонента\\\'
+);
+\'
+    );
+    
+    return $arrayCodeByUrl[$page];
+}
+
+',
     'TYPE' => 'php',
     'DIR' => './gy/install/',
   ),
@@ -10232,45 +10296,6 @@ form{
     'TYPE' => 'css',
     'DIR' => './gy/style/',
   ),
-  './customDir/component/containerdata_element_show/teplates/0/lang_template.php' => 
-  array (
-    'CODE' => '<? // языковой файл для шаблона компонента
-if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
-
-$mess[\'rus\'] = array(
-    \'add-custom-text\' => \'Сейчас запущен кастомный (пользовательский) шаблон компонента\'
-);
-',
-    'TYPE' => 'php',
-    'DIR' => './customDir/component/containerdata_element_show/teplates/0/',
-  ),
-  './customDir/component/containerdata_element_show/teplates/0/style.css' => 
-  array (
-    'CODE' => '.user_custom_div{
-    background-color: #21a2ff; 
-    color: #05ff07;
-}',
-    'TYPE' => 'css',
-    'DIR' => './customDir/component/containerdata_element_show/teplates/0/',
-  ),
-  './customDir/component/containerdata_element_show/teplates/0/template.php' => 
-  array (
-    'CODE' => '<?if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );?>
-
-<div class="user_custom_div">
-    
-    <?if(!empty($arRes[\'ITEMS\'])){?>
-        <? foreach ($arRes[\'ITEMS\'] as $value) { ?>
-            <?=((!empty($value[\'value\']))? $value[\'value\'] : \'\');?>
-        <?}?> 
-    <?}?>    
-    
-    <br/>(<?=$this->lang->GetMessage(\'add-custom-text\');?>)
-      
-</div>',
-    'TYPE' => 'php',
-    'DIR' => './customDir/component/containerdata_element_show/teplates/0/',
-  ),
 );
         
     // создаёт все директории и файлы php, js, css проекта
@@ -10286,7 +10311,7 @@ $mess[\'rus\'] = array(
     function getTrueDataDir($arDir, $thisDir, $arIgnoreDirOrFile){
         $result = array();
         foreach ($arDir as $dirNameOrFile) {
-            // проверить ен входит ли директория в игнорируемую 
+            // проверить не входит ли директория в игнорируемую 
             if( !in_array($dirNameOrFile, $arIgnoreDirOrFile ) ){
                 $diirName = $thisDir.$dirNameOrFile;
                 if(is_dir($diirName)){
@@ -10337,7 +10362,7 @@ $mess[\'rus\'] = array(
 
     unlink("./consoleInstallGyFramework.php"); // удалить этот скрипт
     @unlink("./graphicalInstallGyFramework.php"); // удалить скрипт графической установки
-
+    
     echo "OK!";
     
 }else{

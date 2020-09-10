@@ -34,7 +34,7 @@ function getTrueDataDir($arDir, $thisDir, $arIgnoreDirOrFile){
     
     foreach ($arDir as $dirNameOrFile) {
         
-        // проверить ен входит ли директория в игнорируемую 
+        // проверить не входит ли директория в игнорируемую 
         if( !in_array($dirNameOrFile, $arIgnoreDirOrFile ) ){
             $diirName = $thisDir.$dirNameOrFile;
             if(is_dir($diirName)){
@@ -43,10 +43,11 @@ function getTrueDataDir($arDir, $thisDir, $arIgnoreDirOrFile){
                 $twoResult = getTrueDataDir($date, $diirName, $arIgnoreDirOrFile);
                 $result = array_merge($result, $twoResult);               
             }else{
-                $result[$thisDir.$dirNameOrFile]['CODE'] = file_get_contents($thisDir.$dirNameOrFile);
-                $result[$thisDir.$dirNameOrFile]['TYPE'] = getTypeFile($thisDir.$dirNameOrFile);
-                $result[$thisDir.$dirNameOrFile]['DIR'] = $thisDir;
-                
+                if($thisDir.$dirNameOrFile != './index.php'){ // исключить главную, её не будет
+                    $result[$thisDir.$dirNameOrFile]['CODE'] = file_get_contents($thisDir.$dirNameOrFile);
+                    $result[$thisDir.$dirNameOrFile]['TYPE'] = getTypeFile($thisDir.$dirNameOrFile);
+                    $result[$thisDir.$dirNameOrFile]['DIR'] = $thisDir;
+                }
             }
         }
     }
@@ -75,6 +76,7 @@ if($isRunConsole){ ';
         '.git',
         'gy/cache',
         'gy/tests',
+        'customDir',
         '.',
         '..'
     );
@@ -126,7 +128,7 @@ if($isRunConsole){ ';
     function getTrueDataDir($arDir, $thisDir, $arIgnoreDirOrFile){
         $result = array();
         foreach ($arDir as $dirNameOrFile) {
-            // проверить ен входит ли директория в игнорируемую 
+            // проверить не входит ли директория в игнорируемую 
             if( !in_array($dirNameOrFile, $arIgnoreDirOrFile ) ){
                 $diirName = $thisDir.$dirNameOrFile;
                 if(is_dir($diirName)){

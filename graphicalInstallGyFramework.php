@@ -833,7 +833,7 @@ if(isset($data['step']) && in_array($data['step'], $steps)){
                 $consoleLog = ob_get_contents();
                 ob_end_clean();
                 
-                if( $consoleLog != 'OK!' ){ 
+                if( $consoleLog != 'Install = OK!' ){ 
                     $err['type'] = 1;
                     $err['text'] = $consoleLog;
                     $flag = false;

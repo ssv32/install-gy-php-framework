@@ -16,7 +16,8 @@ install gy php framework<br/>
 1. Cкачайте себе файлы описанные выше (`consoleInstallGyFramework.php`, `graphicalInstallGyFramework.php`, раздел `install-file`); <br/>
 2. Поместите их в корень раздела где должен быть развёрнут проект;<br/>
 3. Перейдите в браузере на скрипт установки ( `<домен вашего проекта>/graphicalInstallGyFramework.php` );<br/>
-4. Далее нужно следовать инструкциям которые будут на экране, принять условия лицензии, указать найтройки ядра gy и базы данных (база данных уже должна быть создана);<br/>
+4. Далее нужно следовать инструкциям которые будут на экране, принять условия лицензии, указать найтройки ядра gy и базы данных (база данных уже должна быть создана),
+    можно поставить галочку и установить демо сайт (в демо сайт входит главная страница с приветствием и раздел `customDir` с примером кастомизации шаблона компонента. );<br/>
 5. Далее произведётся установка gy, зададутся настройки ядра gy и установятся таблицы в базу данных необходимые ядру gy и удалятся все файлы которые были нужны для установки (`consoleInstallGyFramework.php`, `graphicalInstallGyFramework.php`, раздел `install-file`).
 <br/>
 
@@ -26,6 +27,11 @@ install gy php framework<br/>
 3. Запустите из консоли скрипт `consoleInstallGyFramework.php` (пример: `php -f ./consoleInstallGyFramework.php`), данный скрипт создаст все папки и файлы gy php framework, после чего удалит себя, `graphicalInstallGyFramework.php` и раздел `/install-file`;<br/>
 4. После установки необходимо задать настройки ядра gy framework, это можно сделать скриптом `gy/install/consoleInstallOptions.php` из командной строки (выше есть пример как запускать) или изменив файл `/gy/config/gy_config.php`; <br/>
 5. Затем надо установить необходимое в базу данных скриптом `gy/install/installDataBaseTable.php` тоже из консоли  (выше есть пример как запускать) (предварительно нужно создать БД и задать доступы и её имя на шаге выше). <br/>
+
+### ! После консольной установки  
+Вы можете установить небольшой демо сайт консольным скриптом `gy/install/installDemoSite1.php`, нужен параметр `start` (пример `php -f gy/install/installDemoSite1.php start`).<br/>
+В демо сайт входит главная страница с приветствием и раздел `customDir` с примером кастомизации шаблона компонента. 
+
 
 <br/><br/><br/>
 `---`<br/>
@@ -53,7 +59,7 @@ To install, you need to add files from this repository to the server:
 1. Download yourself the files described above (`consoleInstallGyFramework.php`, `graphicalInstallGyFramework.php`, section `install-file`); <br/>
 2. Place them at the root of the section where the project should be deployed;<br/>
 3. Go to the installation script in the browser ( `<your project domain>/graphicalInstallGyFramework.php` );<br/>
-4. Next, you need to follow the instructions that will be on the screen, accept the license terms, specify the gy kernel settings and the database (you should have created the database yourself before this step);<br/>
+4. Next, you need to follow the instructions that will be on the screen, accept the license terms, specify the gy kernel settings and the database (you should have created the database yourself before this step), you can check the box and install the demo site (the demo site includes a main page with a welcome page and a section `customDir` with an example of customizing a component template);<br/>
 5. Next, gy is installed, the gy kernel settings are set and the tables are installed in the database necessary for the gy kernel and all files that were needed for the installation are deleted (`consoleInstallGyFramework.php`, `graphicalInstallGyFramework.php`, section `install-file`).
 <br/>
 
@@ -63,6 +69,11 @@ To install, you need to add files from this repository to the server:
 3. Run the script from the console `consoleInstallGyFramework.php` (example: `php -f ./consoleInstallGyFramework.php`), this script will create all folders and files gy php framework, after which it will delete itself, `graphicalInstallGyFramework.php` and section `/install-file`;<br/>
 4. After installation, you need to configure the gy framework core, this can be done with a script `gy/install/consoleInstallOptions.php` from the command line (there is an example of how to run it above) or by changing the file `/gy/config/gy_config.php`; <br/>
 5. Then you need to install the necessary in the database with a script `gy/install/installDataBaseTable.php` also from the console (above there is an example of how to run) (you first need to create a database and set access and its name in the step above). <br/>
+
+### ! After console installation
+You can install the demo site with a console script `gy/install/installDemoSite1.php`, parameter needed `start` (example `php -f gy/install/installDemoSite1.php start`).<br/>
+The demo site includes a main page with a welcome page and a section `customDir` with an example of customizing a component template. 
+
 
 
 <br/><br/><br/>

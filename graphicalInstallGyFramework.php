@@ -858,25 +858,26 @@ function getCoreConfigInfo(){
 
         array(
             'name' => 'lang',
-            'text' => 'Язык',
+            'text' => 'Язык |<span style="color: #45af45;"> language</span>',
             'value' => array(
-                'rus'
+                'rus',
+                'eng'
             )
         ),
         array(
             'name' => 'type_cache',
-            'text' => 'Тип кеша',
+            'text' => 'Тип кеша |<span style="color: #45af45;">cahe type</span>',
             'value' => array(
                 'cacheFiles'
             )
         ),
         array(
             'name' => 'sole',
-            'text' => 'Соль (строка с набором произвольных символов, нужно для шифрования)',
+            'text' => 'Соль (строка с набором произвольных символов, нужно для шифрования) <br/><span style="color: #45af45;">Salt (string with a set of arbitrary characters, needed for encryption)</span>',
         ),
         array(
             'name' => 'db_type',
-            'text' => 'Тип базы данных (БД)',
+            'text' => 'Тип базы данных (БД) <br/><span style="color: #45af45;">Database type (DB)</span>',
             'value' => array(
                 'mysql',
                 'PhpFileSqlClientForGy',
@@ -885,27 +886,27 @@ function getCoreConfigInfo(){
         ),
         array(
             'name' => 'db_host',
-            'text' => 'Хост БД (для БД PhpFileSqlClientForGy указывать не надо)',
+            'text' => 'Хост БД (для БД PhpFileSqlClientForGy указывать не надо) <br/><span style="color: #45af45;">Host DB (for DB PhpFileSqlClientForGy no need to enter)</span>',
         ),
         array(
             'name' => 'db_url',
-            'text' => 'url к файлу БД (указывается только для БД PhpFileSqlClientForGy)',
+            'text' => 'Путь к файлу БД (указывается только для БД PhpFileSqlClientForGy) <br/><span style="color: #45af45;">Path to the database file (specified only for the PhpFileSqlClientForGy database)</span>',
         ),
         array(
             'name' => 'db_user',
-            'text' => 'Имя пользователя БД',
+            'text' => 'Имя пользователя БД | <span style="color: #45af45;">Name user DB</span>',
         ),
         array(
             'name' => 'db_pass',
-            'text' => 'Пароль БД (что бы задать пустой пароль укажите ***)',
+            'text' => 'Пароль БД (что бы задать пустой пароль укажите ***) <br/><span style="color: #45af45;">DB password (to set an empty password, specify ***)</span>',
         ),
         array(
             'name' => 'db_name',
-            'text' => 'Имя БД',
+            'text' => 'Имя БД | <span style="color: #45af45;">Name DB</span>',
         ),
         array(
             'name' => 'db_port',
-            'text' => 'Порт БД (для БД PhpFileSqlClientForGy указывать не надо)',
+            'text' => 'Порт БД (для БД PhpFileSqlClientForGy указывать не надо) <br/><span style="color: #45af45;">DB port (for DB PhpFileSqlClientForGy no need to enter)</span>',
         )
     );
 }
@@ -914,7 +915,7 @@ function getHtmlPage($step, $errText){
     ?>
     <html>
         <head>
-            <title>Мастер установки GY framework/CMS</title>
+            <title>Мастер установки GY framework/CMS | Installation wizard GY framework/CMS</title>
             <style>
                 body{
                     background: #6862aa;
@@ -991,34 +992,41 @@ function getHtmlPage($step, $errText){
                 <form method="post">
                     <input type="hidden" name="step" value="<?=$step?>">
                     <div class="content-text">
-                        <H3>Мастер установки GY framework/CMS</H3>
+                        <H3>Мастер установки GY framework/CMS |<span style="color: #45af45;"> Installation wizard GY framework/CMS</span></H3>
                         <br/>
                         <table class="steps">
                             <tr>
-                                <td><b <?if($step == 0){?>class="active"<?}?>>Шаг 1</b></td>
-                                <td><b <?if($step == 1){?>class="active"<?}?>>Шаг 2</b></td>
-                                <td><b <?if($step == 2){?>class="active"<?}?>>Шаг 3</b></td>
-                                <td><b <?if($step == 3){?>class="active"<?}?>>Шаг 4</b></td>
+                                <td><b <?if($step == 0){?>class="active"<?}?>>Шаг 1 |<span style="color: #45af45;"> Step 1</span></b></td>
+                                <td><b <?if($step == 1){?>class="active"<?}?>>Шаг 2 |<span style="color: #45af45;"> Step 2</span></b></td>
+                                <td><b <?if($step == 2){?>class="active"<?}?>>Шаг 3 |<span style="color: #45af45;"> Step 3</span></b></td>
+                                <td><b <?if($step == 3){?>class="active"<?}?>>Шаг 4 |<span style="color: #45af45;"> Step 4</span></b></td>
                             </tr>
                         </table>
                         <br/>
                         <div>
                             <?if($step == 0){?>
-                                <H4>Вас приветствует мастер установки Gy framework/CMS</H4>
+                                <H4>Вас приветствует мастер установки Gy framework/CMS |<span style="color: #45af45;"> Welcome to the installation wizard Gy framework/CMS</span></H4>
 
                                 <p>Gy – это php framework, также имеющий элементы CMS, это админка, 
                                     управление пользователями, страницами сайта (есть конструктор сайта), контентом, кешем.</p>
+                                <p style="color: #45af45;">Gy – php framework, also having CMS elements, this is the admin area, 
+                                    user management, site pages (there is a site builder), content, cache.</p>
+                                
                                 <p>Более подробную информацию можно почитать тут <a href="https://github.com/ssv32/gy" target="_blank">https://github.com/ssv32/gy</a> </p>
+                                <p style="color: #45af45;">More information can be found here <a href="https://github.com/ssv32/gy" target="_blank">https://github.com/ssv32/gy</a> </p>
 
 
                                 <p>Для установки вам нужно пройти всего несколько шагов</p>
+                                <p style="color: #45af45;">To install, you only need to go through a few steps</p>
                             <?}elseif($step == 1){?>
-                                <H4>Лицензионное соглашение</H4>
+                                <H4>Лицензионное соглашение | <span style="color: #45af45;">License agreement</span></H4>
                                 <p>(это стандартная GPL-3.0 License, распространяется только на раздел /gy проекта)</p>
+                                <p style="color: #45af45;">(this is a standard GPL-3.0 License, only applies to the /gy section of the project)</p>
                                 <textarea disabled=disabled rows=15 cols=80 class="text-license"><?getTextGPL30()?></textarea>
                             <?}elseif($step == 2){?>
-                                <H4>Настройки ядра:</h4>
+                                <H4>Настройки ядра | <span style="color: #45af45;">Kernel settings</span> :</h4>
                                 <p>(значение *** можно задавать только для пароля БД)</p>
+                                <p style="color: #45af45;">(value *** can only be set for password DB)</p>
                                 <?$configInfo = getCoreConfigInfo();?>
                                 <?if(!empty($configInfo)){?>
                                     <table class="gy-config">
@@ -1044,14 +1052,19 @@ function getHtmlPage($step, $errText){
                                         <tr>
                                             <td></td>
                                             <td><input type="checkbox" name="demo-site1" /></td>
-                                            <td>Нужно ли установить демо сайт v1<br/> (мини демонстрация gy, в неё входит раздел /customDir с примером кастомизации шаблона компонента и главная страница). </td>
+                                            <td>
+                                                Нужно ли установить демо сайт v1<br/> (мини демонстрация gy, в неё входит раздел /customDir с примером кастомизации шаблона компонента и главная страница). 
+                                                <br/>
+                                                <span style="color: #45af45;">Do I need to install a demo site v1<br/> (A mini demo of the template is included in the /customDir section with an example of customizing the template and the main page).</span>
+                                            </td>
                                         </tr>
                                     </table>
                                 <?}?>
 
                             <?}elseif($step == 3){?>
-                                <H4>Поздравляем!</H4>
+                                <H4>Поздравляем! | <span style="color: #45af45;">Congratulations!</span></H4>
                                 <p>Gy - framework/CMS был установлен.</p>
+                                <p style="color: #45af45;">Gy - framework/CMS was installed.</p>
                                 <p>
                                     Вы можете внести свой вклад в проект gy - framework/CMS, следующими способами:
                                     <ul class="list">
@@ -1061,9 +1074,22 @@ function getHtmlPage($step, $errText){
                                         <li>можете предложить как можно улучшить продукт;</li>
                                         <li>или поделиться с друзьями, в соц. сетях/устно словами.</li>
                                     </ul>
+                                    <br/><span style="color: #45af45;">You can contribute to the gy - framework / CMS project in the following ways:</span>
+                                    <ul class="list">
+                                        <li><span style="color: #45af45;">report a bug/security issue;</span></li>
+                                        <li><span style="color: #45af45;">report inaccuracies/typos;</span></li>
+                                        <li><span style="color: #45af45;">help in developing;</span></li>
+                                        <li><span style="color: #45af45;">can you suggest how you can improve the product;</span></li>
+                                        <li><span style="color: #45af45;">or share with friends, in social. networks/verbally.</span></li>
+                                    </ul>
                                     Проект и подробная информация находится тут <a href="https://github.com/ssv32/gy" target="_blank">https://github.com/ssv32/gy</a>
                                     <br/>
+                                    <span style="color: #45af45;">Project and detailed information is here <a href="https://github.com/ssv32/gy" target="_blank">https://github.com/ssv32/gy</a></span>
+                                    <br/>
+                                    <br/>
                                     Wiki проекта находтся тут <a href="https://github.com/ssv32/gy/wiki" target="_blank">https://github.com/ssv32/gy/wiki</a>
+                                    <br/>
+                                    <span style="color: #45af45;">The project wiki is here <a href="https://github.com/ssv32/gy/wiki" target="_blank">https://github.com/ssv32/gy/wiki</a></span>
                                 </p>
                             <?}?>
                         </div>
@@ -1075,21 +1101,25 @@ function getHtmlPage($step, $errText){
                                 class="button"
                                 name="button-next"
                                 <?if(($step == 0) || ($step == 2) ){?>
-                                    value="Далее -->"
+                                    value="Далее | Next -->"
                                 <?}elseif($step == 1){?>
-                                    value="Я согласен"
+                                    value="Я согласен | I agree"
                                 <?}?>
                             />
                             <br/>
                             <br/>
-                            <?if($errText !== false){?>
-                                <span class="err-text">Произошла ошибка:</span>
+                            <?
+                            if($errText !== false){?>
+                                <span class="err-text">Произошла ошибка | <span style="color: #45af45;">An error has occurred</span>:</span>
                                 <br/>
                                 <textarea class="text1" disabled="disabled" cols="80" rows="3" ><?=$errText['text']?></textarea>
                                 <br/>
                                 <?if($errText['type'] != 0){?>
                                     <p>
                                         * Вы можете сообщить от ошибке <a href="https://github.com/ssv32/gy" target="_blank">https://github.com/ssv32/gy</a>
+                                    </p>
+                                    <p style="color: #45af45;">
+                                        * You can report from bug <a href="https://github.com/ssv32/gy" target="_blank">https://github.com/ssv32/gy</a>
                                     </p>
                                 <?}?>
                                 <br/>
@@ -1098,8 +1128,9 @@ function getHtmlPage($step, $errText){
                             <br/>
                             <br/>
                         <?}else{?>
-                            <a class="button" href="/" >Перейти в Ваш проект с установленным gy</a>
+                            <a class="button" href="/" >Перейти в Ваш проект с установленным gy | Go to your project with gy installed</a>
                             <P>* Cкрипт установки, директории и файлы нужные для установки были удалены</p>
+                            <P style="color: #45af45;">* The installation script, directories and files needed for installation have been removed</p>
                         <?}?>
                     </div>
                 </form>

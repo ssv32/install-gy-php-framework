@@ -247,6 +247,8 @@ if ($user->isAdmin()){
     'CODE' => '<?if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 global $app;
 global $user;
+
+$langTextThisFile = new lang($app->urlProject."/gy/admin", \'header-admin\', $app->options[\'lang\']);
 ?>
 
 <html>
@@ -256,22 +258,25 @@ global $user;
         <script src="../../gy/js/main.js"></script>
     </head>	
     <body class="gy-body-admin">
-        <h2 class="gy-admin-logo">Админка gy framework</h2>
+        
+        
+        
+        <h2 class="gy-admin-logo"><?=$langTextThisFile->GetMessage(\'title\')?></h2>
         <?if(!empty($app->options[\'v-gy\'])){?>
             <span class="version-gy-core">v <?=$app->options[\'v-gy\']?></span>
             <br/>
         <?}?>
-        <a href="/" class="gy-admin-button-min" >Перейти на сайт</a>
+        <a href="/" class="gy-admin-button-min" ><?=$langTextThisFile->GetMessage(\'site\')?></a>
         <br/>
         <br/>
         <?
         if (accessUserGroup::accessThisUserByAction( \'show_admin_panel\')){
 
             // меню доступное для текущего пользователя
-            $menu[\'Главная админки\'] = \'/gy/admin/index.php\';
+            $menu[ $langTextThisFile->GetMessage(\'index-page\') ] = \'/gy/admin/index.php\';
 
             if(accessUserGroup::accessThisUserByAction( \'edit_users\') || $user->isAdmin()){ 
-                $menu[\'Пользователи\'] = \'/gy/admin/users.php\';
+                $menu[ $langTextThisFile->GetMessage(\'users\') ] = \'/gy/admin/users.php\';
             }
 
             // надо добавить пункты меню заданные в подключенных модулях
@@ -290,10 +295,10 @@ global $user;
                 }
             }
 
-            $menu[\'Модули\'] = \'/gy/admin/modules.php\';
+            $menu[ $langTextThisFile->GetMessage(\'modules\') ] = \'/gy/admin/modules.php\';
             
             if($user->isAdmin()){
-                $menu[\'Настройки\'] = \'/gy/admin/options.php\';
+                $menu[ $langTextThisFile->GetMessage(\'options\') ] = \'/gy/admin/options.php\';
             }
 
             // menu
@@ -326,6 +331,31 @@ $app->component(
 include "../../gy/admin/footer-admin.php";
 
 ',
+    'TYPE' => 'php',
+    'DIR' => './gy/admin/',
+  ),
+  './gy/admin/lang_header-admin.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'title\' => \'Админка gy framework\',
+    \'site\' => \'Перейти на сайт\',
+    \'modules\' => \'Модули\',
+    \'options\' => \'Настройки\',
+    \'index-page\' => \'Главная админки\',
+    \'users\' => \'Пользователи\'
+);
+
+$mess[\'eng\'] = array(
+    \'title\' => \'Admin panel - gy framework\',
+    \'site\' => \'Go to website\',
+    \'modules\' => \'Modules\',
+    \'options\' => \'Options\',
+    \'index-page\' => \'Home\',
+    \'users\' => \'Users\'
+);',
     'TYPE' => 'php',
     'DIR' => './gy/admin/',
   ),
@@ -3870,6 +3900,11 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 $mess[\'rus\'] = array(
     \'text-info\' => \'Компонент нужен для добавление пользователя\',
     \'property-back-url\' => \'Ссылка на страницу откуда идёт добавление пользователя\',
+);
+
+$mess[\'eng\'] = array(
+    \'text-info\' => \'The component is needed to add a user\',
+    \'property-back-url\' => \'Link to the page from where the user is being added\',
 );',
     'TYPE' => 'php',
     'DIR' => './gy/component/add_user/',
@@ -3893,6 +3928,19 @@ $mess[\'rus\'] = array(
     \'add-err\' => \'error, попробуйте заново\'
 );
 
+$mess[\'eng\'] = array(
+    \'button\' => \'Add\',
+    \'id\' => \'id\', 
+    \'login\' => \'Login\', 
+    \'name\' => \'Name\', 
+    \'pass\' => \'Password\', 
+    \'groups\' => \'Group of rights\',
+    \'title-add\' => \'Adding a new user\',
+    \'back\' => \'<< Back\',
+    \'ok\' => \'ok\',
+    \'add-ok\' => \'User added\',
+    \'add-err\' => \'error, try again\'
+);
 ',
     'TYPE' => 'php',
     'DIR' => './gy/component/add_user/teplates/0/',
@@ -3990,6 +4038,9 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
     \'text-info\' => \'Запустит внутри себя компонент form_auth\',
+);
+$mess[\'eng\'] = array(
+    \'text-info\' => \'Will launch the form_auth component inside itself\',
 );',
     'TYPE' => 'php',
     'DIR' => './gy/component/admin/',
@@ -4013,6 +4064,9 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
     \'hi\' => \'Админка gy framework\',
+);
+$mess[\'eng\'] = array(
+    \'hi\' => \'Admin panel - gy framework\',
 );
 
 ',
@@ -4084,6 +4138,9 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
     \'text-info\' => \'Отобразит панель администратора в публичной части\',
+);
+$mess[\'eng\'] = array(
+    \'text-info\' => \'Will display the admin panel in the public area\',
 );',
     'TYPE' => 'php',
     'DIR' => './gy/component/admin-button-public-site/',
@@ -4098,6 +4155,13 @@ $mess[\'rus\'] = array(
     \'hi\' => \'Привет, \',
     \'exit\' => \'Выйти\',
     \'button-work-page\' => \'Работа со страницами сайта\'
+);
+
+$mess[\'eng\'] = array(
+    \'button-admin\' => \'Gy - site administration section\',
+    \'hi\' => \'Hello, \',
+    \'exit\' => \'Log off\',
+    \'button-work-page\' => \'Working with site pages\'
 );
 
 ',
@@ -4278,6 +4342,9 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
     \'text-info\' => \'Капча, выведет картинку с буквами/цифрами, полем ввода и кнопкой отправить\',
+);
+$mess[\'eng\'] = array(
+    \'text-info\' => \'Captcha, will display a picture with letters / numbers, an input field and send\',
 );',
     'TYPE' => 'php',
     'DIR' => './gy/component/capcha/',
@@ -4385,6 +4452,10 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
     \'text-info\' => \'Редактирование общих свойств пользователей\',
+);
+
+$mess[\'eng\'] = array(
+    \'text-info\' => \'Editing General User Properties\',
 );',
     'TYPE' => 'php',
     'DIR' => './gy/component/edit-all-users-propertys/',
@@ -4407,6 +4478,21 @@ $mess[\'rus\'] = array(
     \'not-propertys\' => \'Ещё нет общих пользовательских свойств\',
     \'add-property\' => \'Добавить\',
     \'title-add-property\' => \'Добавление нового общего свойства для пользователей\'
+);
+
+$mess[\'eng\'] = array(
+    \'ok\' => \'Ok\',
+    \'title\' => \'General user properties\',
+    \'name\' => \'Property name\',
+    \'type\' => \'Property type\',
+    \'code\' => \'Property code\',
+    \'del-property\' => \'Delete\',
+    \'edit-property\' => \'Edit\',
+    \'stat-ok\' => \'Action completed\',
+    \'stat-err\' => \'An error has occurred\',
+    \'not-propertys\' => \'No shared custom properties yet\',
+    \'add-property\' => \'Add\',
+    \'title-add-property\' => \'Adding a new shared property for users\'
 );
 
 ',
@@ -4614,6 +4700,10 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 $mess[\'rus\'] = array(
     \'text-info\' => \'Компонент для редактирования пользовательских свойств (общих свойств)\',
     \'property-id-user\' => \'Id Пользователя которого надо редактировать\'
+);
+$mess[\'eng\'] = array(
+    \'text-info\' => \'Component for editing custom properties (general properties)\',
+    \'property-id-user\' => \'Id of the User to be edited\'
 );',
     'TYPE' => 'php',
     'DIR' => './gy/component/edit-users-propertys/',
@@ -4629,8 +4719,18 @@ $mess[\'rus\'] = array(
     \'save\' => \'Сохранить\',
     \'stat-ok\' => \'Данные сохранены\',
     \'stat-err\' => \'Произошла ошибка\',
-    \'name-property\' => \'Имя свофства\',
+    \'name-property\' => \'Имя свойства\',
     \'value-property\' => \'Значение свойства\'
+);
+
+$mess[\'eng\'] = array(
+    \'ok\' => \'Ok\',
+    \'title\' => \'Editing user properties id=\',
+    \'save\' => \'Save\',
+    \'stat-ok\' => \'Data saved\',
+    \'stat-err\' => \'An error has occurred\',
+    \'name-property\' => \'Property name\',
+    \'value-property\' => \'Property value\'
 );
 
 ',
@@ -4831,6 +4931,12 @@ $mess[\'rus\'] = array(
     \'text-info\' => \'Редактирование пользователя\',
     \'property-back-url\' => \'Ссылка на страницу откуда идёт редактирование\',
     \'property-id-user\' => \'Id Пользователя которого надо редактировать\'
+);
+
+$mess[\'eng\'] = array(
+    \'text-info\' => \'User editing\',
+    \'property-back-url\' => \'Link to the page where the editing is coming from\',
+    \'property-id-user\' => \'Id of the User to be edited\'
 );',
     'TYPE' => 'php',
     'DIR' => './gy/component/edit_user/',
@@ -4854,6 +4960,22 @@ $mess[\'rus\'] = array(
     \'edit-err\' => \'error, попробуйте заново\',
     \'no-update-pass-text\' => \'Не изменять пароль\',
     \'edit-propertys\' => \'Изменить своства (общие свойства)\'
+);
+
+$mess[\'eng\'] = array(
+    \'button\' => \'Save\',
+    \'id\' => \'id\', 
+    \'login\' => \'Login\', 
+    \'name\' => \'Name\', 
+    \'pass\' => \'Password\', 
+    \'groups\' => \'Group of rights\',
+    \'title\' => \'User edit\',
+    \'back\' => \'<< Back\',
+    \'ok\' => \'ok\',
+    \'stat-ok\' => \'Data saved\',
+    \'edit-err\' => \'error, try again\',
+    \'no-update-pass-text\' => \'Do not change password\',
+    \'edit-propertys\' => \'Change properties (general properties)\'
 );
 
 ',
@@ -5021,7 +5143,7 @@ if ($isShowAdminPanel === true){
     $arRes[\'form_input\']["pass"] = "pass";
 }
 
-if ( !empty($arRes["auth_ok"]) && ($arRes["auth_ok"] == \'ok\') && !empty($_REQUEST[\'Выйти\'])){
+if ( !empty($arRes["auth_ok"]) && ($arRes["auth_ok"] == \'ok\') && !empty($_REQUEST[ $this->lang->GetMessage(\'button-exit\') ])){
     if ($user->userExit() ){
         header( \'Location: \'.$redirectUrl );
     }
@@ -5041,7 +5163,26 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 $mess[\'rus\'] = array(
     \'text-info\' => \'Форма авторизации\',
     \'property-idComponent\' => \'Уникальное число (придумать надо самому) в рамках страницы сайта где вызывается компонент (сделано если два одинаковых компонента будут на одной странице сайта)\'
+);
+$mess[\'eng\'] = array(
+    \'text-info\' => \'Authorization form\',
+    \'property-idComponent\' => \'A unique number (you have to think of it yourself) within the site page where the component is called (done if two identical components are on the same page of the site)\'
 );',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/form_auth/',
+  ),
+  './gy/component/form_auth/lang_controller.php' => 
+  array (
+    'CODE' => '<? // языковой файл для компонента
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'button-exit\' => \'Выйти\',
+);
+$mess[\'eng\'] = array(
+    \'button-exit\' => \'Log_off\',
+);
+',
     'TYPE' => 'php',
     'DIR' => './gy/component/form_auth/',
   ),
@@ -5054,7 +5195,16 @@ $mess[\'rus\'] = array(
     \'button\' => \'Авторизоваться\',
     \'err1\' => \'! Логин или пароль неправильные.\',
     \'exit\' => \'Выйти\',
-    \'err_capcha\' => \'! Ошибка в capcha, попробуйте ещё раз\'
+    \'err_capcha\' => \'! Ошибка в capcha, попробуйте ещё раз\',
+    \'hi\' => \'Привет\'
+);
+
+$mess[\'eng\'] = array(
+    \'button\' => \'Login\',
+    \'err1\' => \'! Login or password is incorrect.\',
+    \'exit\' => \'Log off\',
+    \'err_capcha\' => \'! Capcha error, please try again\',
+    \'hi\' => \'Hello\'
 );
 
 ',
@@ -5091,7 +5241,7 @@ if ( empty($arRes["auth_ok"]) ) :?>
         
     </form>	
 <?else:?>
-    <h1>Привет, <?=$arRes["auth_user"];?></h1>
+    <h1><?=$this->lang->GetMessage(\'hi\');?>, <?=$arRes["auth_user"];?></h1>
     <form>
         <input class="gy-admin-button" type="submit" name="<?=$this->lang->GetMessage(\'exit\');?>" value="<?=$this->lang->GetMessage(\'exit\');?>" />
     </form>
@@ -5173,6 +5323,12 @@ $mess[\'rus\'] = array(
     \'text-info\' => \'Форма авторизации тестовая, авторизации в ядре gy не происходит (просто демонстрация работы нескольких компонентов одновременно)\',
     \'property-test\' => \'Поле для теста\',
     \'property-idComponent\' => \'Уникальное число (придумать надо самому) в рамках страницы сайта где вызывается компонент (сделано если два одинаковых компонента будут на одной странице сайта)\'
+);
+
+$mess[\'eng\'] = array(
+    \'text-info\' => \'The authorization form is test, there is no authorization in the gy core (just a demonstration of the work of several components at the same time)\',
+    \'property-test\' => \'Test field\',
+    \'property-idComponent\' => \'A unique number (you have to come up with yourself) within the site page where the component is called (done if two identical components are on the same page of the site)\'
 );',
     'TYPE' => 'php',
     'DIR' => './gy/component/form_auth_test/',
@@ -5183,6 +5339,9 @@ $mess[\'rus\'] = array(
 if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
+    \'test\' => \'ok\',
+);
+$mess[\'eng\'] = array(
     \'test\' => \'ok\',
 );
 ',
@@ -5219,12 +5378,14 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
     \'button\' => \'Отправить\',
-    \'get-text\' => \'Введите любой текст\'
+    \'get-text\' => \'Введите любой текст\',
+    \'hi\' => \'Привет\'
 );
 
 $mess[\'eng\'] = array(
     \'button\' => \'Send\',
-    \'get-text\' => \'pleas input any text\'
+    \'get-text\' => \'pleas input any text\',
+    \'hi\' => \'Hello\'
 );',
     'TYPE' => 'php',
     'DIR' => './gy/component/form_auth_test/teplates/0/',
@@ -5262,7 +5423,7 @@ if ( empty($arRes["auth_ok"]) ) :?>
 
     </form>	
 <?else:?>
-    <h1>Привет, <?=$arRes["auth_user"];?></h1>
+    <h1><?=$this->lang->GetMessage(\'hi\');?>, <?=$arRes["auth_user"];?></h1>
 
 <?endif;?>',
     'TYPE' => 'php',
@@ -5291,11 +5452,13 @@ $componentInfo = array(
     'CODE' => '<?php 
 if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
+global $app;
+
 $data = $_POST;
 
 if(!empty($data[\'cacheClear\'])){
     // нужно удалить все файлы из раздела /gy/cache/
-    global $app;    
+       
     $files = glob($app->url.\'/cache/*\'); 
     foreach($files as $file){
         if(is_file($file)){
@@ -5308,6 +5471,38 @@ if(!empty($data[\'cacheClear\'])){
 $arRes[\'button\'] = array(
     \'cacheClear\'
 );
+
+// возможные варианты языка
+$arRes[\'langs\'] = array(
+    \'rus\',
+    \'eng\'
+);
+
+$arRes[\'this-lang\'] = $app->options[\'lang\'];
+
+if(!empty($data[\'save\']) && in_array($data[\'lang\'], $arRes[\'langs\'])){
+
+    // задать настройки сразу ядра
+    global $argv;
+    $argv = array();
+    $argv[] = 1;
+    $argv[] = \'set-option\';
+    $argv[] = \'lang\';
+    $argv[] = $data[\'lang\'];
+    
+    ob_start();
+    include $_SERVER["DOCUMENT_ROOT"].\'/gy/install/consoleInstallOptions.php\';
+    $consoleLog = ob_get_contents();
+    ob_end_clean();
+
+    if($consoleLog != "run set-option\\nfinish set-option\\n"){
+        $arRes[\'status\'] = \'save-ok\'; 
+    }else{
+        $arRes[\'status\'] = \'save-err\'; 
+        $arRes[\'status-text\'] = $consoleLog;
+    }
+    
+}
 
 // показать шаблон
 $this->template->show($arRes, $this->arParam);
@@ -5322,6 +5517,10 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
     \'text-info\' => \'Настройки gy админ панели\',
+);
+
+$mess[\'eng\'] = array(
+    \'text-info\' => \'Gy admin panel settings\',
 );',
     'TYPE' => 'php',
     'DIR' => './gy/component/gy_options/',
@@ -5335,7 +5534,22 @@ $mess[\'rus\'] = array(
     \'title\' => \'Настройки\',
     \'cacheClear\' => \'Сбросить кеш\',
     \'ok\' => \'ОК\',
-    \'cacheClear-ok\' => \'! кеш сброшен\'
+    \'cacheClear-ok\' => \'! кеш сброшен\',
+    \'title-lang\' => \'Выбор языка\',
+    \'save\' => \'Сохранить\',
+    \'save-ok\' => \'Изменения сохранены\',
+    \'save-err\' => \'Произошла ошибка во время сохранения\'
+);
+
+$mess[\'eng\'] = array(
+    \'title\' => \'Settings\',
+    \'cacheClear\' => \'Flush cache\',
+    \'ok\' => \'OK\',
+    \'cacheClear-ok\' => \'! cache flushed\',
+    \'title-lang\' => \'Language selection\',
+    \'save\' => \'Save\',
+    \'save-ok\' => \'Changes saved\',
+    \'save-err\' => \'An error occurred while saving\'
 );
 
 ',
@@ -5352,13 +5566,46 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );?
 <?if(empty($arRes[\'status\']) && !empty($arRes[\'button\'])){?>
     <? foreach ($arRes[\'button\'] as $val) { ?>
         <form method="post">
+            <?if(!empty($arRes[\'langs\'])){?>
+                <br/>
+                ================================
+                <br/>
+                <?=$this->lang->GetMessage(\'title-lang\');?>:
+                <select name="lang">
+                    <? foreach ($arRes[\'langs\'] as $value) { ?>
+                        <option 
+                            value="<?=$value?>"
+                            <?if ($value == $arRes[\'this-lang\']){?>
+                                selected
+                            <?}?>
+                        >
+                            <?=$value?>
+                        </option>
+                    <?}?>
+                </select>
+                <br/>
+                <input type=\'submit\' class="gy-admin-button" name="save" value="<?=$this->lang->GetMessage(\'save\');?>" />
+                <br/>
+                ===============================
+                <br/>
+            <?}?>
+            
             <input type=\'submit\' class="gy-admin-button" name="cacheClear" value="<?=$this->lang->GetMessage(\'cacheClear\');?>" />
         </form>
     <?}?>
 <? }else{ ?>
     <?if ($arRes[\'status\'] == \'cacheClear-ok\'){?>
         <div class="gy-admin-good-message"><?=$this->lang->GetMessage(\'cacheClear-ok\');?></div>
-    <? } ?>
+    <?}elseif($arRes[\'status\'] == \'save-ok\'){ ?>
+        <div class="gy-admin-good-message"><?=$this->lang->GetMessage(\'save-ok\');?></div>
+    <?}elseif($arRes[\'status\'] == \'save-err\'){ ?>
+        <div class="gy-admin-error-message">
+            <?=$this->lang->GetMessage(\'save-err\');?>:
+            <br/>
+            <?=$arRes[\'status-text\'];?>
+        </div>
+    <?}?>
+
     <br/>
     <a href="/gy/admin/options.php" class="gy-admin-button"><?=$this->lang->GetMessage(\'ok\');?></a>
 <?}',
@@ -5408,6 +5655,11 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 $mess[\'rus\'] = array(
     \'text-info\' => \'Компонент для вывода html кода\',
     \'property-html\' => \'Любой html код\'
+);
+
+$mess[\'eng\'] = array(
+    \'text-info\' => \'Component for outputting html code\',
+    \'property-html\' => \'Any html code\'
 );',
     'TYPE' => 'php',
     'DIR' => './gy/component/includeHtml/',
@@ -5470,6 +5722,11 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 $mess[\'rus\'] = array(
     \'text-info\' => \'Меню\',
     \'property-buttons\' => \'Массив с элементами меню, вида : названия кнопки => ссылка\'
+);
+
+$mess[\'eng\'] = array(
+    \'text-info\' => \'Menu\',
+    \'property-buttons\' => \'Array of buttons with menu items, like: titles => link\'
 );',
     'TYPE' => 'php',
     'DIR' => './gy/component/menu/',
@@ -5493,6 +5750,10 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
     \'hi\' => \'Админка gy framework\',
+);
+
+$mess[\'rus\'] = array(
+    \'hi\' => \'Admin panel - gy framework\',
 );
 
 ',
@@ -5554,6 +5815,10 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
     \'text-info\' => \'Таблица с подключёнными модулями к gy и их версии\',
+);
+
+$mess[\'eng\'] = array(
+    \'text-info\' => \'Table with connected modules to gy and their versions\',
 );',
     'TYPE' => 'php',
     'DIR' => './gy/component/show_include_modules/',
@@ -5565,6 +5830,14 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
     \'hi\' => \'Модули подключенные к ядру gy\',
+    \'name\' => \'Имя модуля\',
+    \'v\' => \'Версия\'
+);
+
+$mess[\'eng\'] = array(
+    \'hi\' => \'Modules connected to the gy core\',
+    \'name\' => \'Name module\',
+    \'v\' => \'Version\'
 );
 
 ',
@@ -5580,7 +5853,7 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 <?if ($arRes[\'info-modules\']){?>
 
     <table border="1" class="gy-table-all-users">
-        <tr><th>Имя модуля</th><th>Версия</th></tr>
+        <tr><th><?=$this->lang->GetMessage(\'name\')?></th><th><?=$this->lang->GetMessage(\'v\')?></th></tr>
 
         <?foreach ($arRes[\'info-modules\'] as $key => $val){?>
             <tr>
@@ -5687,6 +5960,11 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 $mess[\'rus\'] = array(
     \'text-info\' => \'Просмотреть все данные пользователя (и значения общих свойств)\',
     \'property-id-user\' => \'Id Пользователя данные по которому надо просмотреть\'
+);
+
+$mess[\'eng\'] = array(
+    \'text-info\' => \'View all user data (and general property values)\',
+    \'property-id-user\' => \'Id of the User data for which you want to view\'
 );',
     'TYPE' => 'php',
     'DIR' => './gy/component/show_user/',
@@ -5703,7 +5981,16 @@ $mess[\'rus\'] = array(
     \'value-property\' => \'Значение\',
     \'title-property\' => \'Значения общих пользовательских свойств\',
     \'title-property-standart\' => \'Основные данные пользователя\'
-    
+);
+
+
+$mess[\'eng\'] = array(
+    \'title\' => \'View user data with id=\',
+    \'err-data\' => \'User data not found\',
+    \'name-property\' => \'Name\',
+    \'value-property\' => \'Value\',
+    \'title-property\' => \'Common custom property values\',
+    \'title-property-standart\' => \'Basic user data\'
 );
 
 ',
@@ -5840,6 +6127,10 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
     \'text-info\' => \'Таблица со всеми пользователями\',
+);
+
+$mess[\'eng\'] = array(
+    \'text-info\' => \'Table with all users\',
 );',
     'TYPE' => 'php',
     'DIR' => './gy/component/users_all_tables/',
@@ -5860,6 +6151,19 @@ $mess[\'rus\'] = array(
     \'options-groups\' => \'Настройка групп прав доступа\',
     \'list-all-user-propertys\' => \'Список общих пользовательских свойств\',
     \'show-user\' => \'Посмотреть все данные\'
+);
+
+$mess[\'eng\'] = array(
+    \'del-user\' => \'Delete\',
+    \'edit-user\' => \'Edit\',
+    \'title\' => \'Users\',
+    \'add-user\' => \'Add user\',
+    \'del-ok\' => \'User - delete\',
+    \'del-err\' => \'Error while deleting\',
+    \'ok\' => \'Ok\',
+    \'options-groups\' => \'Setting up access rights groups\',
+    \'list-all-user-propertys\' => \'List of common custom properties\',
+    \'show-user\' => \'View all data\'
 );
 
 ',
@@ -6044,6 +6348,10 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
     \'text-info\' => \'Пользовательские группы и их права\',
+);
+
+$mess[\'eng\'] = array(
+    \'text-info\' => \'User groups and their rights\',
 );',
     'TYPE' => 'php',
     'DIR' => './gy/component/users_group_manager/',
@@ -6065,6 +6373,20 @@ $mess[\'rus\'] = array(
     \'title-add-group\' => \'Добавить новую группу\',
     \'text\' => \'Описание\',
     \'delete\' => \'Удалить\'
+);
+
+$mess[\'eng\'] = array(
+    \'title\' => \'Setting up access rights groups\',
+    \'back\' => \'Cancel\',
+    \'save\' => \'Save\',
+    \'text-ok\' => \'Settings saved successfully\',
+    \'text-er\' => \'! An error occured, please try again\',
+    \'button-text-ok\' => \'Ok\',
+    \'groups\' => \'Groups\',
+    \'actions\' => \'User actions that are allowed for this group\',
+    \'title-add-group\' => \'Add new group\',
+    \'text\' => \'Description\',
+    \'delete\' => \'Delete\'
 );
 
 ',
@@ -6218,6 +6540,11 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) {
 
     include_once("config/gy_config.php"); // подключение настроек ядра // include options
 
+    if(in_array($gy_config[\'lang\'], array(\'rus\', \'eng\'))){
+        global $lang;
+        $lang = $gy_config[\'lang\'];
+    }
+    
     // подключаем класс модуля 
     // (нужен для подключения модулей до определения авто подключения классов)
     include_once(__DIR__ . \'/classes/module.php\');
@@ -6236,7 +6563,7 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) {
     // авто подключение классов
     function __autoload($calssname){ 
         global $urlProject;
-
+        
         // проверю есть ли класс в подключённых модулях и подключу, иначе как всегда всё
         global $module;
         $meyByClassModule = $module->getUrlModuleClassByNameClass($calssname);
@@ -6256,13 +6583,13 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) {
             }
         }
     }
-
+    
     // обезопасить получаемый конфиг
     $gy_config = security::filterInputData($gy_config);
-
+    
     global $app;
     // добавлю версию ядра gy 
-    $gy_config[\'v-gy\'] = \'0.1-alpha\';
+    $gy_config[\'v-gy\'] = \'0.2-alpha\';
     $app = app::createApp($urlProject, $gy_config);
     unset($gy_config);
 
@@ -6383,6 +6710,7 @@ header(\'Location: /gy/admin\');
 
 global $argv;
 $isRunConsole = isset($argv);
+global $br;
 $br = "\\n";
 
 //print_r($argv);
@@ -6460,9 +6788,9 @@ $gy_config = array(\'.$br;
 }
 
 if($isRunConsole){ // пока запускать только из консоли
-	if ( empty($argv[1]) || ($argv[1] == \'help\') ){
+    if ( empty($argv[1]) || ($argv[1] == \'help\') ){
         showHelpFromInstall();
-	}elseif($argv[1] == \'set-all\'){
+    }elseif($argv[1] == \'set-all\'){
         echo \'run set-all\'.$br;
 
         $options = parseOprions($argv);
@@ -6474,7 +6802,7 @@ if($isRunConsole){ // пока запускать только из консол
         }
         echo \'finish set-all\'.$br;
      
-	}elseif($argv[1] == \'set-option\'){
+    }elseif($argv[1] == \'set-option\'){
         echo \'run set-option\'.$br;
         $options = parseOprions($argv);
                
@@ -6504,7 +6832,7 @@ if($isRunConsole){ // пока запускать только из консол
     }
 	
 }else{
-	echo \'! нужно запустить скрипт в консоли\';
+	echo \'! Error. You need to run the script in the console\';
 
 }
 ',
@@ -6595,7 +6923,7 @@ if($isRunConsole){
             \'action_user\', 
             array(
                 \'code\' => \'show_admin_panel\', 
-                \'text\' => \'Просматривать админку\', 
+                \'text\' => \'Просматривать админку | View admin panel\', 
             )
         );
         
@@ -6603,7 +6931,7 @@ if($isRunConsole){
             \'action_user\', 
             array(
                 \'code\' => \'action_all\', 
-                \'text\' => \'Редактировать всё (Админ)\', 
+                \'text\' => \'Редактировать всё (Админ) | Edit All (Admin)\', 
             )
         );
         
@@ -6611,7 +6939,7 @@ if($isRunConsole){
             \'action_user\', 
             array(
                 \'code\' => \'edit_users\', 
-                \'text\' => \'Изменение пользователей (кроме админов)\', 
+                \'text\' => \'Изменение пользователей (кроме админов) | Edit users (except admins)\', 
             )
         );  
     //}
@@ -6638,8 +6966,8 @@ if($isRunConsole){
             \'access_group\', 
             array(
                 \'code\' => \'admins\', 
-                \'name\' => \'Админы\',
-                \'text\' => \'Админы, есть права на всё\',
+                \'name\' => \'Админы | Admins\',
+                \'text\' => \'Админы, есть права на всё | Admins, have rights to everything\',
                 \'code_action_user\' => \'action_all\'
             )
         );
@@ -6647,8 +6975,8 @@ if($isRunConsole){
             \'access_group\', 
             array(
                 \'code\' => \'admins\', 
-                \'name\' => \'Админы\',
-                \'text\' => \'Админы, есть права на всё\',
+                \'name\' => \'Админы | Admins\',
+                \'text\' => \'Админы, есть права на всё | Admins, have rights to everything\',
                 \'code_action_user\' => \'show_admin_panel\'
             )
         );
@@ -6658,8 +6986,8 @@ if($isRunConsole){
             \'access_group\', 
             array(
                 \'code\' => \'content\', 
-                \'name\' => \'Контент\',
-                \'text\' => \'Те кто изменяют контент сайта\',
+                \'name\' => \'Контент | Content\',
+                \'text\' => \'Те кто изменяют контент сайта | Those who change the content of the site\',
                 \'code_action_user\' => \'show_admin_panel\'
             )
         );
@@ -6668,8 +6996,8 @@ if($isRunConsole){
             \'access_group\', 
             array(
                 \'code\' => \'user_admin\', 
-                \'name\' => \'Админи по пользователям\',
-                \'text\' => \'Могут изменять только пользователей\', 
+                \'name\' => \'Админи по пользователям | Admin for users\',
+                \'text\' => \'Могут изменять только пользователей | Can change users\', 
                 \'code_action_user\' => \'edit_users\'
             )
         );
@@ -6677,8 +7005,8 @@ if($isRunConsole){
             \'access_group\', 
             array(
                 \'code\' => \'user_admin\', 
-                \'name\' => \'Админи по пользователям\',
-                \'text\' => \'Могут изменять только пользователей\', 
+                \'name\' => \'Админи по пользователям | Admin for users\',
+                \'text\' => \'Могут изменять только пользователей | Can change users\', 
                 \'code_action_user\' => \'show_admin_panel\'
             )
         );
@@ -6776,7 +7104,7 @@ if($isRunConsole){
     echo $br.\'-----install gy core taldes db = OK!-----\'.$br;
     
 }else{
-	echo \'! нужно запустить скрипт в консоли\';
+	echo \'! Error. You need to run the script in the console\';
 
 }',
     'TYPE' => 'php',
@@ -6797,18 +7125,26 @@ $br = "\\n";
 if($isRunConsole){
     if($argv[1] == \'start\'){
                 
-        if (!file_exists(__DIR__.\'/../../index.php\')) {          
+        if (!file_exists(__DIR__.\'/../../index.php\')) {
+            
+            define("GY_CORE", true); // хак
+            include_once(__DIR__.\'/../../gy/config/gy_config.php\'); // подключение настроек ядра // include options
+            if(!empty($gy_config[\'lang\']) && in_array($gy_config[\'lang\'], array(\'rus\', \'eng\'))){
+                $lang = $gy_config[\'lang\'];
+            }else{
+                $lang = \'rus\';
+            }
             
             // записать основную страницу
-            file_put_contents(__DIR__.\'/../../index.php\', getCodeByUrlPage(\'index.php\'));
+            file_put_contents(__DIR__.\'/../../index.php\', getCodeByUrlPage(\'index.php\', $lang));
             
             mkdir(__DIR__.\'/../../customDir/component/containerdata_element_show/teplates/0/\', 0755, true);
             mkdir(__DIR__.\'/../../customDir/classes/\', 0755, true);
             
             // записать файлы /customDir
-            file_put_contents(__DIR__.\'/../../customDir\\component\\containerdata_element_show\\teplates\\0\\template.php\', getCodeByUrlPage(\'customDir\\component\\containerdata_element_show\\teplates\\0\\template.php\'));
-            file_put_contents(__DIR__.\'/../../customDir\\component\\containerdata_element_show\\teplates\\0\\style.css\', getCodeByUrlPage(\'customDir\\component\\containerdata_element_show\\teplates\\0\\style.css\'));
-            file_put_contents(__DIR__.\'/../../customDir\\component\\containerdata_element_show\\teplates\\0\\lang_template.php\', getCodeByUrlPage(\'customDir\\component\\containerdata_element_show\\teplates\\0\\lang_template.php\'));
+            file_put_contents(__DIR__.\'/../../customDir\\component\\containerdata_element_show\\teplates\\0\\template.php\', getCodeByUrlPage(\'customDir\\component\\containerdata_element_show\\teplates\\0\\template.php\', $lang));
+            file_put_contents(__DIR__.\'/../../customDir\\component\\containerdata_element_show\\teplates\\0\\style.css\', getCodeByUrlPage(\'customDir\\component\\containerdata_element_show\\teplates\\0\\style.css\', $lang));
+            file_put_contents(__DIR__.\'/../../customDir\\component\\containerdata_element_show\\teplates\\0\\lang_template.php\', getCodeByUrlPage(\'customDir\\component\\containerdata_element_show\\teplates\\0\\lang_template.php\', $lang));
 
             echo \'Install = OK!\';
         }else{
@@ -6823,7 +7159,21 @@ if($isRunConsole){
     echo \'! Error. You need to run the script in the console\';
 }
 
-function getCodeByUrlPage($page){
+function getCodeByUrlPage($page, $lang){
+    $arLang = array(
+        \'rus\' => array(
+            \'html-title\' => \'Пример использования gy CMS/framework\',
+            \'title-show-component\' => \'Вызов компонента\',
+            \'title-run-component\' => \'Вызов компонента\',
+        ),
+        \'eng\' => array(
+            \'html-title\' => \'Usage example gy CMS/framework\',
+            \'title-show-component\' => \'Component launch\',
+            \'title-run-component\' => \'Component launch\',
+        )
+    );
+    
+    
     $arrayCodeByUrl = array(
         \'index.php\' => \'<? include $_SERVER["DOCUMENT_ROOT"]."/gy/gy.php"; // подключить ядро // include core 
 
@@ -6837,7 +7187,7 @@ function getCodeByUrlPage($page){
                 \\\'includeHtml\\\',
                 \\\'0\\\',
                 array(
-                    \\\'html\\\' => \\\'<h1>Пример использования gy CMS/framework</h1>\\\'
+                    \\\'html\\\' => \\\'<h1>\'.$arLang[$lang][\'html-title\'].\'</h1>\\\'
                 )
             );
 
@@ -6846,7 +7196,7 @@ function getCodeByUrlPage($page){
                 \\\'includeHtml\\\',
                 \\\'0\\\',
                 array(
-                    \\\'html\\\' => \\\'<h4>Вызов компонента "form_auth_test" (1 раз)</h4>\\\'
+                    \\\'html\\\' => \\\'<h4>\'.$arLang[$lang][\'title-show-component\'].\' "form_auth_test" (№ 1)</h4>\\\'
                 )
             );
 
@@ -6864,7 +7214,7 @@ function getCodeByUrlPage($page){
                 \\\'includeHtml\\\',
                 \\\'0\\\',
                 array(
-                    \\\'html\\\' => \\\'<h4>Вызов компонента "form_auth_test" (2 раз)</h4>\\\'
+                    \\\'html\\\' => \\\'<h4>\'.$arLang[$lang][\'title-run-component\'].\' "form_auth_test" (№ 2)</h4>\\\'
                 )
             );
 
@@ -6914,6 +7264,10 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\\\'rus\\\'] = array(
     \\\'add-custom-text\\\' => \\\'Сейчас запущен кастомный (пользовательский) шаблон компонента\\\'
+);
+
+$mess[\\\'eng\\\'] = array(
+    \\\'add-custom-text\\\' => \\\'The custom (custom) component template outputs this text to you\\\'
 );
 \'
     );
@@ -7617,6 +7971,10 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
     \'text-info\' => \'Выведет список контейнеров данных\',
+);
+
+$mess[\'eng\'] = array(
+    \'text-info\' => \'List data containers\',
 );',
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/component/containerdata/',
@@ -7637,6 +7995,19 @@ $mess[\'rus\'] = array(
     \'ok\' => \'ОК\',
     \'title-container-data\' => \'Контейнеры данных\'
 );
+
+$mess[\'eng\'] = array(
+    \'del\' => \'Delete\',
+    \'add\' => \'Add\',
+    \'edit\' => \'Edit\',
+    \'show-element\' => \'Working with data container elements\',
+    \'del-err\' => \'Mistake! try again\',
+    \'del-ok\' => \'Data container deleted!\',
+    \'not-element\' => \'No data containers yet\',
+    \'ok\' => \'OK\',
+    \'title-container-data\' => \'Data containers\'
+);
+
 
 ',
     'TYPE' => 'php',
@@ -7762,6 +8133,9 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
     \'text-info\' => \'Добавление контейнера данных\',
+);
+$mess[\'eng\'] = array(
+    \'text-info\' => \'Adding a data container\',
 );',
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/component/containerdata_add/',
@@ -7778,6 +8152,15 @@ $mess[\'rus\'] = array(
     \'add-err\' => \'Ошибка! попробуйте ещё раз\', 
     \'add-ok\' => \'Контейнер данных успешно создан!\',
     \'ok\' => \'ОК\'
+);
+
+$mess[\'eng\'] = array(
+    \'save\' => \'Create\',
+    \'back\' => \'Cancel\',
+    \'title\' => \'Creating a data container\',
+    \'add-err\' => \'Error! try again\', 
+    \'add-ok\' => \'Data container created successfully!\',
+    \'ok\' => \'OK\'
 );
 
 ',
@@ -7897,6 +8280,11 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 $mess[\'rus\'] = array(
     \'text-info\' => \'Изменение контейнера данных\',
     \'property-ID\' => \'ID контейнера данных\',
+);
+
+$mess[\'eng\'] = array(
+    \'text-info\' => \'Changing the data container\',
+    \'property-ID\' => \'Data container ID\',
 );',
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/component/containerdata_edit/',
@@ -7914,6 +8302,16 @@ $mess[\'rus\'] = array(
     \'add-ok\' => \'Контейнер данных успешно изменён!\',
     \'ok\' => \'ОК\',
     \'edit-property\' => \'Редактировать свойства этого контейнера данных\'
+);
+
+$mess[\'eng\'] = array(
+    \'save\' => \'Save\',
+    \'back\' => \'Cancel\',
+    \'title\' => \'Editing a data container\',
+    \'add-err\' => \'Error! try again\', 
+    \'add-ok\' => \'Data container changed successfully!\',
+    \'ok\' => \'OK\',
+    \'edit-property\' => \'Edit properties of this data container\'
 );
 
 ',
@@ -8080,6 +8478,11 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 $mess[\'rus\'] = array(
     \'text-info\' => \'Работа с элементами контейнера данных\',
     \'property-container-data-id\' => \'Id контейнера данных\',
+);
+
+$mess[\'eng\'] = array(
+    \'text-info\' => \'Working with data container elements\',
+    \'property-container-data-id\' => \'Data container id\',
 );',
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/component/containerdata_element_list/',
@@ -8104,6 +8507,23 @@ $mess[\'rus\'] = array(
     \'del-ok\' => \'! Элемент удалён\',
     \'edit-ok\' => \'Элемент изменён\',
     \'ok\' => \'ОК\'
+);
+
+$mess[\'eng\'] = array(
+    \'ITEMS-NULL\' => \'!No items yet\',
+    \'title-add-element\' => \'Add new item\',
+    \'add\' => \'Add\',
+    \'save\' => \'Edit\',
+    \'back\' => \'Cancel\',
+    \'title\' => \'Data container elements\',
+    \'add-ok\' => \'Item added\',
+    \'add-err\' => \'!Error, please try again\',
+    \'el-edit\' => \'Edit item\',
+    \'el-del\' => \'Remove item\',
+    \'el-view-property\' => \'View item properties\',
+    \'del-ok\' => \'! Item removed\',
+    \'edit-ok\' => \'item edited\',
+    \'ok\' => \'OK\'
 );
 
 ',
@@ -8338,6 +8758,12 @@ $mess[\'rus\'] = array(
     \'text-info\' => \'Работа со свойствами конкретного элемента контейнера данных\',
     \'property-container-data-id\' => \'Id контейнера данных\',
     \'property-el-id\' => \'Id элемента\'
+);
+
+$mess[\'eng\'] = array(
+    \'text-info\' => \'Working with the properties of a specific item in a data container\',
+    \'property-container-data-id\' => \'Data container id\',
+    \'property-el-id\' => \'Item id\'
 );',
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/component/containerdata_element_property/',
@@ -8358,6 +8784,19 @@ $mess[\'rus\'] = array(
     \'save-ok\' => \'Свойства сохранены\',
     \'PROPERTY_NULL\' => \'! Элементов не найдено\',
     \'ok\' => \'ОК\'
+);
+
+$mess[\'eng\'] = array(
+    \'save\' => \'Save\',
+    \'back\' => \'Cancel\',
+    \'title\' => \'Item property values\',
+    \'name\' =>  \'Name\',
+    \'code\' =>  \'Сode\',
+    \'type\'  => \'Type property\',
+    \'value\' => \'Value\',
+    \'save-ok\' => \'Properties saved\',
+    \'PROPERTY_NULL\' => \'! No items found\',
+    \'ok\' => \'OK\'
 );
 
 ',
@@ -8561,6 +9000,13 @@ $mess[\'rus\'] = array(
     \'property-container-data-code\' => \'Код контейнера данных\',
     \'property-element-code\' => \'Код элемента\',
     \'property-cacheTime\' => \'Время кеширования\'
+);
+
+$mess[\'eng\'] = array(
+    \'text-info\' => \'Outputting a data container item\',
+    \'property-container-data-code\' => \'Data container code\',
+    \'property-element-code\' => \'Item code\',
+    \'property-cacheTime\' => \'Caching time\'
 );',
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/component/containerdata_element_show/',
@@ -8665,6 +9111,11 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 $mess[\'rus\'] = array(
     \'text-info\' => \'Работа с свойствами элементов контейнера данных (можно задавать свойства, которые будут доступны для заполнения у всех элементов конкретного контейнера данных)\',
     \'property-container-data-id\' => \'Id контейнера данных\'
+);
+
+$mess[\'eng\'] = array(
+    \'text-info\' => \'Working with properties of elements of a data container (you can set properties that will be available for filling for all elements of a specific data container)\',
+    \'property-container-data-id\' => \'Data container id\'
 );',
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/component/containerdata_property_edit/',
@@ -8688,6 +9139,19 @@ $mess[\'rus\'] = array(
     \'del-property-ok\' => \'! свойство этого контейнера данных удалено\'
 );
 
+$mess[\'eng\'] = array(
+    \'save\' => \'Save\',
+    \'back\' => \'Cancel\',
+    \'not-property\' => \'properties not set\',
+    \'title-add-property\' => \'Add new property\',
+    \'add-property\' => \'Add\',
+    \'add-ok\' => \'property added\',
+    \'add-err\' => \'Error! try again\',
+    \'add-err-not-type\' => \'Error! property type not selected\',
+    \'ok\' => \'OK\',
+    \'del-btn\' => \'Delete\',
+    \'del-property-ok\' => \'! property of this data container has been removed\'
+);
 ',
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/component/containerdata_property_edit/teplates/0/',
@@ -8787,6 +9251,10 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
  * (заранее обговорено какие есть разделы в модуле)
  */
 
+// языковой файл
+global $lang;
+include \'lang_init.php\';
+
 // компоненты которые есть в модуле
 $componentsThisModule = array(
     \'containerdata\',
@@ -8815,7 +9283,7 @@ $adminPageThisModule = array(
 
 // кнопки для меню админки
 $pagesFromAdminMenu = array(
-    \'Контейнеры данных\' => \'/gy/admin/get-admin-page.php?page=container-data\'
+    $mess[$lang][\'name-button\'] => \'/gy/admin/get-admin-page.php?page=container-data\'
 );
 
 // пользовательское действие, и если оно разрешено текущему пользователю то он увидит 
@@ -8940,7 +9408,7 @@ if($isRunConsole){
     echo $br.\'install sest content - containerData = start\';
 
     // добавить контейнер данных - контент
-    containerData::addContainerData(array(\'code\'=> \'Content\',\'name\'=> \'Контент2\'));
+    containerData::addContainerData(array(\'code\'=> \'Content\',\'name\'=> \'Контент2 | Content2\'));
 
     $dataContentContainerData = containerData::getContainerData(array(\'=\' => array(\'code\', "\'Content\'")), array(\'*\'));
 
@@ -8950,7 +9418,7 @@ if($isRunConsole){
             \'id_type_property\' => 1,
             \'id_container_data\' => $dataContentContainerData[0][\'id\'],
             \'code\' => \'html-code\',
-            \'name\' => \'html вставка\'
+            \'name\' => \'html вставка | html code\'
         )
     );
 
@@ -8959,7 +9427,7 @@ if($isRunConsole){
         array(
             \'section_id\' => 0,
             \'code\' => \'html-index-page\',
-            \'name\' => \'Приветствие на главной\',
+            \'name\' => \'Приветствие на главной | Welcome on the main\',
             \'id_container_data\' => $dataContentContainerData[0][\'id\']
         )
     );
@@ -8993,7 +9461,8 @@ if($isRunConsole){
         $dataElement[\'id\'], 
         $prop[\'id\'],  
         \'value_propertys_type_html\', 
-        \'Привет пользователь, тебя приветствует gy php framework\'.$br.\' и текст показан из его контентной части!!!\'
+        \'Привет пользователь, тебя приветствует gy php framework\'.$br.\' и текст показан из его контентной части!!!\'.
+            \'| Hello user, you are greeted by the gy php framework and the text is shown from its content part !!!\'
     );
 
     echo $br.\'install sest content - containerData = OK!\';
@@ -9005,7 +9474,7 @@ if($isRunConsole){
         \'action_user\', 
         array(
             \'code\' => \'edit_container_data\', 
-            \'text\' => \'Изменение всех container-data\', 
+            \'text\' => \'Изменение всех container-data | Edit all container-data\', 
         )
     );
     
@@ -9021,8 +9490,8 @@ if($isRunConsole){
         \'access_group\', 
         array(
             \'code\' => \'content\', 
-            \'name\' => \'Контент\',
-            \'text\' => \'Те кто изменяют контент сайта\',
+            \'name\' => \'Контент | Сontent\',
+            \'text\' => \'Те кто изменяют контент сайта | Those who can change the content of the site\',
             \'code_action_user\' => \'edit_container_data\'
         )
     );
@@ -9033,11 +9502,26 @@ if($isRunConsole){
     echo $br.\'--install table module - containerData = OK!--\'.$br;
     
 }else{
-    echo \'! нужно запустить скрипт в консоли\';
+    echo \'! Error. You need to run the script in the console\';
 
 }',
     'TYPE' => 'php',
     'DIR' => './gy/modules/containerdata/install/',
+  ),
+  './gy/modules/containerdata/lang_init.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'name-button\' => \'Контейнеры данных\'
+);
+
+$mess[\'eng\'] = array(
+    \'name-button\' => \'Data containers\'
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/containerdata/',
   ),
   './gy/modules/filemodule/admin/work-page-site.php' => 
   array (
@@ -9739,6 +10223,10 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
 
 $mess[\'rus\'] = array(
     \'text-info\' => \'Редактор страниц сайта (и конструктор по компонентам)\',
+);
+
+$mess[\'eng\'] = array(
+    \'text-info\' => \'Site page editor (and component builder)\',
 );',
     'TYPE' => 'php',
     'DIR' => './gy/modules/filemodule/component/work_page_site/',
@@ -9789,6 +10277,46 @@ $mess[\'rus\'] = array(
     \'param-info-text\' => \'Описание\'
 );
 
+$mess[\'eng\'] = array(
+    \'title-edit-file\' => \'Working with site pages\',
+    \'text-input-url-page\' => \'Specify the path to the page on which you want to perform an action\',
+    \'ok\' => \'ok\',
+    \'add-ok\' => \'Page created successfully\',
+    \'del-ok\' => \'Page successfully deleted\',
+    \'text-edit-page\' => \'You are editing the page\',
+    \'err\' => \'An error has occurred\',
+    \'edit-ok\' => \'Page changed successfully\',
+    \'title-action-5\' => \'Page Builder (edit by component)\',
+    \'title-action-4-show-page\' => \'View page\',
+    \'title-delete-page\' => \'Delete page\',
+    \'title-edit-page\' => \'Edit page\',
+    \'title-add-page\' => \'Create page (replaces if already exists)\',
+    \'text-include-components\' => \'The page has connected components - \',
+    \'text-include-this-component\' => \'Component - \',
+    \'name-template\' => \'Template name:\',
+    \'params-component\' => \'Component call parameters:\',
+    \'param-name\' => \'Parameter name\',
+    \'param-value\' => \'Parameter value\',
+    \'text-button-save\' => \'Save\',
+    \'text-button-save2\' => \'Save Page\',
+    \'text-button-del-component\' => \'Remove this component (and save changes)\',
+    \'include-component\' => \'Called Component of Page #\',
+    \'text-button-up-component\' => \'Move component up (and save changes)\',
+    \'text-button-down-component\' => \'Move component below (and save changes)\',
+    \'add-component\' => \'Add component below\',
+    \'warning-text-1\' => \'Attention! the page code decorated with non-components will be destroyed.\',
+    \'title-action-8\' => \'Adding a new component to the page\',
+    \'name-new-component\' => \'Enter component name\',
+    \'name-new-template\' => \'Enter a name for the component template (0 is the default)\',
+    \'next\' => \'Next\',
+    \'not-component\' => \'The selected component does not exist\',
+    \'next_final\' => \'Add component\',
+    \'this_component\' => \'Component selected\',
+    \'this_v_component\' => \'Component version\',
+    \'this_component_text_info\' => \'Component Description\',
+    \'this_template_component\' => \'Selected component template\',
+    \'param-info-text\' => \'Description\'
+);
 ',
     'TYPE' => 'php',
     'DIR' => './gy/modules/filemodule/component/work_page_site/teplates/0/',
@@ -10113,6 +10641,10 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
  * (заранее обговорено какие есть разделы в модуле)
  */
 
+// языковой файл
+global $lang;
+include \'lang_init.php\';
+
 // компоненты которые есть в модуле
 $componentsThisModule = array(
     \'work_page_site\'
@@ -10132,7 +10664,7 @@ $adminPageThisModule = array(
 
 // кнопки для меню админки
 $pagesFromAdminMenu = array(
-    \'Работа со страницами сайта\' => \'/gy/admin/get-admin-page.php?page=work-page-site\'
+    $mess[$lang][\'name-button\'] => \'/gy/admin/get-admin-page.php?page=work-page-site\'
 );
 
 // пользовательское действие, и если оно разрешено текущему пользователю то он увидит 
@@ -10144,6 +10676,21 @@ $nameThisModule = \'filemodule\';
 
 //версия текущего модуля
 $versionThisModule = \'0.1\';',
+    'TYPE' => 'php',
+    'DIR' => './gy/modules/filemodule/',
+  ),
+  './gy/modules/filemodule/lang_init.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'name-button\' => \'Работа со страницами сайта\'
+);
+
+$mess[\'eng\'] = array(
+    \'name-button\' => \'Working with site pages\'
+);',
     'TYPE' => 'php',
     'DIR' => './gy/modules/filemodule/',
   ),

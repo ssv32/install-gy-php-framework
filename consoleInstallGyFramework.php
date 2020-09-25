@@ -5047,6 +5047,67 @@ if (!empty($arParam[\'back-url\']) && empty($arRes["stat"])){?>
     'TYPE' => 'php',
     'DIR' => './gy/component/edit_user/teplates/0/',
   ),
+  './gy/component/footer/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/component/footer/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'footer\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/footer/',
+  ),
+  './gy/component/footer/controller.php' => 
+  array (
+    'CODE' => '<?php 
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+// показать шаблон
+$this->template->show($arRes, $this->arParam);
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/footer/',
+  ),
+  './gy/component/footer/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Подвал сайта\',
+);
+
+$mess[\'eng\'] = array(
+    \'text-info\' => \'Footer site\',
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/footer/',
+  ),
+  './gy/component/footer/teplates/0/lang_template.php' => 
+  array (
+    'CODE' => '<? // языковой файл для шаблона компонента
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/footer/teplates/0/',
+  ),
+  './gy/component/footer/teplates/0/template.php' => 
+  array (
+    'CODE' => '<?if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );?>
+
+    </body>  
+</html>',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/footer/teplates/0/',
+  ),
   './gy/component/form_auth/componentInfo.php' => 
   array (
     'CODE' => '<?
@@ -5611,6 +5672,153 @@ if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );?
 <?}',
     'TYPE' => 'php',
     'DIR' => './gy/component/gy_options/teplates/0/',
+  ),
+  './gy/component/header/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/component/header/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'header\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/header/',
+  ),
+  './gy/component/header/controller.php' => 
+  array (
+    'CODE' => '<?php 
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+// показать шаблон
+$this->template->show($arRes, $this->arParam);
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/header/',
+  ),
+  './gy/component/header/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'Шапка сайта\',
+);
+
+$mess[\'eng\'] = array(
+    \'text-info\' => \'Header site\',
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/header/',
+  ),
+  './gy/component/header/teplates/0/lang_template.php' => 
+  array (
+    'CODE' => '<? // языковой файл для шаблона компонента
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/header/teplates/0/',
+  ),
+  './gy/component/header/teplates/0/template.php' => 
+  array (
+    'CODE' => '<?if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+global $app;
+?>
+
+<html>
+    <head>
+        <?
+        // вывести title и СЕО метатеги
+        if(!empty($arParam[\'seo-meta-tag-head\'])){
+            $app->component(
+                \'hed-meta-tag-seo\',
+                \'0\',
+                $arParam[\'seo-meta-tag-head\']
+            );
+        }
+        
+        ?>
+    </head>
+    <body>  ',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/header/teplates/0/',
+  ),
+  './gy/component/hed-meta-tag-seo/componentInfo.php' => 
+  array (
+    'CODE' => '<?
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+global $app;
+$utlThisComponent = "/gy/component/hed-meta-tag-seo/";
+$langComponentInfo = new lang($app->urlProject.$utlThisComponent, \'componentInfo\', $app->options[\'lang\']);
+
+$componentInfo = array(
+    \'name\' => \'hed-meta-tag-seo\',
+    \'text-info\' => $langComponentInfo->GetMessage(\'text-info\'),
+    \'v\' => \'0.1\',
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/hed-meta-tag-seo/',
+  ),
+  './gy/component/hed-meta-tag-seo/controller.php' => 
+  array (
+    'CODE' => '<?php 
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+// показать шаблон
+$this->template->show($arRes, $this->arParam);
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/hed-meta-tag-seo/',
+  ),
+  './gy/component/hed-meta-tag-seo/lang_componentInfo.php' => 
+  array (
+    'CODE' => '<? // языковой файл для componentInfo.php
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'text-info\' => \'CEO метатеги для <head>\',
+);
+
+$mess[\'eng\'] = array(
+    \'text-info\' => \'SEO tag in <meta> for <head> \',
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/hed-meta-tag-seo/',
+  ),
+  './gy/component/hed-meta-tag-seo/teplates/0/lang_template.php' => 
+  array (
+    'CODE' => '<? // языковой файл для шаблона компонента
+if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );
+
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/hed-meta-tag-seo/teplates/0/',
+  ),
+  './gy/component/hed-meta-tag-seo/teplates/0/template.php' => 
+  array (
+    'CODE' => '<?if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );?>
+
+<?if(!empty($arParam[\'title\'])){?>
+    <title><?=$arParam[\'title\']?></title>
+<?}?>
+
+<?if(!empty($arParam[\'descriptions\'])){?>
+    <meta name="descriptions" content="<?=$arParam[\'descriptions\']?>">
+<?}?>
+
+<?if(!empty($arParam[\'keywords\'])){?>
+    <meta name="keywords" content="<?=$arParam[\'keywords\']?>">
+<?}?>
+',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/hed-meta-tag-seo/teplates/0/',
   ),
   './gy/component/includeHtml/componentInfo.php' => 
   array (
@@ -6690,10 +6898,9 @@ function GetMessageCore($code_text) {
   ),
   './gy/images/fon.png' => 
   array (
-    'CODE' => '�PNG
+    'CODE' => '�PNG
 
-' . "\0" . '' . "\0" . '' . "\0" . '
-IHDR' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . 'ש��' . "\0" . '' . "\0" . '' . "\0" . 'tEXtSoftware' . "\0" . 'Adobe ImageReadyq�e<' . "\0" . '' . "\0" . ' iTXtXML:com.adobe.xmp' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '<?xpacket begin="﻿" id="W5M0MpCehiHzreSzNTczkc9d"?> <x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 5.0-c060 61.134777, 2010/02/12-17:32:00        "> <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"> <rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/" xmlns:stRef="http://ns.adobe.com/xap/1.0/sType/ResourceRef#" xmp:CreatorTool="Adobe Photoshop CS5 Windows" xmpMM:InstanceID="xmp.iid:0F0274D29CFD11EA92E7AE773D58B7DC" xmpMM:DocumentID="xmp.did:0F0274D39CFD11EA92E7AE773D58B7DC"> <xmpMM:DerivedFrom stRef:instanceID="xmp.iid:0F0274D09CFD11EA92E7AE773D58B7DC" stRef:documentID="xmp.did:0F0274D19CFD11EA92E7AE773D58B7DC"/> </rdf:Description> </rdf:RDF> </x:xmpmeta> <?xpacket end="r"?>�1	L' . "\0" . '' . "\0" . '' . "\0" . 'PLTE������:���' . "\0" . '' . "\0" . '' . "\0" . 'tRNS�' . "\0" . '�0J' . "\0" . '' . "\0" . '' . "\0" . '%IDATx�b`ddd``�$p�32��jb�)9�!�*�' . "\0" . '' . "\0" . 'S�!�b��' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . 'IEND�B`�',
+' . "\0" . '' . "\0" . '' . "\0" . 'IHDR' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . 'ש��' . "\0" . '' . "\0" . '' . "\0" . 'tEXtSoftware' . "\0" . 'Adobe ImageReadyq�e<' . "\0" . '' . "\0" . ' iTXtXML:com.adobe.xmp' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . '<?xpacket begin="﻿" id="W5M0MpCehiHzreSzNTczkc9d"?> <x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 5.0-c060 61.134777, 2010/02/12-17:32:00        "> <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"> <rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/" xmlns:stRef="http://ns.adobe.com/xap/1.0/sType/ResourceRef#" xmp:CreatorTool="Adobe Photoshop CS5 Windows" xmpMM:InstanceID="xmp.iid:0F0274D29CFD11EA92E7AE773D58B7DC" xmpMM:DocumentID="xmp.did:0F0274D39CFD11EA92E7AE773D58B7DC"> <xmpMM:DerivedFrom stRef:instanceID="xmp.iid:0F0274D09CFD11EA92E7AE773D58B7DC" stRef:documentID="xmp.did:0F0274D19CFD11EA92E7AE773D58B7DC"/> </rdf:Description> </rdf:RDF> </x:xmpmeta> <?xpacket end="r"?>�1	L' . "\0" . '' . "\0" . '' . "\0" . 'PLTE������:���' . "\0" . '' . "\0" . '' . "\0" . 'tRNS�' . "\0" . '�0J' . "\0" . '' . "\0" . '' . "\0" . '%IDATx�b`ddd``�$p�32��jb�)9�!�*�' . "\0" . '' . "\0" . 'S�!�b��' . "\0" . '' . "\0" . '' . "\0" . '' . "\0" . 'IEND�B`�',
     'TYPE' => 'png',
     'DIR' => './gy/images/',
   ),
@@ -7179,6 +7386,18 @@ function getCodeByUrlPage($page, $lang){
         \'index.php\' => \'<? include $_SERVER["DOCUMENT_ROOT"]."/gy/gy.php"; // подключить ядро // include core 
 
             $app->component(
+                \\\'header\\\',
+                \\\'0\\\',
+                array(
+                    \\\'seo-meta-tag-head\\\' => array(
+                        \\\'title\\\' => \\\'Gy - framework/CMS, demo site 1\\\',
+                        \\\'descriptions\\\' => \\\'Test text gy - framework/CMS demo site 1 meta descriptions\\\',
+                        \\\'keywords\\\' => \\\'gy, framework, CMS, demo, site, site 1\\\'
+                    ) 
+                )
+            );
+
+            $app->component(
                 \\\'admin-button-public-site\\\',
                 \\\'0\\\',
                 array()
@@ -7242,6 +7461,13 @@ function getCodeByUrlPage($page, $lang){
                     \\\'cacheTime\\\' => 86400 // закешить на 24 ч.
                 )
             );
+
+            $app->component(
+                \\\'footer\\\',
+                \\\'0\\\',
+                array()
+            );
+
         \',
         \'customDir\\component\\containerdata_element_show\\teplates\\0\\template.php\' => \'<?if ( !defined("GY_CORE") && (GY_CORE !== true) ) die( "gy: err include core" );?>
 

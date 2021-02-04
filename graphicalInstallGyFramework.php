@@ -705,7 +705,7 @@ if(isset($data['step']) && in_array($data['step'], $steps)){
         // проверить всё ли есть для БД
         if(!empty($data['db_type'])){ 
             $setProperty['db_type'] = $data['db_type'];
-            if( in_array( $data['db_type'], array( 'mysql', 'pgsql' ) ) ){
+            if( in_array( $data['db_type'], array( 'MySql', 'PgSql' ) ) ){
                 foreach (array('db_host', 'db_user', 'db_pass', 'db_name') as $value) {
                     if(empty($data[$value])){
                         $flag = false;
@@ -879,9 +879,9 @@ function getCoreConfigInfo(){
             'name' => 'db_type',
             'text' => 'Тип базы данных (БД) <br/><span style="color: #45af45;">Database type (DB)</span>',
             'value' => array(
-                'mysql',
+                'MySql',
                 'PhpFileSqlClientForGy',
-                'pgsql'
+                'PgSql'
             )
         ),
         array(

@@ -868,7 +868,7 @@ function getCoreConfigInfo(){
             'name' => 'type_cache',
             'text' => 'Тип кеша |<span style="color: #45af45;">cahe type</span>',
             'value' => array(
-                'cacheFiles'
+                'CacheFiles'
             )
         ),
         array(

@@ -7608,7 +7608,7 @@ $gyConfig = array(
         "db_name" => "gy_db",
     ),
     "type_cache" => "CacheFiles",
-    "v-gy" => "0.3-alpha",
+    "v-gy" => "0.2-alpha",
 );
 ',
     'TYPE' => 'php',
@@ -8223,10 +8223,9 @@ if ($isRunConsole) {
             mkdir(__DIR__.\'/../../customDir/classes/\', 0755, true);
 
             // записать файлы /customDir
-            file_put_contents(__DIR__.\'/../../customDir\\component\\containerdata_element_show\\teplates\\0\\template.php\', getCodeByUrlPage(\'customDir\\component\\containerdata_element_show\\teplates\\0\\template.php\', $lang));
-            file_put_contents(__DIR__.\'/../../customDir\\component\\containerdata_element_show\\teplates\\0\\style.css\', getCodeByUrlPage(\'customDir\\component\\containerdata_element_show\\teplates\\0\\style.css\', $lang));
-            file_put_contents(__DIR__.\'/../../customDir\\component\\containerdata_element_show\\teplates\\0\\lang_template.php\', getCodeByUrlPage(\'customDir\\component\\containerdata_element_show\\teplates\\0\\lang_template.php\', $lang));
-
+            file_put_contents(__DIR__.\'/../../customDir/component/containerdata_element_show/teplates/0/template.php\', getCodeByUrlPage(\'./customDir/component/containerdata_element_show/teplates/0/template.php\', $lang));
+            file_put_contents(__DIR__.\'/../../customDir/component/containerdata_element_show/teplates/0/style.css\', getCodeByUrlPage(\'./customDir/component/containerdata_element_show/teplates/0/style.css\', $lang));
+            file_put_contents(__DIR__.\'/../../customDir/component/containerdata_element_show/teplates/0/lang_template.php\', getCodeByUrlPage(\'./customDir/component/containerdata_element_show/teplates/0/lang_template.php\', $lang));
             echo \'Install = OK!\';
         } else {
             echo \'! Did not install. The main page file already exists.\';
@@ -8341,7 +8340,7 @@ function getCodeByUrlPage($page, $lang){
             );
 
         \',
-        \'customDir\\component\\containerdata_element_show\\teplates\\0\\template.php\' => \'<?php if (!defined("GY_CORE") && (GY_CORE !== true)) die( "gy: err include core" );?>
+        \'./customDir/component/containerdata_element_show/teplates/0/template.php\' => \'<?php if (!defined("GY_CORE") && (GY_CORE !== true)) die( "gy: err include core" );?>
 
 <div class="user_custom_div">
     
@@ -8354,11 +8353,11 @@ function getCodeByUrlPage($page, $lang){
     <br/>(<?=$this->lang->getMessage(\\\'add-custom-text\\\');?>)
       
 </div>\',
-        \'customDir\\component\\containerdata_element_show\\teplates\\0\\style.css\' => \'.user_custom_div{
+        \'./customDir/component/containerdata_element_show/teplates/0/style.css\' => \'.user_custom_div{
     background-color: #21a2ff; 
     color: #05ff07;
 }\',
-        \'customDir\\component\\containerdata_element_show\\teplates\\0\\lang_template.php\' => \'<?php // языковой файл для шаблона компонента
+        \'./customDir/component/containerdata_element_show/teplates/0/lang_template.php\' => \'<?php // языковой файл для шаблона компонента
 if (!defined("GY_CORE") && (GY_CORE !== true)) die( "gy: err include core" );
 
 $mess[\\\'rus\\\'] = array(

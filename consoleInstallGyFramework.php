@@ -496,6 +496,12 @@ if (Gy\\Core\\User\\AccessUserGroup::accessThisUserByAction( \'show_admin_panel\
     'TYPE' => 'php',
     'DIR' => './gy/admin/',
   ),
+  './gy/cache/component_container_data_element_show.php' => 
+  array (
+    'CODE' => '<? $cacheData = \'{"data":{"ITEMS":{"1":{"id":"1","id_container_data":"1","id_element_container_data":"1","id_property_container_data":"1","value":"\\u041f\\u0440\\u0438\\u0432\\u0435\\u0442 \\u043f\\u043e\\u043b\\u044c\\u0437\\u043e\\u0432\\u0430\\u0442\\u0435\\u043b\\u044c, \\u0442\\u0435\\u0431\\u044f \\u043f\\u0440\\u0438\\u0432\\u0435\\u0442\\u0441\\u0442\\u0432\\u0443\\u0435\\u0442 gy php framework\\r\\n \\u0438 \\u0442\\u0435\\u043a\\u0441\\u0442 \\u043f\\u043e\\u043a\\u0430\\u0437\\u0430\\u043d \\u0438\\u0437 \\u0435\\u0433\\u043e \\u043a\\u043e\\u043d\\u0442\\u0435\\u043d\\u0442\\u043d\\u043e\\u0439 \\u0447\\u0430\\u0441\\u0442\\u0438!!!!!"}}},"createTime":1612210567,"cacheTime":86400}\';',
+    'TYPE' => 'php',
+    'DIR' => './gy/cache/',
+  ),
   './gy/classes/Gy/Core/AbstractClasses/Cache.php' => 
   array (
     'CODE' => '<?php 
@@ -7595,16 +7601,14 @@ $gyConfig = array(
     "lang" => "rus",
     "sole" => "pass1021asz#_@)A",
     "db_config" => array(
-       \'db_type\' => \'MySql\', 
-        \'db_host\' => \'localhost\',
-        \'db_user\' => \'root\', // заменить на настоящего пользователя // replace by true user 
-        \'db_pass\' => \'\', 
-        \'db_name\' => \'gy_db\',
-        \'db_port\' => \'31006\',
+        "db_type" => "MySql",
+        "db_host" => "localhost",
+        "db_user" => "root",
+        "db_pass" => "******",
+        "db_name" => "gy_db",
     ),
     "type_cache" => "CacheFiles",
-    "v-gy" => "0.2-alpha",
-    "404" => "/404.php",
+    "v-gy" => "0.3-alpha",
 );
 ',
     'TYPE' => 'php',
@@ -7705,7 +7709,7 @@ if ( !defined("GY_CORE") ) {
 
     global $APP;
     // добавлю версию ядра gy
-    $gyConfig[\'v-gy\'] = \'0.2-alpha\';
+    $gyConfig[\'v-gy\'] = \'0.3-alpha\';
     $APP = App::createApp($URL_PROJECT, $gyConfig);
     unset($gyConfig);
 
@@ -8201,8 +8205,10 @@ if ($isRunConsole) {
     if ($argv[1] == \'start\') {
 
         if (!file_exists(__DIR__.\'/../../index.php\')) {
-
-            define("GY_CORE", true); // хак
+	
+            if(!defined(\'GY_CORE\')){
+                define("GY_CORE", true); // хак
+            }
             include(__DIR__.\'/../../gy/config/gy_config.php\'); // подключение настроек ядра // include options
             if (!empty($gyConfig[\'lang\']) && in_array($gyConfig[\'lang\'], array(\'rus\', \'eng\'))) {
                 $lang = $gyConfig[\'lang\'];
@@ -12064,6 +12070,136 @@ $logger->emergency("Emergency message");
 */',
     'TYPE' => 'php',
     'DIR' => './gy/test/',
+  ),
+  './gy/tests/infoBox.php' => 
+  array (
+    'CODE' => '<?
+
+include "../gy.php"; 
+
+echo \'core - ok \';
+
+// container-data
+//$res = containerData::getContainerData(array(), array(\'*\') );
+//$res = containerData::addContainerData(array(\'name\' => \'asd\', \'code\'=> \'asd1\'));
+//$res = containerData::deleteContainerData(array(\'>\' => array(\'id\', 3)));
+
+// property container-data
+//$res = containerData::getPropertysContainerData(array(\'=\' => array(\'id_container_data\', 12)));
+
+//$arr = array(
+//    \'id_type_property\' => 1,
+//    \'id_container_data\' => 12,
+//    \'code\' => \'html 12\',
+//    \'name\' => \'html вставка\'
+//);
+//
+//$res = containerData::addPropertyContainerData( $arr );
+
+
+//$res = containerData::getAllTypePropertysContainerData();
+
+/*
+$res = containerData::deletePropertyContainerData( 17, 18);
+
+print_r($res);
+*/
+
+
+//$cache = new cacheFiles($app->url);
+//
+//
+//
+//$cacheName = \'getContainerData\';
+//$cacheTime = 120;
+//        
+//if($cache->cacheInit($cacheName, $cacheTime)){
+//    $data = $cache->getCacheData();
+//    echo \'cache ok)))\';
+//}else{
+//    echo \'cache NOT (((\';
+//    $data = array(\'test\' => \'test1\');
+//    $cache->setCacheData($data);
+//}
+//
+//echo "<pre>";
+//print_r($data);
+//echo "</pre>>";
+//
+//
+//$cache = new cache($app->url);
+//
+//$cacheName = \'getContainerData2\';
+//$cacheTime = 90;
+//        
+//if($cache->cacheInit($cacheName, $cacheTime)){
+//    $data = $cache->getCacheData();
+//    echo \'cache ok)))\';
+//}else{
+//    echo \'cache NOT (((\';
+//    $data = \'asdasd\';
+//    $cache->setCacheData($data);
+//}
+//
+//echo "<pre>";
+//print_r($data);
+//echo "</pre>>";',
+    'TYPE' => 'php',
+    'DIR' => './gy/tests/',
+  ),
+  './gy/tests/test.php' => 
+  array (
+    'CODE' => '<?
+
+include "../gy.php"; 
+
+echo \'core - ok \';
+
+//$res = accessUserGroup::getAccessGroup();
+//$res = accessUserGroup::getUserAction();
+//$res = accessUserGroup::getListGroupsByUser(2);
+
+//$res = accessUserGroup::deleteUserInAllGroups(2);
+
+//$res = accessUserGroup::addUserInGroup(2, \'user_admin\');
+//$res = accessUserGroup::addUserInGroup(2, \'content\');
+
+//$res = accessUserGroup::deleteAllActionsForGroup(\'user_admin\');
+//$res = accessUserGroup::addOptionsGroup(\'user_admin\', \'edit_container_data\');
+//echo "res <pre>";
+//print_r($res);
+//echo "</pre>";
+//$res = accessUserGroup::addOptionsGroup(\'user_admin\', \'edit_users\');
+
+//$res = accessUserGroup::accessThisUserByAction( \'edit_users\');
+
+//$res = accessUserGroup::accessUser( 2, \'action_all\' );
+
+//$res = accessUserGroup::addUserGroup(
+//    array(
+//        \'code\' => \'test\',
+//        \'text\' => \'test text\',
+//        \'name\' => \'test test 0\'
+//    ),
+//    array( \'show_admin_panel\', \'edit_users\' )
+//);
+
+// $res = accessUserGroup::deleteUserGroupByCode(\'test\');
+
+
+$res = accessUserGroup::getAccessGroup();
+
+echo "res <pre>";
+print_r($res);
+echo "</pre>";
+
+$res = accessUserGroup::getUserAction();
+
+echo "res <pre>";
+print_r($res);
+echo "</pre>";',
+    'TYPE' => 'php',
+    'DIR' => './gy/tests/',
   ),
 );
         

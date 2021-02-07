@@ -496,12 +496,6 @@ if (Gy\\Core\\User\\AccessUserGroup::accessThisUserByAction( \'show_admin_panel\
     'TYPE' => 'php',
     'DIR' => './gy/admin/',
   ),
-  './gy/cache/component_container_data_element_show.php' => 
-  array (
-    'CODE' => '<? $cacheData = \'{"data":{"ITEMS":{"1":{"id":"1","id_container_data":"1","id_element_container_data":"1","id_property_container_data":"1","value":"\\u041f\\u0440\\u0438\\u0432\\u0435\\u0442 \\u043f\\u043e\\u043b\\u044c\\u0437\\u043e\\u0432\\u0430\\u0442\\u0435\\u043b\\u044c, \\u0442\\u0435\\u0431\\u044f \\u043f\\u0440\\u0438\\u0432\\u0435\\u0442\\u0441\\u0442\\u0432\\u0443\\u0435\\u0442 gy php framework\\r\\n \\u0438 \\u0442\\u0435\\u043a\\u0441\\u0442 \\u043f\\u043e\\u043a\\u0430\\u0437\\u0430\\u043d \\u0438\\u0437 \\u0435\\u0433\\u043e \\u043a\\u043e\\u043d\\u0442\\u0435\\u043d\\u0442\\u043d\\u043e\\u0439 \\u0447\\u0430\\u0441\\u0442\\u0438!!!!!"}}},"createTime":1612210567,"cacheTime":86400}\';',
-    'TYPE' => 'php',
-    'DIR' => './gy/cache/',
-  ),
   './gy/classes/Gy/Core/AbstractClasses/Cache.php' => 
   array (
     'CODE' => '<?php 
@@ -4674,7 +4668,7 @@ function checkProperty($arr, $arRes){
     return $result;
 }
 
-if (!empty($data[\'Добавить\']) && ($data[\'Добавить\'] == \'Добавить\')) {
+if (!empty($data[$this->lang->getMessage(\'button\')]) && ($data[$this->lang->getMessage(\'button\')] == $this->lang->getMessage(\'button\'))) {
     if (checkProperty($data, $arRes)) {
         // добавление пользователя
         global $USER;
@@ -4714,7 +4708,7 @@ if (!empty($data[\'Добавить\']) && ($data[\'Добавить\'] == \'Д�
         }
 
     } else {
-        $arRes["stat-text"] = \'! Не все поля заполнены\';
+        $arRes["stat-text"] = $this->lang->getMessage(\'err_property\') ; // ! Не все поля заполнены
         $arRes["stat"] = \'err\';
     }
 
@@ -4747,6 +4741,23 @@ $mess[\'rus\'] = array(
 $mess[\'eng\'] = array(
     \'text-info\' => \'The component is needed to add a user\',
     \'property-back-url\' => \'Link to the page from where the user is being added\',
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/add_user/',
+  ),
+  './gy/component/add_user/lang_controller.php' => 
+  array (
+    'CODE' => '<?php 
+if (!defined("GY_CORE") && (GY_CORE !== true)) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'button\' => \'Добавить\',
+    \'err_property\' => \'! Не все поля заполнены\'
+);
+
+$mess[\'eng\'] = array(
+    \'button\' => \'Add\',
+    \'err_property\' => \'! Not all fields are filled\'
 );',
     'TYPE' => 'php',
     'DIR' => './gy/component/add_user/',
@@ -5732,13 +5743,12 @@ if (!empty($this->arParam[\'id-user\'])) {
     unset($arRes[\'userData\'][\'pass\']);
 }
 
-if (!empty($data[\'Сохранить\'])
-    && ($data[\'Сохранить\'] == \'Сохранить\')
+if (!empty($data[$this->lang->getMessage(\'button\')])
+    && ($data[$this->lang->getMessage(\'button\')] == $this->lang->getMessage(\'button\'))
     && !empty($data[\'edit-id\'])
     && is_numeric($data[\'edit-id\'])
     && ($data[\'edit-id\'] != 1)
 ) {
-
     if (checkProperty($data, $arRes)) {
 
         // подготовить массив данных для обновления пользователей
@@ -5761,15 +5771,14 @@ if (!empty($data[\'Сохранить\'])
         if ($res) {
             $arRes["stat"] = \'ok\';
         } else {
-            $arRes["stat-text"] = \'! Не все поля заполнены\';
+            $arRes["stat-text"] = $this->lang->getMessage(\'err_property\'); 
             $arRes["stat"] = \'err\';
         }
 
     } else {
-        $arRes["stat-text"] = \'! Не все поля заполнены\';
+        $arRes["stat-text"] = $this->lang->getMessage(\'err_property\');
         $arRes["stat"] = \'err\';
     }
-
 
 } elseif ((!empty($arRes["stat"]) && ($arRes["stat"] != \'err\')) || empty($arRes["stat"])) {
     $arRes["stat"] = \'edit\';
@@ -5802,6 +5811,23 @@ $mess[\'eng\'] = array(
     \'text-info\' => \'User editing\',
     \'property-back-url\' => \'Link to the page where the editing is coming from\',
     \'property-id-user\' => \'Id of the User to be edited\'
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/edit_user/',
+  ),
+  './gy/component/edit_user/lang_controller.php' => 
+  array (
+    'CODE' => '<?php 
+if (!defined("GY_CORE") && (GY_CORE !== true)) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'button\' => \'Сохранить\',
+    \'err_property\' => \'! Не все поля заполнены\'
+);
+
+$mess[\'eng\'] = array(
+    \'button\' => \'Save\',
+    \'err_property\' => \'! Not all fields are filled\'
 );',
     'TYPE' => 'php',
     'DIR' => './gy/component/edit_user/',
@@ -7422,7 +7448,7 @@ global $USER;
 unset($data[\'groupsActions\'][\'admins\']);
 
 if (!empty($data[\'button-form\'])
-    && ($data[\'button-form\'] == \'Сохранить\')
+    && ($data[\'button-form\'] == $this->lang->getMessage(\'button\')) 
     && $USER->isAdmin() // TODO пока только админы могут это делать
     && !empty($data[\'groupsActions\'])
 ) { // нужно сохранить новые настроки прав
@@ -7456,6 +7482,23 @@ $mess[\'rus\'] = array(
 
 $mess[\'eng\'] = array(
     \'text-info\' => \'User groups and their rights\',
+);',
+    'TYPE' => 'php',
+    'DIR' => './gy/component/users_group_manager/',
+  ),
+  './gy/component/users_group_manager/lang_controller.php' => 
+  array (
+    'CODE' => '<?php 
+if (!defined("GY_CORE") && (GY_CORE !== true)) die( "gy: err include core" );
+
+$mess[\'rus\'] = array(
+    \'button\' => \'Сохранить\',
+    \'err_property\' => \'! Не все поля заполнены\'
+);
+
+$mess[\'eng\'] = array(
+    \'button\' => \'Save\',
+    \'err_property\' => \'! Not all fields are filled\'
 );',
     'TYPE' => 'php',
     'DIR' => './gy/component/users_group_manager/',
@@ -7604,11 +7647,13 @@ $gyConfig = array(
         "db_type" => "MySql",
         "db_host" => "localhost",
         "db_user" => "root",
-        "db_pass" => "******",
+        "db_pass" => "",
         "db_name" => "gy_db",
+        "db_port" => "31006",
     ),
     "type_cache" => "CacheFiles",
-    "v-gy" => "0.2-alpha",
+    "v-gy" => "0.3-alpha",
+    "404" => "/404.php",
 );
 ',
     'TYPE' => 'php',
@@ -12069,136 +12114,6 @@ $logger->emergency("Emergency message");
 */',
     'TYPE' => 'php',
     'DIR' => './gy/test/',
-  ),
-  './gy/tests/infoBox.php' => 
-  array (
-    'CODE' => '<?
-
-include "../gy.php"; 
-
-echo \'core - ok \';
-
-// container-data
-//$res = containerData::getContainerData(array(), array(\'*\') );
-//$res = containerData::addContainerData(array(\'name\' => \'asd\', \'code\'=> \'asd1\'));
-//$res = containerData::deleteContainerData(array(\'>\' => array(\'id\', 3)));
-
-// property container-data
-//$res = containerData::getPropertysContainerData(array(\'=\' => array(\'id_container_data\', 12)));
-
-//$arr = array(
-//    \'id_type_property\' => 1,
-//    \'id_container_data\' => 12,
-//    \'code\' => \'html 12\',
-//    \'name\' => \'html вставка\'
-//);
-//
-//$res = containerData::addPropertyContainerData( $arr );
-
-
-//$res = containerData::getAllTypePropertysContainerData();
-
-/*
-$res = containerData::deletePropertyContainerData( 17, 18);
-
-print_r($res);
-*/
-
-
-//$cache = new cacheFiles($app->url);
-//
-//
-//
-//$cacheName = \'getContainerData\';
-//$cacheTime = 120;
-//        
-//if($cache->cacheInit($cacheName, $cacheTime)){
-//    $data = $cache->getCacheData();
-//    echo \'cache ok)))\';
-//}else{
-//    echo \'cache NOT (((\';
-//    $data = array(\'test\' => \'test1\');
-//    $cache->setCacheData($data);
-//}
-//
-//echo "<pre>";
-//print_r($data);
-//echo "</pre>>";
-//
-//
-//$cache = new cache($app->url);
-//
-//$cacheName = \'getContainerData2\';
-//$cacheTime = 90;
-//        
-//if($cache->cacheInit($cacheName, $cacheTime)){
-//    $data = $cache->getCacheData();
-//    echo \'cache ok)))\';
-//}else{
-//    echo \'cache NOT (((\';
-//    $data = \'asdasd\';
-//    $cache->setCacheData($data);
-//}
-//
-//echo "<pre>";
-//print_r($data);
-//echo "</pre>>";',
-    'TYPE' => 'php',
-    'DIR' => './gy/tests/',
-  ),
-  './gy/tests/test.php' => 
-  array (
-    'CODE' => '<?
-
-include "../gy.php"; 
-
-echo \'core - ok \';
-
-//$res = accessUserGroup::getAccessGroup();
-//$res = accessUserGroup::getUserAction();
-//$res = accessUserGroup::getListGroupsByUser(2);
-
-//$res = accessUserGroup::deleteUserInAllGroups(2);
-
-//$res = accessUserGroup::addUserInGroup(2, \'user_admin\');
-//$res = accessUserGroup::addUserInGroup(2, \'content\');
-
-//$res = accessUserGroup::deleteAllActionsForGroup(\'user_admin\');
-//$res = accessUserGroup::addOptionsGroup(\'user_admin\', \'edit_container_data\');
-//echo "res <pre>";
-//print_r($res);
-//echo "</pre>";
-//$res = accessUserGroup::addOptionsGroup(\'user_admin\', \'edit_users\');
-
-//$res = accessUserGroup::accessThisUserByAction( \'edit_users\');
-
-//$res = accessUserGroup::accessUser( 2, \'action_all\' );
-
-//$res = accessUserGroup::addUserGroup(
-//    array(
-//        \'code\' => \'test\',
-//        \'text\' => \'test text\',
-//        \'name\' => \'test test 0\'
-//    ),
-//    array( \'show_admin_panel\', \'edit_users\' )
-//);
-
-// $res = accessUserGroup::deleteUserGroupByCode(\'test\');
-
-
-$res = accessUserGroup::getAccessGroup();
-
-echo "res <pre>";
-print_r($res);
-echo "</pre>";
-
-$res = accessUserGroup::getUserAction();
-
-echo "res <pre>";
-print_r($res);
-echo "</pre>";',
-    'TYPE' => 'php',
-    'DIR' => './gy/tests/',
   ),
 );
         

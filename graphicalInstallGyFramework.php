@@ -682,14 +682,24 @@ Public License instead of this License.  But first, please read
 }
 
 $steps = array(
-    0, // приветствие
-    1, // лицензия
-    2, // настройки
-    3  // финал
+    0, // выбор языка
+    1, // приветствие
+    2, // лицензия
+    3, // настройки
+    4  // финал
 );
 
 $thisStep = 0;
+$thisLanguage = 'ru';
 $err = false;
+
+if(!empty($data['button-next']) && ($data['button-next'] == 'English') ) {
+    $thisLanguage = 'en';
+}
+if(!empty($data['language']) && ($data['language'] == 'en') ) {
+    $thisLanguage = 'en';
+}
+
 if(isset($data['step']) && in_array($data['step'], $steps)){
     $thisStep = $data['step'];
     
@@ -698,7 +708,7 @@ if(isset($data['step']) && in_array($data['step'], $steps)){
     // надо проверить всё ли пришло из настроек и установить эти настройки
     // + установить сам gy
     // если что то не то можно сделать флад $flag = false
-    if($thisStep == 2){ 
+    if($thisStep == 3){ 
         
         $setProperty = array();
                 
@@ -911,7 +921,7 @@ function getCoreConfigInfo(){
     );
 }
     
-function getHtmlPage($step, $errText){
+function getHtmlPage($step, $thisLanguage, $errText){
     ?>
     <html>
         <head>
@@ -991,20 +1001,38 @@ function getHtmlPage($step, $errText){
             <div class="content">
                 <form method="post">
                     <input type="hidden" name="step" value="<?=$step?>">
+                    <input type="hidden" name="language" value="<?=$thisLanguage?>">
                     <div class="content-text">
                         <H3>Мастер установки GY framework/CMS |<span style="color: #45af45;"> Installation wizard GY framework/CMS</span></H3>
                         <br/>
-                        <table class="steps">
-                            <tr>
-                                <td><b <?if($step == 0){?>class="active"<?}?>>Шаг 1 |<span style="color: #45af45;"> Step 1</span></b></td>
-                                <td><b <?if($step == 1){?>class="active"<?}?>>Шаг 2 |<span style="color: #45af45;"> Step 2</span></b></td>
-                                <td><b <?if($step == 2){?>class="active"<?}?>>Шаг 3 |<span style="color: #45af45;"> Step 3</span></b></td>
-                                <td><b <?if($step == 3){?>class="active"<?}?>>Шаг 4 |<span style="color: #45af45;"> Step 4</span></b></td>
-                            </tr>
-                        </table>
+                        <?if($step != 0){?>
+                            <table class="steps">
+                                <tr>
+                                    <td><b <?if($step == 1){?>class="active"<?}?>>Шаг 1 |<span style="color: #45af45;"> Step 1</span></b></td>
+                                    <td><b <?if($step == 2){?>class="active"<?}?>>Шаг 2 |<span style="color: #45af45;"> Step 2</span></b></td>
+                                    <td><b <?if($step == 3){?>class="active"<?}?>>Шаг 3 |<span style="color: #45af45;"> Step 3</span></b></td>
+                                    <td><b <?if($step == 4){?>class="active"<?}?>>Шаг 4 |<span style="color: #45af45;"> Step 4</span></b></td>
+                                </tr>
+                            </table>
+                        <?}?>
                         <br/>
                         <div>
                             <?if($step == 0){?>
+                                <H4>Вас приветствует мастер установки Gy framework/CMS <br/><span style="color: #45af45;"> Welcome to the installation wizard Gy framework/CMS</span></H4>
+                                <H4>Язык | <span style="color: #45af45;">Language</span></H4>
+                                <input 
+                                    type="submit" 
+                                    class="button"
+                                    name="button-next"
+                                    value="Русский"
+                                />
+                                <input 
+                                    type="submit" 
+                                    class="button"
+                                    name="button-next"
+                                    value="English"
+                                />
+                            <?}elseif($step == 1){?>
                                 <H4>Вас приветствует мастер установки Gy framework/CMS |<span style="color: #45af45;"> Welcome to the installation wizard Gy framework/CMS</span></H4>
 
                                 <p>Gy – это php framework, также имеющий элементы CMS, это админка, 
@@ -1018,12 +1046,12 @@ function getHtmlPage($step, $errText){
 
                                 <p>Для установки вам нужно пройти всего несколько шагов</p>
                                 <p style="color: #45af45;">To install, you only need to go through a few steps</p>
-                            <?}elseif($step == 1){?>
+                            <?}elseif($step == 2){?>
                                 <H4>Лицензионное соглашение | <span style="color: #45af45;">License agreement</span></H4>
                                 <p>(это стандартная GPL-3.0 License, распространяется только на раздел /gy проекта)</p>
                                 <p style="color: #45af45;">(this is a standard GPL-3.0 License, only applies to the /gy section of the project)</p>
                                 <textarea disabled=disabled rows=15 cols=80 class="text-license"><?getTextGPL30()?></textarea>
-                            <?}elseif($step == 2){?>
+                            <?}elseif($step == 3){?>
                                 <H4>Настройки ядра | <span style="color: #45af45;">Kernel settings</span> :</h4>
                                 <p>(значение *** можно задавать только для пароля БД)</p>
                                 <p style="color: #45af45;">(value *** can only be set for password DB)</p>
@@ -1061,7 +1089,7 @@ function getHtmlPage($step, $errText){
                                     </table>
                                 <?}?>
 
-                            <?}elseif($step == 3){?>
+                            <?}elseif($step == 4){?>
                                 <H4>Поздравляем! | <span style="color: #45af45;">Congratulations!</span></H4>
                                 <p>Gy - framework/CMS был установлен.</p>
                                 <p style="color: #45af45;">Gy - framework/CMS was installed.</p>
@@ -1094,45 +1122,48 @@ function getHtmlPage($step, $errText){
                             <?}?>
                         </div>
                     </div>
-                    <div class="div-button">
-                        <?if($step != 3){?>
-                            <input 
-                                type="submit" 
-                                class="button"
-                                name="button-next"
-                                <?if(($step == 0) || ($step == 2) ){?>
-                                    value="Далее | Next -->"
-                                <?}elseif($step == 1){?>
-                                    value="Я согласен | I agree"
+                    
+                    <?if ($step != 0) {?>
+                        <div class="div-button">
+                            <?if( $step != 4 ){?>
+                                <input 
+                                    type="submit" 
+                                    class="button"
+                                    name="button-next"
+                                    <?if( ($step == 1) || ($step == 3) ){?>
+                                        value="Далее | Next -->"
+                                    <?}elseif($step == 2){?>
+                                        value="Я согласен | I agree"
+                                    <?}?>
+                                />
+                                <br/>
+                                <br/>
+                                <?
+                                if($errText !== false){?>
+                                    <span class="err-text">Произошла ошибка | <span style="color: #45af45;">An error has occurred</span>:</span>
+                                    <br/>
+                                    <textarea class="text1" disabled="disabled" cols="80" rows="3" ><?=$errText['text']?></textarea>
+                                    <br/>
+                                    <?if($errText['type'] != 1){?>
+                                        <p>
+                                            * Вы можете сообщить от ошибке <a href="https://github.com/ssv32/gy" target="_blank">https://github.com/ssv32/gy</a>
+                                        </p>
+                                        <p style="color: #45af45;">
+                                            * You can report from bug <a href="https://github.com/ssv32/gy" target="_blank">https://github.com/ssv32/gy</a>
+                                        </p>
+                                    <?}?>
+                                    <br/>
+                                    <br/>
                                 <?}?>
-                            />
-                            <br/>
-                            <br/>
-                            <?
-                            if($errText !== false){?>
-                                <span class="err-text">Произошла ошибка | <span style="color: #45af45;">An error has occurred</span>:</span>
-                                <br/>
-                                <textarea class="text1" disabled="disabled" cols="80" rows="3" ><?=$errText['text']?></textarea>
-                                <br/>
-                                <?if($errText['type'] != 0){?>
-                                    <p>
-                                        * Вы можете сообщить от ошибке <a href="https://github.com/ssv32/gy" target="_blank">https://github.com/ssv32/gy</a>
-                                    </p>
-                                    <p style="color: #45af45;">
-                                        * You can report from bug <a href="https://github.com/ssv32/gy" target="_blank">https://github.com/ssv32/gy</a>
-                                    </p>
-                                <?}?>
                                 <br/>
                                 <br/>
+                            <?}else{?>
+                                <a class="button" href="/" >Перейти в Ваш проект с установленным gy | Go to your project with gy installed</a>
+                                <P>* Cкрипт установки, директории и файлы нужные для установки были удалены</p>
+                                <P style="color: #45af45;">* The installation script, directories and files needed for installation have been removed</p>
                             <?}?>
-                            <br/>
-                            <br/>
-                        <?}else{?>
-                            <a class="button" href="/" >Перейти в Ваш проект с установленным gy | Go to your project with gy installed</a>
-                            <P>* Cкрипт установки, директории и файлы нужные для установки были удалены</p>
-                            <P style="color: #45af45;">* The installation script, directories and files needed for installation have been removed</p>
-                        <?}?>
-                    </div>
+                        </div>
+                    <?}?>
                 </form>
                 <div class="footer">
                     gy - framework/CMS 2020
@@ -1144,6 +1175,6 @@ function getHtmlPage($step, $errText){
     <?
 }
 
-getHtmlPage($thisStep, $err);
+getHtmlPage($thisStep, $thisLanguage, $err);
 
 
